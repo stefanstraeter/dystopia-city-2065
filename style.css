@@ -1,0 +1,12 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+canvas {
+  background-color: black;
+}
