@@ -64,14 +64,14 @@ Thumbs.db
 $RECYCLE.BIN/
 
 # ------------------------------------------------------------
-# Optional: ignore compiled assets if applicable
+# Optional: Ignore Compiled Assets
 # ------------------------------------------------------------
 *.min.js
 *.min.css
 *.map
 
 # ------------------------------------------------------------
-# Optional: images or assets cache
+# Optional: Images or Assets Cache
 # ------------------------------------------------------------
 __MACOSX/
 *.orig
