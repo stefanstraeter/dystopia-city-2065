@@ -1,11 +1,9 @@
-/* Apply box-sizing rule to all elements */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/* Remove default margin */
 body,
 h1,
 h2,
@@ -19,12 +17,10 @@ dd {
   margin: 0;
 }
 
-/* Remove iOS Safari default tap highlight */
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Remove list styles and margin for normal lists and lists with role attribute */
 ul,
 ol,
 ul[role="list"],
@@ -34,7 +30,6 @@ ol[role="list"] {
   margin: 0;
 }
 
-/* Basics body settings */
 body {
   min-height: 100vh;
   line-height: 1.5;
@@ -43,14 +38,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Make images easier to handel */
 img,
 picture {
   max-width: 100%;
   display: block;
 }
 
-/* Ensure font inheritance for form elements */
 input,
 button,
 textarea,
@@ -61,7 +54,6 @@ select {
   padding: 0;
 }
 
-/* Set cursor for clickable elements only */
 button,
 select,
 input[type="button"],
@@ -70,7 +62,6 @@ input[type="reset"] {
   cursor: pointer;
 }
 
-/* Improve text wrapping for headings and paragraphs */
 h1,
 h2,
 h3,
@@ -81,18 +72,15 @@ p {
   overflow-wrap: break-word;
 }
 
-/* Enable smooth scrolling by default */
 html {
   scroll-behavior: smooth;
 }
 
-/* Reset links  */
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* Remove animations for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
     scroll-behavior: auto;
