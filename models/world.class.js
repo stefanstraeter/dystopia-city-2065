@@ -5,6 +5,17 @@ class World {
         new Spider(),
         new Spider()
     ];
+    backgroundObjects = [
+        new BackgroundObject('img/01_background/back.png', 0, 0, 200, 450),
+        new BackgroundObject('img/01_background/back.png', 200, 0, 200, 450),
+        new BackgroundObject('img/01_background/back.png', 400, 0, 200, 450),
+        new BackgroundObject('img/01_background/back.png', 600, 0, 200, 450),
+
+        new BackgroundObject('img/01_background/middle.png', 0, 0, 384, 408),
+        new BackgroundObject('img/01_background/middle.png', 384, 0, 384, 408),
+
+        new BackgroundObject('img/01_background/foreground.png', 0, 0, 950, 450)
+    ];
     canvas;
     ctx;
 
@@ -15,30 +26,25 @@ class World {
     };
 
     draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);         // Canvas leeren
+        this.addObjectsToMap(this.backgroundObjects);
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.enemies);
 
+        requestAnimationFrame(() => this.draw());
+    }
+
+    addToMap(moveableObject) {
         this.ctx.drawImage(
-            this.character.img,
-            this.character.x,
-            this.character.y,
-            this.character.width,
-            this.character.height
-        );
+            moveableObject.img,
+            moveableObject.x,
+            moveableObject.y,
+            moveableObject.width,
+            moveableObject.height)
+    };
 
-        this.enemies.forEach(enemy => {
-            this.ctx.drawImage(
-                enemy.img,
-                enemy.x,
-                enemy.y,
-                enemy.width,
-                enemy.height
-            )
-        });
-
-        let self = this;
-        requestAnimationFrame(function () {
-            self.draw();
-        });
+    addObjectsToMap(objects) {
+        objects.forEach(object => this.addToMap(object));
     }
 }
