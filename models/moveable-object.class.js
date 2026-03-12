@@ -5,7 +5,10 @@ class MoveableObject {
     img;
     height = 100;
     width = 100;
+    speed = 0.15;
 
+    animations = {};
+    currentAnimation = null;
     frameCount = 1;
     currentFrame = 0;
     frameSpeed = 11;
@@ -16,7 +19,16 @@ class MoveableObject {
         this.img.src = path;
     }
 
-    updateAnimation() {
+    playAnimation(name) {
+        if (this.currentAnimation === name || !this.animations[name]) return;
+
+        this.currentAnimation = name;
+        this.loadImage(this.animations[name].path);
+        this.frameCount = this.animations[name].frames;
+        this.currentFrame = 0;
+    }
+
+    animate() {
         this.frameCounter++;
         if (this.frameCounter > this.frameSpeed) {
             this.frameCounter = 0;
@@ -25,9 +37,7 @@ class MoveableObject {
     }
 
     draw(ctx) {
-        if (!this.img.width) return;
-        if (!this.img.width) return;
-
+        if (!this.img || !this.img.complete) return;
         const frameWidth = this.img.width / this.frameCount;
         ctx.drawImage(
             this.img,
@@ -42,11 +52,20 @@ class MoveableObject {
         );
     }
 
-    moveRight() {
-
-    }
-
     moveLeft() {
-
+        this.x -= this.speed;
     }
+
+    moveRight() {
+        this.x += this.speed;
+    }
+
+    /* NEU: Kollisionsprüfung (Allgemeine Formel)
+    isColliding(obj) {
+        return this.x + this.width > obj.x &&
+            this.y + this.height > obj.y &&
+            this.x < obj.x + obj.width &&
+            this.y < obj.y + obj.height;
+    }
+    */
 }
