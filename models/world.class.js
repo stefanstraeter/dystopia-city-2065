@@ -1,10 +1,10 @@
 class World {
     character = new Character();
-    enemies = [
-        new Spider(),
-        new Spider(),
-        new Spider()
-    ];
+    //enemies = [
+    // new Spider(),
+    // new Spider(),
+    // new Spider()
+    //];
     backgroundObjects = [
         new BackgroundObject('img/01_background/back.png', 0, 0, 200, 450),
         new BackgroundObject('img/01_background/back.png', 200, 0, 200, 450),
@@ -29,20 +29,16 @@ class World {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.addObjectsToMap(this.backgroundObjects);
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.enemies);
+        this.character.updateAnimation();
+        this.character.draw(this.ctx);
+        // this.addObjectsToMap(this.enemies);
 
         requestAnimationFrame(() => this.draw());
     }
 
     addToMap(moveableObject) {
-        this.ctx.drawImage(
-            moveableObject.img,
-            moveableObject.x,
-            moveableObject.y,
-            moveableObject.width,
-            moveableObject.height)
-    };
+        moveableObject.draw(this.ctx);
+    }
 
     addObjectsToMap(objects) {
         objects.forEach(object => this.addToMap(object));
