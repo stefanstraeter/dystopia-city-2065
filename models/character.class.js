@@ -1,10 +1,6 @@
 class Character extends MoveableObject {
 
-    x = 40
-    y = 200;
-    height = 235;
-    width = 235;
-
+    currentAnimation = null;
     animations = {
         idle: {
             path: 'img/02_character_bud/Idle.png',
@@ -20,37 +16,22 @@ class Character extends MoveableObject {
         }
     };
 
-    currentAnimation = 'null';
-
-    constructor() {
+    constructor(x = 40, y = 230, w = 200, h = 200) {
         super();
-        this.setAnimation('idle');
+        this.x = x;
+        this.y = y;
+        this.width = w;
+        this.height = h;
+        this.playAnimation('idle');
     }
 
-    setAnimation(name) {
-        if (this.currentAnimation === name) return;
+    updateState() {
+        super.animate();
+        this.handleMovement();
+    }
 
-        this.currentAnimation = name;
-
-        this.loadImage(this.animations[name].path);
-        this.frameCount = this.animations[name].frames;
-        this.currentFrame = 0;
+    handleMovement() {
+        // Hier kommt bald dein: 
+        // if (this.world.keyboard.RIGHT) { this.moveRight(); }
     }
 }
-
-
-
-
-
-
-
-/*
-if (this.keyboard.RIGHT) {
-    this.character.setAnimation('walk');
-}
-
-if (this.keyboard.SPACE) {
-    this.character.setAnimation('attack');
-}
-
-*/
