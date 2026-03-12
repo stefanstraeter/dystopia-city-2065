@@ -1,41 +1,26 @@
 class Spider extends MoveableObject {
 
-    y = 350;
-    height = 100;
-    width = 100;
     animations = {
-        idle: {
-            path: 'img/02_character_bud/Idle.png',
-            frames: 4
-        },
-        walk: {
-            path: 'img/02_character_bud/Walk.png',
-            frames: 6
-        },
-        attack: {
-            path: 'img/03_enemies/spider/Attack.png',
-            frames: 12
-        }
+        idle: { path: 'img/03_enemies/spider/Idle.png', frames: 4 },
+        walk: { path: 'img/03_enemies/spider/Walk.png', frames: 10 },
+        attack: { path: 'img/03_enemies/spider/Attack.png', frames: 12 }
     };
-    currentAnimation = 'null';
 
-
-    constructor() {
+    constructor(x = (400 + Math.random() * 500), y = 350) {
         super();
-        this.setAnimation('attack');
-        this.x = 200 + Math.random() * 500;
+        this.x = x;
+        this.y = y;
+        this.speed = 0.3 + Math.random() * 0.4;
+        this.playAnimation('walk');
     }
 
-    setAnimation(name) {
-        if (this.currentAnimation === name) return;
+    updateState() {
+        super.animate();
+        this.moveLeft();
 
-        this.currentAnimation = name;
-        this.loadImage(this.animations[name].path);
-        this.frameCount = this.animations[name].frames;
-        this.currentFrame = 0;
+        if (this.x < -this.width) {
+            this.x = 1000 + Math.random() * 1000;
+        }
     }
-
 }
-
-
 
