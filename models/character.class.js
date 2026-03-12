@@ -1,6 +1,6 @@
 class Character extends MoveableObject {
 
-    x = 40;
+    x = 40
     y = 200;
     height = 235;
     width = 235;
@@ -28,7 +28,6 @@ class Character extends MoveableObject {
     }
 
     setAnimation(name) {
-
         if (this.currentAnimation === name) return;
 
         this.currentAnimation = name;
