@@ -1,10 +1,11 @@
 class World {
     character = new Character();
-    //enemies = [
-    // new Spider(),
-    // new Spider(),
-    // new Spider()
-    //];
+    enemies = [
+        new Spider(),
+        new Spider(),
+        new Spider()
+    ];
+
     backgroundObjects = [
         new BackgroundObject('img/01_background/back.png', 0, 0, 200, 450),
         new BackgroundObject('img/01_background/back.png', 200, 0, 200, 450),
@@ -31,7 +32,7 @@ class World {
         this.addObjectsToMap(this.backgroundObjects);
         this.character.updateAnimation();
         this.character.draw(this.ctx);
-        // this.addObjectsToMap(this.enemies);
+        this.addObjectsToMap(this.enemies);
 
         requestAnimationFrame(() => this.draw());
     }
@@ -41,6 +42,9 @@ class World {
     }
 
     addObjectsToMap(objects) {
-        objects.forEach(object => this.addToMap(object));
+        objects.forEach(object => {
+            object.updateAnimation();
+            this.addToMap(object);
+        });
     }
 }
