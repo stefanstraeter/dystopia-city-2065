@@ -34,16 +34,13 @@ class Character extends MoveableObject {
             this.moveRight();
             isMoving = true;
         }
-
         if (this.world.keyboard.KEY_LEFT && this.x > 0) {
             this.moveLeft();
             isMoving = true;
         }
-
         if (this.world.keyboard.KEY_UP && !this.isAboveGround()) {
             this.jump();
         }
-
         if (this.isAboveGround()) {
             this.playAnimation('jump');
         } else if (isMoving) {
