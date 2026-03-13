@@ -2,43 +2,86 @@ class MoveableObject {
 
     x = 140;
     y = 100;
-    img;
     height = 100;
     width = 100;
     speed = 0.15;
-
+    speedY = 0;
+    acceleration = 2;
+    img;
     animations = {};
     currentAnimation = null;
-    frameCount = 1;
     currentFrame = 0;
-    frameSpeed = 11;
+    frameCount = 1;
     frameCounter = 0;
+    frameSpeed = 11;
+    otherDirection = false;
 
     loadImage(path) {
         this.img = new Image();
         this.img.src = path;
     }
 
-    playAnimation(name) {
-        if (this.currentAnimation === name || !this.animations[name]) return;
-
-        this.currentAnimation = name;
-        this.loadImage(this.animations[name].path);
-        this.frameCount = this.animations[name].frames;
-        this.currentFrame = 0;
-    }
-
     animate() {
         this.frameCounter++;
+
         if (this.frameCounter > this.frameSpeed) {
             this.frameCounter = 0;
-            this.currentFrame = (this.currentFrame + 1) % this.frameCount;
+            let isJumpEnd = this.currentAnimation === 'jump' && this.currentFrame >= this.frameCount - 1;
+            this.currentFrame = isJumpEnd ? this.currentFrame : (this.currentFrame + 1) % this.frameCount;
         }
+    }
+
+    playAnimation(name) {
+        if (this.currentAnimation === name) return;
+
+        let animation = this.animations[name];
+        if (!animation) return;
+
+        this.currentAnimation = name;
+        this.loadImage(animation.path);
+        this.frameCount = animation.frames;
+        this.frameSpeed = animation.speed ? animation.speed : 10;
+        this.currentFrame = 0;
+        this.frameCounter = 0;
+    }
+
+    moveLeft() {
+        this.x -= this.speed;
+        this.otherDirection = true;
+    }
+
+    moveRight() {
+        this.x += this.speed;
+        this.otherDirection = false;
+    }
+
+    applyGravity() {
+        setInterval(() => {
+            if (this.isAboveGround() || this.speedY > 0) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            } else {
+                this.y = 270;
+                this.speedY = 0;
+            }
+        }, 1000 / 25);
+    }
+
+    isAboveGround() {
+        return false;
     }
 
     draw(ctx) {
         if (!this.img || !this.img.complete) return;
+
         const frameWidth = this.img.width / this.frameCount;
+        if (this.otherDirection) {
+            ctx.save();
+            ctx.translate(this.width, 0);
+            ctx.scale(-1, 1);
+            this.x = this.x * -1;
+        }
+
         ctx.drawImage(
             this.img,
             this.currentFrame * frameWidth,
@@ -50,22 +93,11 @@ class MoveableObject {
             this.width,
             this.height
         );
+        if (this.otherDirection) {
+            this.x = this.x * -1;
+            ctx.restore();
+        }
     }
-
-    moveLeft() {
-        this.x -= this.speed;
-    }
-
-    moveRight() {
-        this.x += this.speed;
-    }
-
-    /* NEU: Kollisionsprüfung (Allgemeine Formel)
-    isColliding(obj) {
-        return this.x + this.width > obj.x &&
-            this.y + this.height > obj.y &&
-            this.x < obj.x + obj.width &&
-            this.y < obj.y + obj.height;
-    }
-    */
 }
+
+
