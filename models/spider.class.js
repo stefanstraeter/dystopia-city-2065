@@ -6,11 +6,11 @@ class Spider extends MoveableObject {
         attack: { path: 'img/03_enemies/spider/Attack.png', frames: 12 }
     };
 
-    constructor(x = (400 + Math.random() * 500), y = 350) {
+    constructor(x = (400 + Math.random() * 500), y = (330 + Math.random() * 50)) {
         super();
         this.x = x;
         this.y = y;
-        this.speed = 0.3 + Math.random() * 0.4;
+        this.speed = 0.1 + Math.random() * 0.4;
         this.playAnimation('walk');
     }
 
