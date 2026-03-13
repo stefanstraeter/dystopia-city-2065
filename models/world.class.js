@@ -6,9 +6,9 @@ class World {
         new Spider()
     ];
     flyingVehicles = [
-        new FlyingVehicle('img/04_vehicles/police.png', 400, 30, 0.3, 60, 30),
-        new FlyingVehicle('img/04_vehicles/drone.png', 500, 70, 0.6, 40, 30),
-        new FlyingVehicle('img/04_vehicles/truck.png', 900, 50, 0.4, 150, 60),
+        new FlyingVehicle('img/04_vehicles/police.png', 290, 40, 0.1, 60, 30),
+        new FlyingVehicle('img/04_vehicles/drone.png', 900, 20, 0.16, 50, 30),
+        new FlyingVehicle('img/04_vehicles/truck.png', 500, 50, 0.2, 150, 60),
     ];
     backgroundLayers = {
         back: [
@@ -27,12 +27,20 @@ class World {
     };
     canvas;
     ctx;
+    keyboard;
 
-    constructor(canvas) {
+    constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
+        this.keyboard = keyboard;
+        this.setWorld();
         this.draw();
+
     };
+
+    setWorld() {
+        this.character.world = this;
+    }
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -42,8 +50,8 @@ class World {
         this.addObjectsToMap(this.backgroundLayers.middle);
         this.addObjectsToMap(this.backgroundLayers.foreground);
 
-        this.addToMap(this.character);
         this.addObjectsToMap(this.enemies);
+        this.addToMap(this.character);
 
         this.updateAllObjects();
 
