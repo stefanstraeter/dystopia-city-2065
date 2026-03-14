@@ -5,11 +5,15 @@ class World {
         new Spider(),
         new Spider()
     ];
-    flyingVehicles = [
-        new FlyingVehicle('img/04_vehicles/police.png', 290, 40, 0.1, 60, 30),
-        new FlyingVehicle('img/04_vehicles/drone.png', 900, 20, 0.16, 50, 30),
-        new FlyingVehicle('img/04_vehicles/truck.png', 500, 50, 0.2, 150, 60),
-    ];
+    flyingVehicles = {
+        background: [
+            new FlyingVehicle('img/04_vehicles/drone.png', 900, 40, 0.5, 40, 20, -1)
+        ],
+        midground: [
+            new FlyingVehicle('img/04_vehicles/police.png', 550, 200, 0.3, 60, 30, -1),
+            new FlyingVehicle('img/04_vehicles/truck.png', 0, 100, 0.3, 150, 60, 1)
+        ]
+    };
     backgroundLayers = {
         back: [
             new BackgroundObject('img/01_background/far-buildings.png', 0, 0, 350, 350),
@@ -50,25 +54,24 @@ class World {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.addObjectsToMap(this.backgroundLayers.back);
-        this.addObjectsToMap(this.flyingVehicles);
+        this.addObjectsToMap(this.flyingVehicles.background);
         this.addObjectsToMap(this.backgroundLayers.middle);
+        this.addObjectsToMap(this.flyingVehicles.midground);
         this.addObjectsToMap(this.backgroundLayers.foreground);
 
         this.addObjectsToMap(this.enemies);
         this.addToMap(this.character);
 
         this.updateAllObjects();
-
         requestAnimationFrame(() => this.draw());
     }
 
     updateAllObjects() {
         this.character.updateState();
         this.enemies.forEach(enemy => enemy.updateState());
-        this.flyingVehicles.forEach(vehicle => {
-            vehicle.animate();
-            vehicle.move();
-        });
+
+        this.flyingVehicles.background.forEach(vehicle => vehicle.updateState());
+        this.flyingVehicles.midground.forEach(vehicle => vehicle.updateState());
     }
 
     addToMap(moveableObject) {

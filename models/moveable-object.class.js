@@ -14,7 +14,7 @@ class MoveableObject {
     frameCount = 1;
     frameCounter = 0;
     frameSpeed = 11;
-    otherDirection = false;
+    isMirrored = false;
 
     loadImage(path) {
         this.img = new Image();
@@ -47,12 +47,12 @@ class MoveableObject {
 
     moveLeft() {
         this.x -= this.speed;
-        this.otherDirection = true;
+        this.isMirrored = true;
     }
 
     moveRight() {
         this.x += this.speed;
-        this.otherDirection = false;
+        this.isMirrored = false;
     }
 
     applyGravity() {
@@ -75,7 +75,7 @@ class MoveableObject {
         if (!this.img || !this.img.complete) return;
 
         const frameWidth = this.img.width / this.frameCount;
-        if (this.otherDirection) {
+        if (this.isMirrored) {
             ctx.save();
             ctx.translate(this.width, 0);
             ctx.scale(-1, 1);
@@ -93,7 +93,7 @@ class MoveableObject {
             this.width,
             this.height
         );
-        if (this.otherDirection) {
+        if (this.isMirrored) {
             this.x = this.x * -1;
             ctx.restore();
         }
