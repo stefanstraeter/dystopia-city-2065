@@ -12,17 +12,21 @@ class World {
     ];
     backgroundLayers = {
         back: [
-            new BackgroundObject('img/01_background/back.png', 0, 0, 200, 450),
-            new BackgroundObject('img/01_background/back.png', 200, 0, 200, 450),
-            new BackgroundObject('img/01_background/back.png', 400, 0, 200, 450),
-            new BackgroundObject('img/01_background/back.png', 600, 0, 200, 450)
+            new BackgroundObject('img/01_background/far-buildings.png', 0, 0, 350, 350),
+            new BackgroundObject('img/01_background/far-buildings.png', 350, 0, 350, 350),
+            new BackgroundObject('img/01_background/far-buildings.png', 700, 0, 350, 350)
+
         ],
         middle: [
-            new BackgroundObject('img/01_background/middle.png', 0, 0, 384, 408),
-            new BackgroundObject('img/01_background/middle.png', 384, 0, 384, 408)
+            new BackgroundObject('img/01_background/back-buildings.png', 0, 0, 500, 400),
+            new BackgroundObject('img/01_background/back-buildings.png', 500, 0, 500, 400)
         ],
         foreground: [
-            new BackgroundObject('img/01_background/foreground.png', 0, 0, 950, 450)
+            new BackgroundObject('img/01_background/foreground 2.png', 0, 0, 850, 450),
+
+
+
+
         ]
     };
     canvas;
