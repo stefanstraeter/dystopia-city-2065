@@ -6,16 +6,18 @@ class Spider extends MoveableObject {
         attack: { path: 'img/03_enemies/spider/Attack.png', frames: 12 }
     };
 
-    constructor(x, groundY, width, height, speed) {
+    constructor(x, width, height, speed) {
         super();
         this.x = x;
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.y = groundY - this.height;
+        this.offset.bottom = -30;
 
+        this.applyGravity();
         this.playAnimation('walk');
     }
+
 
     updateState() {
         super.animate();
