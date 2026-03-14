@@ -1,4 +1,5 @@
 class Character extends MoveableObject {
+
     animations = {
         idle: { path: 'img/02_character_bud/Idle.png', frames: 5, speed: 12 },
         walk: { path: 'img/02_character_bud/Walk.png', frames: 4, speed: 6 },
@@ -7,15 +8,16 @@ class Character extends MoveableObject {
     };
     world;
 
-    constructor(x = 40, y = 270, width = 200, height = 200, speed = 3) {
+    constructor(x, y, width, height, speed) {
         super();
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.playAnimation('idle');
         this.applyGravity();
+        this.playAnimation('idle');
+
     }
 
     updateState() {
@@ -30,7 +32,7 @@ class Character extends MoveableObject {
     handleMovement() {
         let isMoving = false;
 
-        if (this.world.keyboard.KEY_RIGHT && this.x < 700) {
+        if (this.world.keyboard.KEY_RIGHT && this.x < 2500) {
             this.moveRight();
             isMoving = true;
         }
@@ -51,6 +53,10 @@ class Character extends MoveableObject {
     }
 
     isAboveGround() {
-        return this.y < 270;
+        // Wenn Bud höher ist als (Boden - seine eigene Körpergröße), ist er in der Luft
+        if (this.world && this.world.groundLevel) {
+            return this.y < (this.world.groundLevel - this.height);
+        }
+        return this.y < 270; // Fallback
     }
 }

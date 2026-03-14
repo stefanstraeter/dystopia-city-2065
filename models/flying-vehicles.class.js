@@ -1,6 +1,6 @@
 class FlyingVehicle extends MoveableObject {
 
-    constructor(imagePath, x = 800, y = 50, speed = 0.5, width = 60, height = 25, direction = -1) {
+    constructor(imagePath, x, y, speed, width, height, direction, world, parallaxFactor = 1) {
         super();
         this.loadImage(imagePath);
         this.x = x;
@@ -9,20 +9,25 @@ class FlyingVehicle extends MoveableObject {
         this.width = width;
         this.height = height;
         this.direction = direction;
+        this.world = world;
+        this.parallaxFactor = parallaxFactor;
+        this.isMirrored = (this.direction === 1);
     }
 
     move() {
         this.x += this.speed * this.direction;
-        this.isMirrored = this.direction === 1;
-        this.handleRespawn();
-    }
 
-    handleRespawn() {
-        if (this.direction === -1 && this.x < -this.width) {
-            this.x = 900;
+        let currentCameraX = (-this.world.camera_x) * this.parallaxFactor;
+        let screenWidth = 800;
+
+        if (this.direction === -1 && this.x < currentCameraX - this.width) {
+            this.x = currentCameraX + screenWidth + Math.random() * 500;
+            this.y = 20 + Math.random() * 200;
         }
-        if (this.direction === 1 && this.x > 900) {
-            this.x = -this.width;
+
+        if (this.direction === 1 && this.x > currentCameraX + screenWidth + this.width) {
+            this.x = currentCameraX - this.width - Math.random() * 500;
+            this.y = 20 + Math.random() * 200;
         }
     }
 
@@ -32,4 +37,4 @@ class FlyingVehicle extends MoveableObject {
             super.animate();
         }
     }
-} 1
+}

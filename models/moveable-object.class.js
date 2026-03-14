@@ -61,7 +61,12 @@ class MoveableObject {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } else {
-                this.y = 270;
+                // Wenn eine Welt existiert, berechne den Boden dynamisch
+                if (this.world && this.world.groundLevel) {
+                    this.y = this.world.groundLevel - this.height;
+                } else {
+                    this.y = 270; // Fallback
+                }
                 this.speedY = 0;
             }
         }, 1000 / 25);
