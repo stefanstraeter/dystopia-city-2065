@@ -4,6 +4,7 @@ class MoveableObject {
     y = 100;
     height = 100;
     width = 100;
+    offset = { top: 0, bottom: 0, left: 0, right: 0 };
     speed = 0.15;
     speedY = 0;
     acceleration = 2;
@@ -15,6 +16,7 @@ class MoveableObject {
     frameCounter = 0;
     frameSpeed = 11;
     isMirrored = false;
+    world;
 
     loadImage(path) {
         this.img = new Image();
@@ -61,11 +63,8 @@ class MoveableObject {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } else {
-                // Wenn eine Welt existiert, berechne den Boden dynamisch
-                if (this.world && this.world.groundLevel) {
-                    this.y = this.world.groundLevel - this.height;
-                } else {
-                    this.y = 270; // Fallback
+                if (this.world) {
+                    this.y = this.world.groundLevel - this.height + this.offset.bottom;
                 }
                 this.speedY = 0;
             }
@@ -73,7 +72,8 @@ class MoveableObject {
     }
 
     isAboveGround() {
-        return false;
+        if (!this.world) return false;
+        return this.y < (this.world.groundLevel - this.height + this.offset.bottom);
     }
 
     draw(ctx) {
