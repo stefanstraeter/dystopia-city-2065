@@ -8,10 +8,9 @@ class Character extends MoveableObject {
     };
     world;
 
-    constructor(x, y, width, height, speed) {
+    constructor(x, width, height, speed) {
         super();
         this.x = x;
-        this.y = y;
         this.width = width;
         this.height = height;
         this.speed = speed;
@@ -52,11 +51,5 @@ class Character extends MoveableObject {
         }
     }
 
-    isAboveGround() {
-        // Wenn Bud höher ist als (Boden - seine eigene Körpergröße), ist er in der Luft
-        if (this.world && this.world.groundLevel) {
-            return this.y < (this.world.groundLevel - this.height);
-        }
-        return this.y < 270; // Fallback
-    }
+
 }
