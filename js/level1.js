@@ -4,7 +4,8 @@ const level1 = {
         new Spider(900, 130, 130, 0.2),
         new Spider(1200, 90, 90, 0.5),
         new Spider(1350, 100, 100, 0.8),
-        new Spider(1950, 150, 150, 0.4)
+        new Spider(1950, 150, 150, 0.4),
+        new Endboss(500, 330, 330, 0.4)
     ],
 
     vehicles: {
@@ -20,8 +21,15 @@ const level1 = {
     },
 
     neonSigns: [
-        new NeonSign('img/05_neon_signs/monitor_face.png', 0, 20, 150, 150, 4, 15),
-        new NeonSign('img/05_neon_signs/banner_1.png', 635, 20, 60, 140, 4, 15),
+        new NeonSign('img/05_neon_signs/monitor_face.png', 10, 80, 120, 120, 4, 15),
+        new NeonSign('img/05_neon_signs/side-sign.png', 645, 25, 35, 140, 4, 15),
+        new NeonSign('img/05_neon_signs/green-sign.png', 1055, 60, 60, 140, 4, 15),
+        new NeonSign('img/05_neon_signs/coke.png', 1140, -10, 45, 110, 3, 15),
+        new NeonSign('img/05_neon_signs/scroll-sign.png', 1850, 10, 30, 140, 4, 15),
+        new NeonSign('img/05_neon_signs/monitor_face.png', 2255, 100, 120, 120, 4, 15),
+        new NeonSign('img/05_neon_signs/chinese-sign.png', 2435, 10, 60, 140, 4, 15),
+
+
 
     ],
 
