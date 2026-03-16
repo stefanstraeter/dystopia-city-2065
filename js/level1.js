@@ -1,7 +1,9 @@
 const level1 = {
     level_end_x: 3400,
     statusBars: [
-        new StatusBar('img/06_status_bar/health.png', 30, 20, 150, 25)
+        new StatusBar('img/06_status_bar/health.png', 30, 20, 130, 22),
+        new StatusBar('img/06_status_bar/coin.png', 30, 45, 130, 22),
+        new StatusBar('img/06_status_bar/rocket.png', 30, 70, 130, 22)
     ],
     enemies: [
         new Spider(900, 130, 130, 1),
