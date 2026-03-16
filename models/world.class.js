@@ -17,13 +17,14 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.level = level1;
-        this.character = new Character(100, 250, 250, 3);
+        this.character = new Character(100, 250, 250, 5);
         this.enemies = this.level.enemies;
         this.flyingVehicles = this.level.vehicles;
         this.backgroundLayers = this.level.backgrounds;
         this.neonSigns = this.level.neonSigns;
         this.setWorld();
         this.draw();
+        this.run();
     }
 
     setWorld() {
@@ -42,7 +43,6 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.updateAllObjects();
 
         this.ctx.save();
         this.ctx.translate(this.camera_x * 0.2, 0);
@@ -94,11 +94,30 @@ class World {
 
     addToMap(moveableObject) {
         moveableObject.draw(this.ctx);
+
     }
 
     addObjectsToMap(objects) {
         objects.forEach(object => {
             this.addToMap(object);
+        });
+    }
+
+    run() {
+        setInterval(() => {
+            this.updateAllObjects();
+            this.checkCollisions();
+        }, 1000 / 60);
+    }
+
+    checkCollisions() {
+        if (this.character.isDead()) return;
+
+        this.level.enemies.forEach(enemy => {
+            if (this.character.isColliding(enemy)) {
+                this.character.hit();
+                // Hier könnten wir später auch das UI updaten
+            }
         });
     }
 }
