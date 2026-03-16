@@ -8,7 +8,6 @@ class Character extends MoveableObject {
         hurt: { path: 'img/02_character_bud/Hurt.png', frames: 2, speed: 4 },
         death: { path: 'img/02_character_bud/Death.png', frames: 7, speed: 2 }
     };
-    world;
 
     constructor(x, width, height, speed) {
         super();
@@ -18,7 +17,6 @@ class Character extends MoveableObject {
         this.speed = speed;
         this.applyGravity();
         this.playAnimation('idle');
-
     }
 
     updateState() {
@@ -26,27 +24,29 @@ class Character extends MoveableObject {
         this.handleMovement();
     }
 
-    jump() {
-        this.speedY = 23;
+    handleMovement() {
+        this.updatePosition();
+        this.updateAnimation();
     }
 
-    handleMovement() {
-        let isMoving = false;
-
-        if (this.world.keyboard.KEY_RIGHT && this.x < 2500) {
+    updatePosition() {
+        if (this.world.keyboard.KEY_RIGHT && this.x < (this.world.level.level_end_x - this.width)) {
             this.moveRight();
-            isMoving = true;
         }
+
         if (this.world.keyboard.KEY_LEFT && this.x > 0) {
             this.moveLeft();
-            isMoving = true;
         }
-        if (this.world.keyboard.KEY_UP && !this.isAboveGround()) {
+
+        if (this.world.keyboard.KEY_SPACE && !this.isAboveGround()) {
             this.jump();
         }
+    }
+
+    updateAnimation() {
         if (this.isAboveGround()) {
             this.playAnimation('jump');
-        } else if (isMoving) {
+        } else if (this.world.keyboard.KEY_RIGHT || this.world.keyboard.KEY_LEFT) {
             this.playAnimation('walk');
         } else {
             this.playAnimation('idle');
