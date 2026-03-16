@@ -5,9 +5,12 @@ class MoveableObject {
     height = 100;
     width = 100;
     offset = { top: 0, bottom: 0, left: 0, right: 0 };
+    footOffset = 0;
     speed = 0.15;
     speedY = 0;
-    acceleration = 2;
+    acceleration = 1;
+    energy = 100;
+    lastHit = 0;
     img;
     animations = {};
     currentAnimation = null;
@@ -16,7 +19,6 @@ class MoveableObject {
     frameCounter = 0;
     frameSpeed = 11;
     isMirrored = false;
-    world;
 
     loadImage(path) {
         this.img = new Image();
@@ -28,8 +30,15 @@ class MoveableObject {
 
         if (this.frameCounter > this.frameSpeed) {
             this.frameCounter = 0;
+
+            let isDeathEnd = this.currentAnimation === 'death' && this.currentFrame >= this.frameCount - 1;
             let isJumpEnd = this.currentAnimation === 'jump' && this.currentFrame >= this.frameCount - 1;
-            this.currentFrame = isJumpEnd ? this.currentFrame : (this.currentFrame + 1) % this.frameCount;
+
+            if (isDeathEnd) {
+            } else if (isJumpEnd) {
+            } else {
+                this.currentFrame = (this.currentFrame + 1) % this.frameCount;
+            }
         }
     }
 
@@ -58,26 +67,24 @@ class MoveableObject {
     }
 
     jump() {
-        this.speedY = 23;
+        this.speedY = 21;
     }
 
     applyGravity() {
-        setInterval(() => {
-            if (this.isAboveGround() || this.speedY > 0) {
-                this.y -= this.speedY;
-                this.speedY -= this.acceleration;
-            } else {
-                if (this.world) {
-                    this.y = this.world.groundLevel - this.height + this.offset.bottom;
-                }
-                this.speedY = 0;
+        if (this.isAboveGround() || this.speedY > 0) {
+            this.y -= this.speedY;
+            this.speedY -= this.acceleration;
+        } else {
+            if (this.world) {
+                this.y = this.world.groundLevel - this.height + this.footOffset;
             }
-        }, 1000 / 25);
+            this.speedY = 0;
+        }
     }
 
     isAboveGround() {
         if (!this.world) return false;
-        return this.y < (this.world.groundLevel - this.height + this.offset.bottom);
+        return this.y < (this.world.groundLevel - this.height + this.footOffset);
     }
 
     draw(ctx) {
@@ -85,6 +92,7 @@ class MoveableObject {
 
         this.flipImage(ctx);
         this.drawImage(ctx);
+        this.drawHitbox(ctx);
         this.flipImageBack(ctx);
     }
 
@@ -117,6 +125,50 @@ class MoveableObject {
             ctx.restore();
         }
     }
+
+    isColliding(mo) {
+        return this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
+            this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
+            this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
+            this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
+    }
+
+    hit() {
+        if (this.isHurt()) return;
+
+        this.energy -= 10;
+        if (this.energy < 0) {
+            this.energy = 0;
+        } else {
+            this.lastHit = new Date().getTime();
+        }
+    }
+
+    isHurt() {
+        let timepassed = (new Date().getTime() - this.lastHit) / 1000;
+        return timepassed < 0.5;
+    }
+
+    isDead() {
+        return this.energy == 0;
+    }
+
+    drawHitbox(ctx) {
+        if (this instanceof Character || this instanceof Spider || this instanceof Endboss) {
+            ctx.beginPath();
+            ctx.lineWidth = "2";
+            ctx.strokeStyle = "red";
+            ctx.rect(
+                this.x + this.offset.left,
+                this.y + this.offset.top,
+                this.width - this.offset.left - this.offset.right,
+                this.height - this.offset.top - this.offset.bottom
+            );
+            ctx.stroke();
+        }
+    }
+
+
 }
 
 
