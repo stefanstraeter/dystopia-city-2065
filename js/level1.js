@@ -1,11 +1,11 @@
 const level1 = {
-
+    level_end_x: 3400,
     enemies: [
         new Spider(900, 130, 130, 0.2),
         new Spider(1200, 90, 90, 0.5),
         new Spider(1350, 100, 100, 0.8),
         new Spider(1950, 150, 150, 0.4),
-        new Endboss(500, 330, 330, 0.4)
+        new Endboss(3000, 330, 330, 0.4)
     ],
 
     vehicles: {
