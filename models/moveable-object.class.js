@@ -57,6 +57,10 @@ class MoveableObject {
         this.isMirrored = false;
     }
 
+    jump() {
+        this.speedY = 23;
+    }
+
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
@@ -79,18 +83,16 @@ class MoveableObject {
     draw(ctx) {
         if (!this.img || !this.img.complete) return;
 
-        const frameWidth = this.img.width / this.frameCount;
-        if (this.isMirrored) {
-            ctx.save();
-            ctx.translate(this.width, 0);
-            ctx.scale(-1, 1);
-            this.x = this.x * -1;
-        }
+        this.flipImage(ctx);
+        this.drawImage(ctx);
+        this.flipImageBack(ctx);
+    }
 
+    drawImage(ctx) {
+        const frameWidth = this.img.width / this.frameCount;
         ctx.drawImage(
             this.img,
-            this.currentFrame * frameWidth,
-            0,
+            this.currentFrame * frameWidth, 0,
             frameWidth,
             this.img.height,
             this.x,
@@ -98,6 +100,18 @@ class MoveableObject {
             this.width,
             this.height
         );
+    }
+
+    flipImage(ctx) {
+        if (this.isMirrored) {
+            ctx.save();
+            ctx.translate(this.width, 0);
+            ctx.scale(-1, 1);
+            this.x = this.x * -1;
+        }
+    }
+
+    flipImageBack(ctx) {
         if (this.isMirrored) {
             this.x = this.x * -1;
             ctx.restore();
