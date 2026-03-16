@@ -5,17 +5,23 @@ class World {
     keyboard;
     camera_x = 0;
     groundLevel = 490;
-    character = new Character(100, 250, 250, 3);
-    level = level1;
-    enemies = this.level.enemies;
-    flyingVehicles = this.level.vehicles;
-    backgroundLayers = this.level.backgrounds;
-    neonSigns = this.level.neonSigns;
+    character;
+    level;
+    enemies;
+    flyingVehicles;
+    backgroundLayers;
+    neonSigns;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.level = level1;
+        this.character = new Character(100, 250, 250, 3);
+        this.enemies = this.level.enemies;
+        this.flyingVehicles = this.level.vehicles;
+        this.backgroundLayers = this.level.backgrounds;
+        this.neonSigns = this.level.neonSigns;
         this.setWorld();
         this.draw();
     }
@@ -23,16 +29,15 @@ class World {
     setWorld() {
         this.character.world = this;
         this.character.y = this.groundLevel - this.character.height;
-
-        this.level.enemies.forEach(enemy => {
+        this.enemies.forEach(enemy => {
             enemy.world = this;
             enemy.y = this.groundLevel - enemy.height;
         });
-
-        this.flyingVehicles.background.forEach(vehicle =>
-            vehicle.world = this);
-        this.flyingVehicles.midground.forEach(vehicle =>
-            vehicle.world = this);
+        this.neonSigns.forEach(sign => {
+            sign.world = this;
+        });
+        this.flyingVehicles.background.forEach(v => v.world = this);
+        this.flyingVehicles.midground.forEach(v => v.world = this);
     }
 
     draw() {
@@ -59,9 +64,8 @@ class World {
         this.addObjectsToMap(this.flyingVehicles.midground);
         this.addObjectsToMap(this.backgroundLayers.foreground);
         this.addObjectsToMap(this.enemies);
-        this.addToMap(this.character);
-
         this.addObjectsToMap(this.neonSigns);
+        this.addToMap(this.character);
 
         this.ctx.restore();
 
@@ -70,16 +74,23 @@ class World {
 
     updateAllObjects() {
         this.character.updateState();
-        this.camera_x = -this.character.x + 60;
         this.enemies.forEach(enemy => enemy.updateState());
-
         this.flyingVehicles.background.forEach(vehicle => vehicle.updateState());
         this.flyingVehicles.midground.forEach(vehicle => vehicle.updateState());
-
         this.neonSigns.forEach(sign => sign.updateState());
+        this.updateCamera();
     }
 
-
+    updateCamera() {
+        this.camera_x = -this.character.x + 100;
+        if (this.camera_x > 0) {
+            this.camera_x = 0;
+        }
+        let max_camera_x = -(this.level.level_end_x - this.canvas.width);
+        if (this.camera_x < max_camera_x) {
+            this.camera_x = max_camera_x;
+        }
+    }
 
     addToMap(moveableObject) {
         moveableObject.draw(this.ctx);
