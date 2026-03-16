@@ -1,11 +1,11 @@
 const level1 = {
     level_end_x: 3400,
     enemies: [
-        new Spider(900, 130, 130, 0.2),
-        new Spider(1200, 90, 90, 0.5),
-        new Spider(1350, 100, 100, 0.8),
-        new Spider(1950, 150, 150, 0.4),
-        new Endboss(3000, 330, 330, 0.4)
+        new Spider(900, 130, 130, 1),
+        new Spider(1200, 100, 100, 0.8),
+        new Spider(1350, 100, 100, 0.4),
+        new Spider(1950, 120, 120, 0.9),
+        new Endboss(2900, 330, 330, 0.4)
     ],
     vehicles: {
         background: [
@@ -19,13 +19,13 @@ const level1 = {
         ]
     },
     neonSigns: [
-        new NeonSign('img/05_neon_signs/monitor_face.png', 10, 80, 120, 120, 4, 15),
-        new NeonSign('img/05_neon_signs/side-sign.png', 645, 25, 35, 140, 4, 15),
-        new NeonSign('img/05_neon_signs/green-sign.png', 1055, 60, 60, 140, 4, 15),
-        new NeonSign('img/05_neon_signs/coke.png', 1140, -10, 45, 110, 3, 15),
-        new NeonSign('img/05_neon_signs/scroll-sign.png', 1850, 10, 30, 140, 4, 15),
-        new NeonSign('img/05_neon_signs/monitor_face.png', 2255, 100, 120, 120, 4, 15),
-        new NeonSign('img/05_neon_signs/chinese-sign.png', 2435, 10, 60, 140, 4, 15),
+        new NeonSign('img/05_neon_signs/monitor_face.png', 10, 80, 120, 120, 4, 6),
+        new NeonSign('img/05_neon_signs/side-sign.png', 645, 25, 35, 140, 4, 7),
+        new NeonSign('img/05_neon_signs/green-sign.png', 1055, 60, 60, 140, 4, 8),
+        new NeonSign('img/05_neon_signs/coke.png', 1140, -10, 45, 110, 3, 10),
+        new NeonSign('img/05_neon_signs/scroll-sign.png', 1850, 10, 30, 140, 4, 9),
+        new NeonSign('img/05_neon_signs/monitor_face.png', 2255, 100, 120, 120, 4, 6),
+        new NeonSign('img/05_neon_signs/chinese-sign.png', 2435, 10, 60, 140, 4, 9),
     ],
     backgrounds: {
         back: [
