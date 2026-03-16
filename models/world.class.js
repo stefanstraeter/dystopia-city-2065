@@ -69,6 +69,8 @@ class World {
 
         this.ctx.restore();
 
+        this.addObjectsToMap(this.level.statusBars);
+
         requestAnimationFrame(() => this.draw());
     }
 
@@ -111,12 +113,11 @@ class World {
     }
 
     checkCollisions() {
-        if (this.character.isDead()) return;
-
-        this.level.enemies.forEach(enemy => {
+        this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy)) {
                 this.character.hit();
-                // Hier könnten wir später auch das UI updaten
+
+                this.level.statusBars[0].setPercentage(this.character.energy);
             }
         });
     }
