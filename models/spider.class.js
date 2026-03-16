@@ -13,7 +13,7 @@ class Spider extends MoveableObject {
         this.height = height;
         this.speed = speed;
         this.footOffset = -30;
-        this.offset = { top: 20, bottom: 30, left: 20, right: 20 };
+        this.offset = { top: 5, bottom: 30, left: 20, right: 20 };
         this.applyGravity();
         this.playAnimation('walk');
     }
