@@ -1,4 +1,4 @@
-class Endboss extends MoveableObject { // Mit d
+class Endboss extends MoveableObject {
 
     animations = {
         idle: { path: 'img/03_enemies/endboss/Idle.png', frames: 6 },
@@ -13,7 +13,7 @@ class Endboss extends MoveableObject { // Mit d
         this.offset.bottom = -20;
         this.isMirrored = true;
         this.applyGravity();
-        this.playAnimation('idle'); // Kleingeschrieben wie oben in animations!
+        this.playAnimation('idle');
     }
 
     updateState() {
