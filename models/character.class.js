@@ -17,6 +17,7 @@ class Character extends MoveableObject {
         this.speed = speed;
         this.footOffset = 0;
         this.offset = { top: 40, bottom: 80, left: 80, right: 80 };
+        this.energy = 100;
         this.applyGravity();
         this.playAnimation('idle');
     }
@@ -28,11 +29,17 @@ class Character extends MoveableObject {
     }
 
     handleMovement() {
+        if (this.isDead()) {
+            this.playAnimation('death');
+            return;
+        }
         this.updatePosition();
         this.updateAnimation();
     }
 
     updatePosition() {
+        if (!this.world || !this.world.keyboard) return;
+
         if (this.world.keyboard.KEY_RIGHT && this.x < (this.world.level.level_end_x - this.width)) {
             this.moveRight();
         }
@@ -47,14 +54,16 @@ class Character extends MoveableObject {
     }
 
     updateAnimation() {
-        if (this.isDead()) {
-            this.playAnimation('death');
-        } else if (this.isHurt()) {
+        if (!this.world || !this.world.keyboard) return;
+
+        if (this.isHurt()) {
             this.playAnimation('hurt');
         } else if (this.isAboveGround()) {
             this.playAnimation('jump');
         } else if (this.world.keyboard.KEY_RIGHT || this.world.keyboard.KEY_LEFT) {
             this.playAnimation('walk');
+        } else if (this.world.keyboard.KEY_UP) {
+            this.playAnimation('attack');
         } else {
             this.playAnimation('idle');
         }
