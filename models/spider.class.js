@@ -1,9 +1,9 @@
 class Spider extends MoveableObject {
 
     animations = {
-        idle: { path: 'img/03_enemies/spider/Idle.png', frames: 4 },
-        walk: { path: 'img/03_enemies/spider/Walk.png', frames: 10 },
-        attack: { path: 'img/03_enemies/spider/Attack.png', frames: 12 }
+        idle: { path: 'img/03_enemies/spider/Idle.png', frames: 4, speed: 6 },
+        walk: { path: 'img/03_enemies/spider/Walk.png', frames: 12, speed: 2 },
+        attack: { path: 'img/03_enemies/spider/Attack.png', frames: 12, speed: 6 }
     };
 
     constructor(x, width, height, speed) {
@@ -12,8 +12,8 @@ class Spider extends MoveableObject {
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.offset.bottom = -30;
-
+        this.footOffset = -30;
+        this.offset = { top: 20, bottom: 30, left: 20, right: 20 };
         this.applyGravity();
         this.playAnimation('walk');
     }
@@ -22,6 +22,7 @@ class Spider extends MoveableObject {
     updateState() {
         super.animate();
         this.moveLeft();
+        this.applyGravity();
     }
 }
 
