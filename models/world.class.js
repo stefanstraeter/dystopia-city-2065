@@ -25,6 +25,7 @@ class World {
         this.flyingVehicles = this.level.vehicles;
         this.backgroundLayers = this.level.backgrounds;
         this.neonSigns = this.level.neonSigns;
+        this.throwableObjects = [];
         this.setWorld();
         this.draw();
         this.run();
@@ -70,6 +71,7 @@ class World {
         this.addObjectsToMap(this.enemies);
         this.addObjectsToMap(this.neonSigns);
         this.addToMap(this.character);
+        this.addObjectsToMap(this.throwableObjects);
         this.ctx.restore();
 
         this.addObjectsToMap(this.level.UIElements);
@@ -85,6 +87,11 @@ class World {
         this.flyingVehicles.background.forEach(vehicle => vehicle.updateState());
         this.flyingVehicles.midground.forEach(vehicle => vehicle.updateState());
         this.neonSigns.forEach(sign => sign.updateState());
+        this.throwableObjects.forEach(obj => obj.updateState());
+        this.throwableObjects = this.throwableObjects.filter(obj => {
+            return obj.x > this.character.x - 900 && obj.x < this.character.x + 900;
+        });
+
         this.updateCamera();
     }
 
