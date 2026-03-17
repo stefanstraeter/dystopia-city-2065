@@ -1,9 +1,23 @@
 const level1 = {
     level_end_x: 3400,
     statusBars: [
-        new StatusBar('img/06_status_bar/health.png', 30, 20, 130, 22),
-        new StatusBar('img/06_status_bar/coin.png', 30, 45, 130, 22),
-        new StatusBar('img/06_status_bar/rocket.png', 30, 70, 130, 22)
+        new Health(),
+        new Collectable(),
+        new Rocket()
+    ],
+    statusIcons: [
+        new StatusIcon('img/07_status_icons/health.png', 25, 20, 35, 35),
+        new StatusIcon('img/07_status_icons/collectables.png', 25, 55, 35, 35),
+        new StatusIcon('img/07_status_icons/rocket.png', 25, 93, 40, 25),
+    ],
+    items: [
+        new PlasmaCore(650, 300),
+        new PlasmaCore(1250, 130),
+        new PowerCell(2555, 120),
+        new PlasmaCore(3300, 350),
+        new RocketAmmo(150, 50),
+        new RocketAmmo(950, 20),
+        new RocketAmmo(2350, 200)
     ],
     enemies: [
         new Spider(900, 130, 130, 1),
