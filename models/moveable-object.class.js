@@ -22,13 +22,13 @@ class MoveableObject extends DrawableObject {
 
     animate() {
         this.frameCounter++;
-
         if (this.frameCounter > this.frameSpeed) {
             this.frameCounter = 0;
+            let isDeathAnim = this.currentAnimation === 'death';
+            let isAtLastFrame = this.currentFrame >= this.frameCount - 1;
 
-            let isDeathEnd = this.currentAnimation === 'death' && this.currentFrame >= this.frameCount - 1;
-
-            if (isDeathEnd) {
+            if (isDeathAnim && isAtLastFrame) {
+                this.currentFrame = this.frameCount - 1;
             } else {
                 this.currentFrame = (this.currentFrame + 1) % this.frameCount;
             }
@@ -103,15 +103,14 @@ class MoveableObject extends DrawableObject {
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
     }
 
-    hit() {
+    hit(damageReceived) {
         if (this.isHurt()) return;
 
-        this.energy -= this.damage;
-        if (this.energy < 0) {
-            this.energy = 0;
-        } else {
-            this.lastHit = new Date().getTime();
-        }
+        let damage = damageReceived !== undefined ? damageReceived : this.damage;
+        this.energy -= damage;
+        this.lastHit = new Date().getTime();
+
+        if (this.energy < 0) this.energy = 0;
     }
 
     isHurt() {
