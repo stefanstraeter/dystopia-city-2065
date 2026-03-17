@@ -12,18 +12,18 @@ class StatusIcon extends DrawableObject {
 
 class HealthIcon extends StatusIcon {
     constructor() {
-        super('img/07_status_icons/health.png', 25, 20, 35, 35);
+        super('assets/img/07_status_icons/health.png', 25, 20, 35, 35);
     }
 }
 
 class CollectableIcon extends StatusIcon {
     constructor() {
-        super('img/07_status_icons/collectables.png', 25, 55, 35, 35);
+        super('assets/img/07_status_icons/collectables.png', 25, 55, 35, 35);
     }
 }
 
 class RocketIcon extends StatusIcon {
     constructor() {
-        super('img/07_status_icons/rocket.png', 25, 95, 40, 20);
+        super('assets/img/07_status_icons/rocket.png', 25, 95, 40, 20);
     }
 }
