@@ -1,25 +1,18 @@
-class Plasma extends MoveableObject {
+class Plasma extends ThrowableObject {
 
     constructor(x, y, isMirrored) {
-        super();
-        this.loadImage('img/02_character_bud/Plasma.png');
-        this.x = x;
-        this.y = y;
-        this.width = 100;
-        this.height = 60;
-        this.isMirrored = isMirrored;
+        super(x, y, isMirrored);
+        this.loadImage('assets/img/02_character_bud/Plasma.png');
+        this.width = 120;
+        this.height = 40;
         this.speed = 15;
         this.frameCount = 4;
         this.frameSpeed = 5;
+        this.damage = 20;
     }
 
     updateState() {
         this.animate();
-
-        if (this.isMirrored) {
-            this.x -= this.speed;
-        } else {
-            this.x += this.speed;
-        }
+        this.move();
     }
-} 
+}
