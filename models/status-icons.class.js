@@ -24,6 +24,6 @@ class CollectableIcon extends StatusIcon {
 
 class RocketIcon extends StatusIcon {
     constructor() {
-        super('img/07_status_icons/rocket.png', 25, 93, 40, 25);
+        super('img/07_status_icons/rocket.png', 25, 95, 40, 20);
     }
 }
