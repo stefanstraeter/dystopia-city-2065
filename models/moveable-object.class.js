@@ -7,15 +7,13 @@ class MoveableObject extends DrawableObject {
     lastHit = 0;
     animations = {};
     currentAnimation = null;
-    frameCounter = 0;
-    frameSpeed = 11;
     isMirrored = false;
     offset = { top: 0, bottom: 0, left: 0, right: 0 };
     footOffset = 0;
     damage = 10;
 
     draw(ctx) {
-        if (!this.img || !this.img.complete) return;
+        if (!this.visible || !this.img || !this.img.complete) return;
         this.flipImage(ctx);
         this.drawImage(ctx);
         this.drawHitbox(ctx);
