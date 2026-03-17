@@ -1,6 +1,6 @@
 const level1 = {
     level_end_x: 3400,
-    UIElement: [
+    UIElements: [
         new Health(),
         new Collectable(),
         new Rocket()
@@ -10,7 +10,7 @@ const level1 = {
         new CollectableIcon(),
         new RocketIcon()
     ],
-    items: [
+    collectableItems: [
         new PlasmaCore(650, 300),
         new PlasmaCore(1250, 130),
         new PowerCell(2555, 120),
