@@ -21,22 +21,22 @@ class UIElement extends DrawableObject {
     }
 }
 
-class Health extends UIElement {
+class HealthBar extends UIElement {
     constructor() {
-        super('img/06_status_bar/health.png', 30, 30, 190, 30, 18);
+        super('assets/img/06_status_bar/health.png', 30, 30, 190, 30, 18);
     }
 }
 
-class Collectable extends UIElement {
+class CollectableBar extends UIElement {
     constructor() {
-        super('img/06_status_bar/collectables.png', 30, 60, 190, 30, 18, 0);
+        super('assets/img/06_status_bar/collectables.png', 30, 60, 190, 30, 18, 0);
         this.setPercentage(0);
     }
 }
 
-class Rocket extends UIElement {
+class RocketBar extends UIElement {
     constructor() {
-        super('img/06_status_bar/rockets.png', 30, 90, 190, 30, 18, 0);
+        super('assets/img/06_status_bar/rockets.png', 30, 90, 190, 30, 18, 0);
         this.setPercentage(0);
     }
 }
