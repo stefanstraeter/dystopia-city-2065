@@ -66,13 +66,13 @@ class World {
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.flyingVehicles.midground);
         this.addObjectsToMap(this.backgroundLayers.foreground);
-        this.addObjectsToMap(this.level.items);
+        this.addObjectsToMap(this.level.collectableItems);
         this.addObjectsToMap(this.enemies);
         this.addObjectsToMap(this.neonSigns);
         this.addToMap(this.character);
         this.ctx.restore();
 
-        this.addObjectsToMap(this.level.UIElement);
+        this.addObjectsToMap(this.level.UIElements);
         this.addObjectsToMap(this.level.statusIcons);
 
         requestAnimationFrame(() => this.draw());
@@ -81,7 +81,7 @@ class World {
     updateAllObjects() {
         this.character.updateState();
         this.enemies.forEach(enemy => enemy.updateState());
-        this.level.items.forEach(item => item.updateState());
+        this.level.collectableItems.forEach(item => item.updateState());
         this.flyingVehicles.background.forEach(vehicle => vehicle.updateState());
         this.flyingVehicles.midground.forEach(vehicle => vehicle.updateState());
         this.neonSigns.forEach(sign => sign.updateState());
@@ -122,11 +122,11 @@ class World {
             if (this.character.isColliding(enemy)) {
                 this.character.hit();
 
-                this.level.UIElement[0].setPercentage(this.character.energy);
+                this.level.UIElements[0].setPercentage(this.character.energy);
             }
         });
 
-        this.level.items.forEach((item, index) => {
+        this.level.collectableItems.forEach((item, index) => {
             if (this.character.isColliding(item)) {
                 this.handleItemPickup(item, index);
             }
@@ -139,13 +139,13 @@ class World {
             if (this.collectedItems > 100) {
                 this.collectedItems = 100;
             }
-            this.level.UIElement[1].setPercentage(this.collectedItems);
+            this.level.UIElements[1].setPercentage(this.collectedItems);
         }
         if (item instanceof RocketAmmo) {
             this.collectedRockets += item.value;
-            this.level.UIElement[2].setPercentage(this.collectedRockets);
+            this.level.UIElements[2].setPercentage(this.collectedRockets);
         }
-        this.level.items.splice(index, 1);
+        this.level.collectableItems.splice(index, 1);
     }
 
 }
