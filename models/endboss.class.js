@@ -1,7 +1,7 @@
 class Endboss extends MoveableObject {
 
     animations = {
-        idle: { path: 'img/03_enemies/endboss/Idle.png', frames: 6 },
+        idle: { path: 'assets/img/03_enemies/endboss/Idle.png', frames: 6 },
     };
 
     startX;
