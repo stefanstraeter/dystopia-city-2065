@@ -13,6 +13,7 @@ function handleKeyboard(keyCode, isPressed) {
     if (keyCode == 38) keyboard.KEY_UP = isPressed;
     if (keyCode == 39) keyboard.KEY_RIGHT = isPressed;
     if (keyCode == 40) keyboard.KEY_DOWN = isPressed;
+    if (keyCode == 88) keyboard.KEY_X = isPressed;
 }
 
 document.addEventListener('keydown', (event) => {
