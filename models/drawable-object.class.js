@@ -10,6 +10,8 @@ class DrawableObject {
     frameCount = 1;
     frameCounter = 0;
     frameSpeed = 10;
+    visible = true;
+    world;
 
     loadImage(path) {
         this.img = new Image();
@@ -25,7 +27,7 @@ class DrawableObject {
     }
 
     draw(ctx) {
-        if (!this.img || !this.img.complete) return;
+        if (!this.visible || !this.img || !this.img.complete) return;
         this.drawImage(ctx);
     }
 
@@ -44,7 +46,7 @@ class DrawableObject {
     }
 
     drawHitbox(ctx) {
-        if (this instanceof Character || this instanceof Spider || this instanceof Endboss) {
+        if (this instanceof Character || this instanceof Spider || this instanceof Endboss || this instanceof CollectableObject) {
             ctx.beginPath();
             ctx.lineWidth = "2";
             ctx.strokeStyle = "red";
