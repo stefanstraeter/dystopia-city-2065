@@ -12,7 +12,6 @@ class World {
     backgroundLayers;
     neonSigns;
 
-
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -48,30 +47,13 @@ class World {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.save();
-        this.ctx.translate(this.camera_x * 0.2, 0);
-        this.addObjectsToMap(this.backgroundLayers.back);
-        this.ctx.restore();
-
-        this.ctx.save();
-        this.ctx.translate(this.camera_x * 0.3, 0);
-        this.addObjectsToMap(this.flyingVehicles.background);
-        this.ctx.restore();
-
-        this.ctx.save();
-        this.ctx.translate(this.camera_x * 0.6, 0);
-        this.addObjectsToMap(this.backgroundLayers.middle);
-        this.ctx.restore();
+        this.drawParallaxLayer(0.2, this.backgroundLayers.back);
+        this.drawParallaxLayer(0.3, this.flyingVehicles.background);
+        this.drawParallaxLayer(0.6, this.backgroundLayers.middle);
 
         this.ctx.save();
         this.ctx.translate(this.camera_x, 0);
-        this.addObjectsToMap(this.flyingVehicles.midground);
-        this.addObjectsToMap(this.backgroundLayers.foreground);
-        this.addObjectsToMap(this.level.collectableItems);
-        this.addObjectsToMap(this.enemies);
-        this.addObjectsToMap(this.neonSigns);
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.throwableObjects);
+        this.drawGameObjects();
         this.ctx.restore();
 
         this.addObjectsToMap(this.level.UIElements);
@@ -80,19 +62,60 @@ class World {
         requestAnimationFrame(() => this.draw());
     }
 
-    updateAllObjects() {
-        this.character.updateState();
-        this.enemies.forEach(enemy => enemy.updateState());
-        this.level.collectableItems.forEach(item => item.updateState());
-        this.flyingVehicles.background.forEach(vehicle => vehicle.updateState());
-        this.flyingVehicles.midground.forEach(vehicle => vehicle.updateState());
-        this.neonSigns.forEach(sign => sign.updateState());
-        this.throwableObjects.forEach(obj => obj.updateState());
-        this.throwableObjects = this.throwableObjects.filter(obj => {
-            return obj.x > this.character.x - 900 && obj.x < this.character.x + 900;
-        });
 
+    drawParallaxLayer(speed, objects) {
+        this.ctx.save();
+        this.ctx.translate(this.camera_x * speed, 0);
+        this.addObjectsToMap(objects);
+        this.ctx.restore();
+    }
+
+
+    drawGameObjects() {
+        this.addObjectsToMap(this.flyingVehicles.midground);
+        this.addObjectsToMap(this.backgroundLayers.foreground);
+        this.addObjectsToMap(this.level.collectableItems);
+        this.addObjectsToMap(this.neonSigns);
+        this.addObjectsToMap(this.throwableObjects);
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.enemies);
+    }
+
+    updateAllObjects() {
+        this.updateGameElements();
+        this.filterProjectiles();
+        this.filterEnemies();
         this.updateCamera();
+    }
+
+    updateGameElements() {
+        const allObjects = [
+            this.character,
+            ...this.level.enemies,
+            ...this.level.collectableItems,
+            ...this.flyingVehicles.background,
+            ...this.flyingVehicles.midground,
+            ...this.neonSigns,
+            ...this.throwableObjects
+        ];
+
+        allObjects.forEach(obj => {
+            if (obj && typeof obj.updateState === 'function') {
+                obj.updateState();
+            }
+        });
+    }
+
+    filterProjectiles() {
+        this.throwableObjects = this.throwableObjects.filter(obj => {
+            let isInsideX = obj.x > this.character.x - 1000 && obj.x < this.character.x + 1000;
+            return isInsideX && !obj.hasHit;
+        });
+    }
+
+    filterEnemies() {
+        this.level.enemies = this.level.enemies.filter(enemy => !enemy.isFinished);
+        this.enemies = this.level.enemies;
     }
 
     updateCamera() {
@@ -125,14 +148,39 @@ class World {
     }
 
     checkCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit();
+        this.checkEnemyCollisions();
+        this.checkProjectileCollisions();
+        this.checkItemCollisions();
+    }
 
+
+    checkEnemyCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (!enemy.isDead() && this.character.isColliding(enemy)) {
+                this.character.hit();
                 this.level.UIElements[0].setPercentage(this.character.energy);
             }
         });
+    }
 
+    checkProjectileCollisions() {
+        for (let i = this.throwableObjects.length - 1; i >= 0; i--) {
+            let projectile = this.throwableObjects[i];
+
+            if (projectile.hasHit) continue;
+
+            this.level.enemies.forEach((enemy) => {
+                if (!projectile.hasHit && !enemy.isDead() && projectile.isColliding(enemy)) {
+                    projectile.hasHit = true;
+                    enemy.hit(projectile.damage);
+
+                    this.throwableObjects.splice(i, 1);
+                }
+            });
+        }
+    }
+
+    checkItemCollisions() {
         this.level.collectableItems.forEach((item, index) => {
             if (this.character.isColliding(item)) {
                 this.handleItemPickup(item, index);
