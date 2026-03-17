@@ -3,18 +3,21 @@ class Character extends MoveableObject {
     animations = {
         idle: { path: 'img/02_character_bud/Idle.png', frames: 5, speed: 4 },
         walk: { path: 'img/02_character_bud/Walk.png', frames: 4, speed: 3 },
-        attack: { path: 'img/02_character_bud/Attack_gun.png', frames: 7, speed: 6 },
+        attackGun: { path: 'img/02_character_bud/Attack_gun.png', frames: 7, speed: 6 },
+        attackBomb: { path: 'img/02_character_bud/Attack_bomb.png', frames: 6, speed: 4 },
         jump: { path: 'img/02_character_bud/Jump.png', frames: 7, speed: 3 },
         hurt: { path: 'img/02_character_bud/Hurt.png', frames: 2, speed: 4 },
         death: { path: 'img/02_character_bud/Death.png', frames: 7, speed: 2 }
     };
+
+    lastShootTime = 0;
 
     constructor(x, width, height, speed) {
         super();
         this.x = x;
         this.width = width;
         this.height = height;
-        this.speed = speed;
+        this.speed = speed; 6
         this.footOffset = 0;
         this.offset = { top: 40, bottom: 80, left: 80, right: 80 };
         this.energy = 100;
@@ -48,24 +51,50 @@ class Character extends MoveableObject {
             this.moveLeft();
         }
 
-        if (this.world.keyboard.KEY_SPACE && !this.isAboveGround()) {
+        if (this.world.keyboard.KEY_UP && !this.isAboveGround()) {
             this.jump();
+        }
+
+        if (this.world.keyboard.KEY_SPACE) {
+            this.shoot();
         }
     }
 
     updateAnimation() {
         if (!this.world || !this.world.keyboard) return;
 
-        if (this.isHurt()) {
+        if (this.isDead()) {
+            this.playAnimation('death');
+        } else if (this.isHurt()) {
             this.playAnimation('hurt');
+        } else if (this.world.keyboard.KEY_SPACE) {
+            this.playAnimation('attackGun');
+        } else if (this.world.keyboard.KEY_X) {
+            this.playAnimation('attackBomb');
         } else if (this.isAboveGround()) {
             this.playAnimation('jump');
         } else if (this.world.keyboard.KEY_RIGHT || this.world.keyboard.KEY_LEFT) {
             this.playAnimation('walk');
-        } else if (this.world.keyboard.KEY_UP) {
-            this.playAnimation('attack');
         } else {
             this.playAnimation('idle');
+        }
+    }
+
+    shoot() {
+        let currentTime = new Date().getTime();
+        if (currentTime - this.lastShootTime > 400) {
+            this.playAnimation('attackGun');
+            let plasmaX;
+            let plasmaY = this.y + 70;
+
+            if (this.isMirrored) {
+                plasmaX = this.x + 40;
+            } else {
+                plasmaX = this.x + 180;
+            }
+            let newPlasma = new Plasma(plasmaX, plasmaY, this.isMirrored);
+            this.world.throwableObjects.push(newPlasma);
+            this.lastShootTime = currentTime;
         }
     }
 
