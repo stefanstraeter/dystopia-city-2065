@@ -7,7 +7,7 @@ class Endboss extends MoveableObject {
     startX;
     distance = 150;
     damage = 25;
-    walkingRight = false;
+    walkingRight = true;
 
     constructor(x, width, height, speed) {
         super(x, width, height, speed);
