@@ -1,14 +1,14 @@
 const level1 = {
     level_end_x: 3400,
-    statusBars: [
+    UIElement: [
         new Health(),
         new Collectable(),
         new Rocket()
     ],
     statusIcons: [
-        new StatusIcon('img/07_status_icons/health.png', 25, 20, 35, 35),
-        new StatusIcon('img/07_status_icons/collectables.png', 25, 55, 35, 35),
-        new StatusIcon('img/07_status_icons/rocket.png', 25, 93, 40, 25),
+        new HealthIcon(),
+        new CollectableIcon(),
+        new RocketIcon()
     ],
     items: [
         new PlasmaCore(650, 300),
