@@ -30,7 +30,8 @@ const level1 = {
         background: [
             new Drone(400, 40, 2.5, -1, null, 0.3),
             new Police(1200, 60, 2.0, -1, null, 0.3),
-            new Drone(2000, 30, 3.0, -1, null, 0.3)
+            new Drone(2000, 30, 3.0, -1, null, 0.3),
+            new Truck(900, 20, 3.0, -1, null, 0.3)
         ],
         midground: [
             new Police(800, 180, 1.2, -1, null, 1),
