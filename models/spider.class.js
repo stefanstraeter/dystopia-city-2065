@@ -8,7 +8,8 @@ class Spider extends MoveableObject {
         idle: { path: 'assets/img/03_enemies/spider/Idle.png', frames: 4, speed: 6 },
         walk: { path: 'assets/img/03_enemies/spider/Walk.png', frames: 12, speed: 2 },
         attack: { path: 'assets/img/03_enemies/spider/Attack.png', frames: 12, speed: 6 },
-        death: { path: 'assets/img/03_enemies/spider/Death.png', frames: 9, speed: 6 }
+        death: { path: 'assets/img/03_enemies/spider/Death.png', frames: 9, speed: 6 },
+        hurt: { path: 'assets/img/09_explosions/plasma_explosion.png', frames: 6, speed: 2 }
     };
 
     constructor(x, width, height, speed) {
@@ -18,7 +19,7 @@ class Spider extends MoveableObject {
         this.height = height;
         this.speed = speed;
         this.footOffset = -50;
-        this.offset = { top: 5, bottom: 30, left: 40, right: 40 };
+        this.offset = { top: 5, bottom: 30, left: 50, right: 50 };
         this.energy = 50;
         this.applyGravity();
         this.playAnimation('walk');
@@ -63,7 +64,6 @@ class Spider extends MoveableObject {
         } else {
             this.speed = this.NORMAL_SPEED;
         }
-
         this.moveLeft();
         this.playAnimation('walk');
     }
