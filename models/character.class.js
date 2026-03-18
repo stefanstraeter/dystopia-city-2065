@@ -17,7 +17,7 @@ class Character extends MoveableObject {
         this.x = x;
         this.width = width;
         this.height = height;
-        this.speed = speed; 6
+        this.speed = speed;
         this.footOffset = 0;
         this.offset = { top: 40, bottom: 80, left: 100, right: 100 };
         this.energy = 100;
