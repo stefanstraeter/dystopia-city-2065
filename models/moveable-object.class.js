@@ -103,20 +103,42 @@ class MoveableObject extends DrawableObject {
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
     }
 
-    hit(damageReceived) {
-        if (this.isHurt()) return;
-
-        let damage = damageReceived !== undefined ? damageReceived : this.damage;
-        this.energy -= damage;
-        this.lastHit = new Date().getTime();
-
+    hit(damageReceived, damageType = 'default') {
+        if (this.isInvulnerable(damageType)) return;
+        this.energy -= damageReceived ?? this.damage;
+        let now = new Date().getTime();
+        this.setLastHit(damageType);
+        this.lastHit = now;
         if (this.energy < 0) this.energy = 0;
+    }
+
+    setLastHit(damageType) {
+        if (!this.lastHits) this.lastHits = {};
+        this.lastHits[damageType] = new Date().getTime();
+    }
+
+    isInvulnerable(damageType) {
+        if (!this.lastHits) return false;
+        let lastHitTime = this.lastHits[damageType];
+        if (!lastHitTime) return false;
+        let timePassed = (new Date().getTime() - lastHitTime) / 1000;
+        if (damageType === 'melee') {
+            return timePassed < 0.8;
+        }
+        if (damageType === 'plasma') {
+            return timePassed < 0.05;
+        }
+        if (damageType === 'rocket') {
+            return timePassed < 0.2; // optional
+        }
+        return false;
     }
 
     isHurt() {
         let timepassed = (new Date().getTime() - this.lastHit) / 1000;
-        return timepassed < 0.8;
+        return timepassed < 0.2;
     }
+
 
     isDead() {
         return this.energy == 0;
