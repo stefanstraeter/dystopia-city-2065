@@ -27,21 +27,23 @@ class Character extends MoveableObject {
 
     updateState() {
         this.applyGravity();
+        if (this.isDead()) {
+            this.playAnimation('death');
+            super.animate();
+            return;
+        }
         super.animate();
         this.handleMovement();
     }
 
     handleMovement() {
-        if (this.isDead()) {
-            this.playAnimation('death');
-            return;
-        }
+        if (this.isDead()) return;
         this.updatePosition();
         this.updateAnimation();
     }
 
     updatePosition() {
-        if (!this.world || !this.world.keyboard) return;
+        if (this.isDead() || !this.world || !this.world.keyboard) return;
 
         if (this.world.keyboard.KEY_RIGHT && this.x < (this.world.level.level_end_x - this.width)) {
             this.moveRight();
@@ -55,7 +57,6 @@ class Character extends MoveableObject {
         if (this.world.keyboard.KEY_SPACE) {
             this.shoot();
         }
-
     }
 
     updateAnimation() {
@@ -79,6 +80,8 @@ class Character extends MoveableObject {
     }
 
     shoot() {
+        if (this.isDead()) return;
+
         let currentTime = new Date().getTime();
         if (currentTime - this.lastShootTime > 400) {
             this.playAnimation('attackGun');
