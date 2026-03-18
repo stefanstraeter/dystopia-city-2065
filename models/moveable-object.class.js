@@ -5,18 +5,19 @@ class MoveableObject extends DrawableObject {
     acceleration = 1;
     energy = 100;
     lastHit = 0;
+    lastHits = {};
     animations = {};
     currentAnimation = null;
     isMirrored = false;
     offset = { top: 0, bottom: 0, left: 0, right: 0 };
     footOffset = 0;
     damage = 10;
+    isAnimatingOnce = false;
 
     draw(ctx) {
         if (!this.visible || !this.img || !this.img.complete) return;
         this.flipImage(ctx);
         this.drawImage(ctx);
-        this.drawHitbox(ctx);
         this.flipImageBack(ctx);
     }
 
@@ -24,11 +25,16 @@ class MoveableObject extends DrawableObject {
         this.frameCounter++;
         if (this.frameCounter > this.frameSpeed) {
             this.frameCounter = 0;
+
             let isDeathAnim = this.currentAnimation === 'death';
+            let isOneTimeAnim = this.isAnimatingOnce;
             let isAtLastFrame = this.currentFrame >= this.frameCount - 1;
 
             if (isDeathAnim && isAtLastFrame) {
                 this.currentFrame = this.frameCount - 1;
+            } else if (isOneTimeAnim && isAtLastFrame) {
+                this.isAnimatingOnce = false;
+                this.currentFrame = 0;
             } else {
                 this.currentFrame = (this.currentFrame + 1) % this.frameCount;
             }
@@ -36,15 +42,22 @@ class MoveableObject extends DrawableObject {
     }
 
     playAnimation(name) {
+        if (this.currentAnimation === 'death') return;
+        if (this.isAnimatingOnce && name !== 'death') return;
         if (this.currentAnimation === name) return;
 
         let animation = this.animations[name];
         if (!animation) return;
 
+        const oneTimeAnimations = ['hurt', 'hit', 'attack', 'attackGun', 'attackRocket'];
+        if (oneTimeAnimations.includes(name)) {
+            this.isAnimatingOnce = true;
+        }
+
         this.currentAnimation = name;
         this.loadImage(animation.path);
         this.frameCount = animation.frames;
-        this.frameSpeed = animation.speed ? animation.speed : 10;
+        this.frameSpeed = animation.speed || 10;
         this.currentFrame = 0;
         this.frameCounter = 0;
     }
@@ -67,16 +80,19 @@ class MoveableObject extends DrawableObject {
     }
 
     moveLeft() {
+        if (this.isDead()) return;
         this.x -= this.speed;
         this.isMirrored = true;
     }
 
     moveRight() {
+        if (this.isDead()) return;
         this.x += this.speed;
         this.isMirrored = false;
     }
 
     jump() {
+        if (this.isDead()) return;
         this.speedY = 21;
     }
 
@@ -105,43 +121,52 @@ class MoveableObject extends DrawableObject {
 
     hit(damageReceived, damageType = 'default') {
         if (this.isInvulnerable(damageType)) return;
+
         this.energy -= damageReceived ?? this.damage;
-        let now = new Date().getTime();
         this.setLastHit(damageType);
-        this.lastHit = now;
-        if (this.energy < 0) this.energy = 0;
+        this.lastHit = Date.now();
+
+        if (this.energy > 0) {
+            this.playAnimation('hurt');
+            this.retroHitEffect();
+        } else {
+            this.energy = 0;
+            this.playAnimation('death');
+        }
+    }
+
+    retroHitEffect() {
+        this.visible = false;
+        setTimeout(() => {
+            this.visible = true;
+        }, 50);
     }
 
     setLastHit(damageType) {
-        if (!this.lastHits) this.lastHits = {};
-        this.lastHits[damageType] = new Date().getTime();
+        this.lastHits[damageType] = Date.now();
     }
 
     isInvulnerable(damageType) {
-        if (!this.lastHits) return false;
         let lastHitTime = this.lastHits[damageType];
         if (!lastHitTime) return false;
-        let timePassed = (new Date().getTime() - lastHitTime) / 1000;
-        if (damageType === 'melee') {
-            return timePassed < 0.8;
-        }
-        if (damageType === 'plasma') {
-            return timePassed < 0.05;
-        }
-        if (damageType === 'rocket') {
-            return timePassed < 0.2; // optional
-        }
-        return false;
+
+        let timePassed = (Date.now() - lastHitTime) / 1000;
+        const thresholds = {
+            'melee': 0.8,
+            'plasma': 0.05,
+            'bomb': 1.0,
+            'default': 0.2
+        };
+        return timePassed < (thresholds[damageType] || thresholds.default);
     }
 
     isHurt() {
-        let timepassed = (new Date().getTime() - this.lastHit) / 1000;
+        let timepassed = (Date.now() - this.lastHit) / 1000;
         return timepassed < 0.2;
     }
 
-
     isDead() {
-        return this.energy == 0;
+        return this.energy <= 0;
     }
 }
 
