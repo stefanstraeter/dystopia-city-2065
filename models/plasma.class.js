@@ -1,5 +1,8 @@
 class Plasma extends ThrowableObject {
 
+    damage = 10;
+    damageType = 'plasma';
+
     constructor(x, y, isMirrored) {
         super(x, y, isMirrored);
         this.loadImage('assets/img/02_character_bud/Plasma.png');
@@ -8,7 +11,7 @@ class Plasma extends ThrowableObject {
         this.speed = 15;
         this.frameCount = 4;
         this.frameSpeed = 5;
-        this.damage = 20;
+        this.damage = 50;
     }
 
     updateState() {
