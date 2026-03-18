@@ -9,6 +9,9 @@ class CollectableObject extends MoveableObject {
         this.height = height;
         this.frameCount = frames;
         this.frameSpeed = speed;
+        this.currentFrame = 0;
+        this.frameCounter = 0;
+
         this.offset = { top: 5, bottom: 5, left: 5, right: 5 };
     }
 

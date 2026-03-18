@@ -113,6 +113,7 @@ class World {
         this.neonSigns.forEach(sign => sign.updateState());
         this.flyingVehicles.background.forEach(vehicle => vehicle.updateState());
         this.flyingVehicles.midground.forEach(vehicle => vehicle.updateState());
+        this.level.collectableItems.forEach(item => item.updateState());
     }
 
     checkCollisions() {
