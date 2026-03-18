@@ -19,7 +19,6 @@ class CollectableObject extends MoveableObject {
     }
 }
 
-
 class PlasmaCore extends CollectableObject {
     value = 25;
     constructor(x, y) {
