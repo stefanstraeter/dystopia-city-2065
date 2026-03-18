@@ -157,7 +157,7 @@ class World {
     checkEnemyCollisions() {
         this.level.enemies.forEach((enemy) => {
             if (!enemy.isDead() && this.character.isColliding(enemy)) {
-                this.character.hit();
+                this.character.hit(10, 'melee');
                 this.level.UIElements[0].setPercentage(this.character.energy);
             }
         });
@@ -166,14 +166,11 @@ class World {
     checkProjectileCollisions() {
         for (let i = this.throwableObjects.length - 1; i >= 0; i--) {
             let projectile = this.throwableObjects[i];
-
             if (projectile.hasHit) continue;
-
             this.level.enemies.forEach((enemy) => {
                 if (!projectile.hasHit && !enemy.isDead() && projectile.isColliding(enemy)) {
                     projectile.hasHit = true;
-                    enemy.hit(projectile.damage);
-
+                    enemy.hit(projectile.damage, projectile.damageType);
                     this.throwableObjects.splice(i, 1);
                 }
             });
