@@ -4,8 +4,8 @@ body {
   align-items: center;
   justify-content: center;
   height: 100dvh;
-  font-family: "Science Gothic", sans-serif;
-  background-image: url(assets/img/background.jpg);
+  font-family: "Cyberway Riders";
+  background-image: url(../assets/img/background.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -13,8 +13,8 @@ body {
 }
 
 .game-title {
-  font-size: clamp(2rem, 8vw, 3rem);
-  color: #e3dbc9;
+  font-size: clamp(2rem, 8vw, 6rem);
+  color: #b72299;
   font-weight: 900;
   text-align: center;
   line-height: 1.1;
