@@ -24,12 +24,14 @@ class World {
 
         this.healthBar = this.level.UIElements[0];
         this.plasmaBar = this.level.UIElements[1];
-        this.rocketBar = this.level.UIElements[2];
-
-        this.collectedItems = 0;
-        this.collectedRockets = 0;
+        this.ammoBar = this.level.UIElements[2];
 
         this.character = new Character(100, 250, 250, 5);
+        this.character.world = this;
+
+        this.ammoBar.setPercentage(this.character.ammo);
+        this.plasmaBar.setPercentage(this.character.plasma);
+
         this.enemies = this.level.enemies;
         this.flyingVehicles = this.level.vehicles;
         this.backgroundLayers = this.level.backgrounds;
@@ -212,9 +214,14 @@ class World {
 
     handleItemPickup(item, index) {
         if (item instanceof PlasmaCore || item instanceof PowerCell) {
-            this.collectedItems = Math.min(100, this.collectedItems + item.value);
-            this.plasmaBar.setPercentage(this.collectedItems);
+            this.character.plasma = Math.min(100, this.character.plasma + 40);
+            this.plasmaBar.setPercentage(this.character.plasma);
         }
+        if (item instanceof Mediapack) {
+            this.character.energy = Math.min(100, this.character.energy + 40);
+            this.healthBar.setPercentage(this.character.energy);
+        }
+
         this.level.collectableItems.splice(index, 1);
     }
 
