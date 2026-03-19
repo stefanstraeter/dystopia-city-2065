@@ -33,7 +33,7 @@ class PlasmaBar extends UIElement {
     }
 }
 
-class GunBar extends UIElement {
+class AmmoBar extends UIElement {
     constructor() {
         super('assets/img/06_status_bar/gun_status.png', 30, 90, 190, 30, 18, 0);
     }
@@ -58,6 +58,6 @@ class PlasmaIcon extends StatusIcon {
     constructor() { super('assets/img/06_status_bar/plasma_icon.png', 22, 57, 40, 40); }
 }
 
-class GunIcon extends StatusIcon {
+class AmmoIcon extends StatusIcon {
     constructor() { super('assets/img/06_status_bar/gun_icon.png', 12, 97, 50, 25); }
 }
