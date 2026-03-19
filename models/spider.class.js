@@ -23,7 +23,7 @@ class Spider extends MoveableObject {
         this.height = height;
         this.speed = speed;
         this.footOffset = -50;
-        this.offset = { top: 5, bottom: 30, left: 50, right: 50 };
+        this.offset = { top: 5, bottom: 30, left: 20, right: 20 };
         this.energy = 50;
         this.applyGravity();
         this.playAnimation('walk');
@@ -62,7 +62,7 @@ class Spider extends MoveableObject {
 
         if (this.isColliding(this.world.character)) {
             this.playAnimation('attack');
-        } else if (distance > 10) {
+        } else if (distance > 2) {
             this.pursueCharacter(diff, distance);
         } else {
             this.playAnimation('idle');
