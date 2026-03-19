@@ -1,5 +1,4 @@
 class Character extends MoveableObject {
-
     animations = {
         idle: { path: 'assets/img/02_character_bud/Idle.png', frames: 5, speed: 4 },
         walk: { path: 'assets/img/02_character_bud/Walk.png', frames: 4, speed: 3 },
@@ -10,8 +9,8 @@ class Character extends MoveableObject {
     };
 
     lastShootTime = 0;
-    ammo = 100; // Das aktuelle Magazin
-    plasma = 0; // Der Reserve-Vorrat (wird durch Items gefüllt)
+    ammo = 100;
+    plasma = 0;
 
     constructor(x, width, height, speed) {
         super();
@@ -19,10 +18,8 @@ class Character extends MoveableObject {
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.footOffset = 0;
+        this.y = 240;
         this.offset = { top: 40, bottom: 80, left: 100, right: 100 };
-        this.energy = 100;
-        this.applyGravity();
         this.playAnimation('idle');
     }
 
@@ -30,45 +27,28 @@ class Character extends MoveableObject {
         this.applyGravity();
         if (this.isDead()) {
             this.playAnimation('death');
-            super.animate();
-            return;
+        } else {
+            this.handleMovement();
+            this.rechargeAmmoFromPlasma();
         }
-        super.animate();
-        this.rechargeAmmoFromPlasma();
-        this.handleMovement();
+        this.animate();
     }
 
     handleMovement() {
-        if (this.isDead()) return;
-        this.updatePosition();
+        if (!this.world || !this.world.keyboard || this.isDead()) return;
+
+        if (this.world.keyboard.KEY_RIGHT && this.x < (this.world.level.level_end_x - this.width)) this.moveRight();
+        if (this.world.keyboard.KEY_LEFT && this.x > 0) this.moveLeft();
+        if (this.world.keyboard.KEY_UP && !this.isAboveGround()) this.jump();
+        if (this.world.keyboard.KEY_SPACE) this.shoot();
+
         this.updateAnimation();
     }
 
-    updatePosition() {
-        if (this.isDead() || !this.world || !this.world.keyboard) return;
-
-        if (this.world.keyboard.KEY_RIGHT && this.x < (this.world.level.level_end_x - this.width)) {
-            this.moveRight();
-        }
-        if (this.world.keyboard.KEY_LEFT && this.x > 0) {
-            this.moveLeft();
-        }
-        if (this.world.keyboard.KEY_UP && !this.isAboveGround()) {
-            this.jump();
-        }
-        if (this.world.keyboard.KEY_SPACE) {
-            this.shoot();
-        }
-    }
-
     updateAnimation() {
-        if (!this.world || !this.world.keyboard) return;
-
-        if (this.isDead()) {
-            this.playAnimation('death');
-        } else if (this.isHurt()) {
+        if (this.isHurt()) {
             this.playAnimation('hurt');
-        } else if (this.world.keyboard.KEY_SPACE) {
+        } else if (this.world.keyboard.KEY_SPACE && this.ammo >= 10) {
             this.playAnimation('attackGun');
         } else if (this.isAboveGround()) {
             this.playAnimation('jump');
@@ -80,62 +60,30 @@ class Character extends MoveableObject {
     }
 
     shoot() {
-        if (this.isDead()) return;
+        let currentTime = Date.now();
+        if (this.ammo >= 10 && (currentTime - this.lastShootTime > 400)) {
+            this.ammo -= 10;
+            this.world.ammoBar.setPercentage(this.ammo);
 
-        let currentTime = new Date().getTime();
-        if (currentTime - this.lastShootTime > 400) {
-            this.playAnimation('attackGun');
-            let plasmaX;
+            let plasmaX = this.isMirrored ? this.x + 20 : this.x + 140;
             let plasmaY = this.y + 80;
 
-            if (this.isMirrored) {
-                plasmaX = this.x + 20;
-            } else {
-                plasmaX = this.x + 140;
-            }
-
-            let newPlasma = new PlayerPlasma(plasmaX, plasmaY, this.isMirrored);
-            this.world.throwableObjects.push(newPlasma);
+            this.world.throwableObjects.push(new PlayerPlasma(plasmaX, plasmaY, this.isMirrored));
             this.lastShootTime = currentTime;
         }
     }
 
     rechargeAmmoFromPlasma() {
-        if (this.plasma > 0 && this.ammo < 100 && this.world) {
-
-            let consumeRate = 0.1;
-            let gainRate = 0.5;
-
-            this.plasma -= consumeRate;
-            this.ammo += gainRate;
-
-            if (this.plasma < 0) this.plasma = 0;
-            if (this.ammo > 100) this.ammo = 100;
+        if (this.plasma > 0 && this.ammo < 100) {
+            this.plasma = Math.max(0, this.plasma - 0.1);
+            this.ammo = Math.min(100, this.ammo + 0.5);
 
             this.world.plasmaBar.setPercentage(Math.round(this.plasma));
             this.world.ammoBar.setPercentage(Math.round(this.ammo));
         }
     }
 
-    shoot() {
-        if (this.isDead() || !this.world) return;
-
-        let currentTime = new Date().getTime();
-
-        if (this.ammo >= 10 && (currentTime - this.lastShootTime > 400)) {
-            this.ammo -= 10;
-            this.world.ammoBar.setPercentage(this.ammo);
-
-            this.playAnimation('attackGun');
-
-            let plasmaX = this.isMirrored ? this.x + 20 : this.x + 140;
-            let plasmaY = this.y + 80;
-
-            let newPlasma = new PlayerPlasma(plasmaX, plasmaY, this.isMirrored);
-            this.world.throwableObjects.push(newPlasma);
-
-            this.lastShootTime = currentTime;
-        }
+    isDeadAnimationFinished() {
+        return this.energy <= 0 && this.currentFrame >= this.frameCount - 1;
     }
-
 }
