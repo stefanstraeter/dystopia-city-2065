@@ -3,6 +3,7 @@ class Spider extends MoveableObject {
     AGGRO_RANGE = 200;
     CHASE_SPEED = 2;
     NORMAL_SPEED = 1;
+    VIEW_DISTANCE = 450;
 
     animations = {
         idle: { path: 'assets/img/03_enemies/spider/Idle.png', frames: 4, speed: 6 },
@@ -30,8 +31,7 @@ class Spider extends MoveableObject {
             this.handleDeath();
             return;
         }
-
-        this.handleAI();
+        this.updateBehavior();
         super.animate();
         this.applyGravity();
     }
@@ -46,25 +46,36 @@ class Spider extends MoveableObject {
         }
     }
 
-    handleAI() {
+    updateBehavior() {
         if (!this.world || !this.world.character) return;
 
-        let distance = Math.abs(this.x - this.world.character.x);
+        let diff = this.x - this.world.character.x;
+        let distance = Math.abs(diff);
 
+        if (distance > this.VIEW_DISTANCE) {
+            this.isMirrored = true;
+            this.playAnimation('idle');
+            return;
+        }
         if (this.isColliding(this.world.character)) {
             this.playAnimation('attack');
-        } else {
-            this.pursueCharacter(distance);
+        }
+        else if (distance > 10) {
+            this.pursueCharacter(diff, distance);
+        }
+        else {
+            this.playAnimation('idle');
         }
     }
 
-    pursueCharacter(distance) {
-        if (distance < this.AGGRO_RANGE) {
-            this.speed = this.CHASE_SPEED;
+    pursueCharacter(diff, distance) {
+        this.speed = (distance < this.AGGRO_RANGE) ? this.CHASE_SPEED : this.NORMAL_SPEED;
+
+        if (diff > 0) {
+            this.moveLeft();
         } else {
-            this.speed = this.NORMAL_SPEED;
+            this.moveRight();
         }
-        this.moveLeft();
         this.playAnimation('walk');
     }
 }
