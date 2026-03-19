@@ -35,10 +35,3 @@ class PowerCell extends CollectableObject {
         super('assets/img/08_collectables/power_cell.png', x, y);
     }
 }
-
-class RocketAmmo extends CollectableObject {
-    value = 10;
-    constructor(x, y) {
-        super('assets/img/08_collectables/rocket_ammo.png', x, y);
-    }
-}
