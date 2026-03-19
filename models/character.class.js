@@ -4,7 +4,6 @@ class Character extends MoveableObject {
         idle: { path: 'assets/img/02_character_bud/Idle.png', frames: 5, speed: 4 },
         walk: { path: 'assets/img/02_character_bud/Walk.png', frames: 4, speed: 3 },
         attackGun: { path: 'assets/img/02_character_bud/Attack_gun.png', frames: 7, speed: 6 },
-        attackRocket: { path: 'assets/img/02_character_bud/Attack_rocket.png', frames: 6, speed: 4 },
         jump: { path: 'assets/img/02_character_bud/Jump.png', frames: 7, speed: 3 },
         hurt: { path: 'assets/img/02_character_bud/Hurt.png', frames: 2, speed: 4 },
         death: { path: 'assets/img/02_character_bud/Death.png', frames: 7, speed: 2 }
@@ -68,8 +67,6 @@ class Character extends MoveableObject {
             this.playAnimation('hurt');
         } else if (this.world.keyboard.KEY_SPACE) {
             this.playAnimation('attackGun');
-        } else if (this.world.keyboard.KEY_X) {
-            this.playAnimation('attackRocket');
         } else if (this.isAboveGround()) {
             this.playAnimation('jump');
         } else if (this.world.keyboard.KEY_RIGHT || this.world.keyboard.KEY_LEFT) {
