@@ -1,5 +1,4 @@
 class Spider extends MoveableObject {
-
     AGGRO_RANGE = 200;
     CHASE_SPEED = 2;
     NORMAL_SPEED = 1;
@@ -22,28 +21,27 @@ class Spider extends MoveableObject {
         this.width = width;
         this.height = height;
         this.speed = speed;
-        this.footOffset = -50;
-        this.offset = { top: 5, bottom: 30, left: 20, right: 20 };
         this.energy = 50;
-        this.applyGravity();
+        this.footOffset = -40;
+        this.offset = { top: 20, bottom: 20, left: 20, right: 20 };
         this.playAnimation('walk');
     }
 
     updateState() {
+        this.applyGravity();
+        this.animate();
+
         if (this.isDead()) {
             this.handleDeath();
             return;
         }
+
         this.updateBehavior();
-        super.animate();
-        this.applyGravity();
     }
 
     handleDeath() {
         this.playAnimation('death');
-        super.animate();
-        this.y += 0.5;
-
+        this.y += 0.2;
         if (this.currentFrame >= this.frameCount - 1) {
             this.isFinished = true;
         }
@@ -62,7 +60,7 @@ class Spider extends MoveableObject {
 
         if (this.isColliding(this.world.character)) {
             this.playAnimation('attack');
-        } else if (distance > 2) {
+        } else if (distance > 5) {
             this.pursueCharacter(diff, distance);
         } else {
             this.playAnimation('idle');
@@ -82,7 +80,6 @@ class Spider extends MoveableObject {
 
     patrol() {
         this.speed = this.NORMAL_SPEED;
-        this.playAnimation('walk');
 
         if (this.x < this.spawnX - this.patrolRange) {
             this.patrolDirection = 1;
@@ -95,5 +92,6 @@ class Spider extends MoveableObject {
         } else {
             this.moveRight();
         }
+        this.playAnimation('walk');
     }
 }
