@@ -11,7 +11,7 @@
   font-family: "Science Gothic";
   font-style: normal;
   font-weight: 400;
-  src: url("assets/fonts/science-gothic-v5-latin-regular.woff2") format("woff2");
+  src: url("../assets/fonts/science-gothic-v5-latin-regular.woff2") format("woff2");
 }
 
 @font-face {
@@ -19,5 +19,5 @@
   font-family: "Science Gothic";
   font-style: normal;
   font-weight: 800;
-  src: url("assets/fonts/science-gothic-v5-latin-800.woff2") format("woff2");
+  src: url("../assets/fonts/science-gothic-v5-latin-800.woff2") format("woff2");
 }
