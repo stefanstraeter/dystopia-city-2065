@@ -35,3 +35,10 @@ class PowerCell extends CollectableObject {
         super('assets/img/07_collectables/power_cell.png', x, y);
     }
 }
+
+class Mediapack extends CollectableObject {
+    value = 5;
+    constructor(x, y) {
+        super('assets/img/07_collectables/medipack.png', x, y, 60, 60);
+    }
+}
