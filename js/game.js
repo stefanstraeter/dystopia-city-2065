@@ -4,32 +4,71 @@ let keyboard = new Keyboard();
 
 function init() {
     canvas = document.getElementById('canvas');
-    canvas.addEventListener('mousedown', (event) => { if (event.button === 0) keyboard.LEFT_CLICK = true; });
-    canvas.addEventListener('mouseup', (event) => { if (event.button === 0) keyboard.LEFT_CLICK = false; });
+    if (!canvas) return;
 
+    setupInputListeners();
     resizeGame();
-    world = new World(canvas, keyboard);
+
+    document.fonts.ready.then(() => {
+        world = new World(canvas, keyboard);
+        window.addEventListener('mousedown', startInitialAudio, { once: true });
+        window.addEventListener('keydown', startInitialAudio, { once: true });
+    });
+}
+
+function setupInputListeners() {
+    canvas.addEventListener('mousedown', (e) => {
+        if (e.button === 0) keyboard.LEFT_CLICK = true;
+    });
+    canvas.addEventListener('mouseup', (e) => {
+        if (e.button === 0) keyboard.LEFT_CLICK = false;
+    });
+
+    window.addEventListener('keydown', (e) => handleKeyboard(e.code, true));
+    window.addEventListener('keyup', (e) => handleKeyboard(e.code, false));
+    window.addEventListener('resize', resizeGame);
+}
+
+function handleKeyboard(code, isPressed) {
+    const keyMap = {
+        'Space': 'KEY_SPACE',
+        'ArrowLeft': 'KEY_LEFT',
+        'ArrowUp': 'KEY_UP',
+        'ArrowRight': 'KEY_RIGHT',
+        'ArrowDown': 'KEY_DOWN',
+        'KeyX': 'KEY_X',
+        'Enter': 'KEY_ENTER',
+        'KeyH': 'KEY_H'
+    };
+
+    if (keyMap[code]) {
+        keyboard[keyMap[code]] = isPressed;
+    }
+}
+
+function startInitialAudio() {
+    if (world && world.audioManager) {
+        world.audioManager.play('background');
+    }
 }
 
 function resizeGame() {
     if (!canvas) return;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+
     const maxWidth = 800;
     const maxHeight = 450;
     const targetRatio = maxWidth / maxHeight;
 
-    let availableWidth = windowWidth * 0.9;
-    let availableHeight = windowHeight * 0.9;
-    let newWidth, newHeight;
+    let newWidth = window.innerWidth * 0.9;
+    let newHeight = newWidth / targetRatio;
 
-    if (availableWidth / availableHeight > targetRatio) {
-        newHeight = Math.min(availableHeight, maxHeight);
+    if (newHeight > window.innerHeight * 0.9) {
+        newHeight = window.innerHeight * 0.9;
         newWidth = newHeight * targetRatio;
-    } else {
-        newWidth = Math.min(availableWidth, maxWidth);
-        newHeight = newWidth / targetRatio;
     }
+
+    newWidth = Math.min(newWidth, maxWidth);
+    newHeight = Math.min(newHeight, maxHeight);
 
     canvas.style.width = `${newWidth}px`;
     canvas.style.height = `${newHeight}px`;
@@ -37,31 +76,12 @@ function resizeGame() {
 
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
-        canvas.requestFullscreen();
+        canvas.requestFullscreen().catch(err => {
+            console.error(err.message);
+        });
     } else {
         document.exitFullscreen();
     }
 }
-
-function handleKeyboard(keyCode, isPressed) {
-    if (keyCode == 32) keyboard.KEY_SPACE = isPressed;
-    if (keyCode == 37) keyboard.KEY_LEFT = isPressed;
-    if (keyCode == 38) keyboard.KEY_UP = isPressed;
-    if (keyCode == 39) keyboard.KEY_RIGHT = isPressed;
-    if (keyCode == 40) keyboard.KEY_DOWN = isPressed;
-    if (keyCode == 88) keyboard.KEY_X = isPressed;
-    if (keyCode == 13) keyboard.KEY_ENTER = isPressed;
-    if (keyCode == 72) keyboard.KEY_H = isPressed;
-}
-
-window.addEventListener('resize', resizeGame);
-
-document.addEventListener('keydown', (event) => {
-    handleKeyboard(event.keyCode, true);
-});
-
-document.addEventListener('keyup', (event) => {
-    handleKeyboard(event.keyCode, false);
-});
 
 document.addEventListener('DOMContentLoaded', init);
