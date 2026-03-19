@@ -13,7 +13,7 @@ class World {
     neonSigns;
     throwableObjects = [];
     healthBar;
-    collectableBar;
+    plasmaBar;
     rocketBar;
 
     constructor(canvas, keyboard) {
@@ -23,7 +23,7 @@ class World {
         this.level = level1;
 
         this.healthBar = this.level.UIElements[0];
-        this.collectableBar = this.level.UIElements[1];
+        this.plasmaBar = this.level.UIElements[1];
         this.rocketBar = this.level.UIElements[2];
 
         this.collectedItems = 0;
@@ -213,7 +213,7 @@ class World {
     handleItemPickup(item, index) {
         if (item instanceof PlasmaCore || item instanceof PowerCell) {
             this.collectedItems = Math.min(100, this.collectedItems + item.value);
-            this.collectableBar.setPercentage(this.collectedItems);
+            this.plasmaBar.setPercentage(this.collectedItems);
         }
         this.level.collectableItems.splice(index, 1);
     }

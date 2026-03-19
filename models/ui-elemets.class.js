@@ -20,21 +20,22 @@ class UIElement extends DrawableObject {
     }
 }
 
+
 class HealthBar extends UIElement {
     constructor() {
-        super('assets/img/06_status_bar/health.png', 30, 30, 190, 30, 18, 100);
+        super('assets/img/06_status_bar/health_status.png', 30, 30, 190, 30, 18, 100);
     }
 }
 
-class CollectableBar extends UIElement {
+class PlasmaBar extends UIElement {
     constructor() {
-        super('assets/img/06_status_bar/collectables.png', 30, 60, 190, 30, 18, 0);
+        super('assets/img/06_status_bar/plasma_status.png', 30, 60, 190, 30, 18, 0);
     }
 }
 
-class RocketBar extends UIElement {
+class GunBar extends UIElement {
     constructor() {
-        super('assets/img/06_status_bar/rockets.png', 30, 90, 190, 30, 18, 0);
+        super('assets/img/06_status_bar/gun_status.png', 30, 90, 190, 30, 18, 0);
     }
 }
 
@@ -50,13 +51,13 @@ class StatusIcon extends DrawableObject {
 }
 
 class HealthIcon extends StatusIcon {
-    constructor() { super('assets/img/07_status_icons/health.png', 25, 20, 35, 35); }
+    constructor() { super('assets/img/06_status_bar/health_icon.png', 19, 20, 40, 40); }
 }
 
-class CollectableIcon extends StatusIcon {
-    constructor() { super('assets/img/07_status_icons/collectables.png', 25, 55, 35, 35); }
+class PlasmaIcon extends StatusIcon {
+    constructor() { super('assets/img/06_status_bar/plasma_icon.png', 22, 57, 40, 40); }
 }
 
-class RocketIcon extends StatusIcon {
-    constructor() { super('assets/img/07_status_icons/rocket.png', 25, 95, 40, 20); }
+class GunIcon extends StatusIcon {
+    constructor() { super('assets/img/06_status_bar/gun_icon.png', 12, 97, 50, 25); }
 }

@@ -25,13 +25,13 @@ class CollectableObject extends MoveableObject {
 class PlasmaCore extends CollectableObject {
     value = 25;
     constructor(x, y) {
-        super('assets/img/08_collectables/plasma_core.png', x, y);
+        super('assets/img/07_collectables/plasma_core.png', x, y);
     }
 }
 
 class PowerCell extends CollectableObject {
     value = 25;
     constructor(x, y) {
-        super('assets/img/08_collectables/power_cell.png', x, y);
+        super('assets/img/07_collectables/power_cell.png', x, y);
     }
 }

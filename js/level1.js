@@ -2,13 +2,13 @@ const level1 = {
     level_end_x: 3400,
     UIElements: [
         new HealthBar(),
-        new CollectableBar(),
-        new RocketBar()
+        new PlasmaBar(),
+        new GunBar()
     ],
     statusIcons: [
         new HealthIcon(),
-        new CollectableIcon(),
-        new RocketIcon()
+        new PlasmaIcon(),
+        new GunIcon()
     ],
     collectableItems: [
         new PlasmaCore(650, 300),

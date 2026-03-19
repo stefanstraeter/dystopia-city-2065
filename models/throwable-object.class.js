@@ -4,7 +4,8 @@ class ThrowableObject extends MoveableObject {
         MELEE: { damage: 10, cooldown: 0.8, type: 'melee' },
         PLAYER_PLASMA: { damage: 10, speed: 15, cooldown: 0.05, type: 'plasma', img: '02_character_bud/Plasma.png', width: 120, height: 40, frames: 4, isEnemy: false },
         ENEMY_PLASMA: { damage: 10, speed: 8, cooldown: 0.7, type: 'plasma', img: '03_enemies/drone/Plasma.png', width: 60, height: 20, frames: 4, isEnemy: true },
-        BOMB: { damage: 50, speed: 0, cooldown: 2.0, type: 'bomb', img: '03_enemies/endboss/Bomb.png', width: 150, height: 150, frames: 1, isEnemy: true }
+        BOMB: { damage: 50, speed: 0, cooldown: 2.0, type: 'bomb', img: '03_enemies/endboss/Bomb.png', width: 150, height: 150, frames: 1, isEnemy: true },
+
     };
 
     hasHit = false;
@@ -65,7 +66,7 @@ class BossBomb extends ThrowableObject {
         this.hasExploded = false;
         this.offset = { top: 10, bottom: 10, left: 10, right: 10 };
         this.animations = {
-            explosion: { path: 'assets/img/09_explosions/rocket_explosion.png', frames: 8, speed: 4 }
+            explosion: { path: 'assets/img/08_explosions/rocket_explosion.png', frames: 8, speed: 4 }
         };
     }
 

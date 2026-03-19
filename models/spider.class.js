@@ -10,7 +10,7 @@ class Spider extends MoveableObject {
         walk: { path: 'assets/img/03_enemies/spider/Walk.png', frames: 12, speed: 2 },
         attack: { path: 'assets/img/03_enemies/spider/Attack.png', frames: 12, speed: 6 },
         death: { path: 'assets/img/03_enemies/spider/Death.png', frames: 9, speed: 6 },
-        hurt: { path: 'assets/img/09_explosions/plasma_explosion.png', frames: 6, speed: 2 }
+        hurt: { path: 'assets/img/08_explosions/plasma_explosion.png', frames: 6, speed: 2 }
     };
 
     constructor(x, width, height, speed) {
