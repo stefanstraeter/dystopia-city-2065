@@ -4,10 +4,10 @@ class SentryDrone extends MoveableObject {
     SPEED = 1;
 
     animations = {
-        idle: { path: 'assets/img/03_enemies/drone/Idle.png', frames: 4, speed: 6 },
-        forward: { path: 'assets/img/03_enemies/drone/Forward.png', frames: 4, speed: 4 },
-        fire: { path: 'assets/img/03_enemies/drone/Fire.png', frames: 16, speed: 5 },
-        death: { path: 'assets/img/03_enemies/drone/Death.png', frames: 9, speed: 6 },
+        idle: { path: 'assets/img/03_enemies/sentry_drone/Idle.png', frames: 4, speed: 6 },
+        forward: { path: 'assets/img/03_enemies/sentry_drone/Forward.png', frames: 4, speed: 4 },
+        fire: { path: 'assets/img/03_enemies/sentry_drone/Fire.png', frames: 16, speed: 5 },
+        death: { path: 'assets/img/03_enemies/sentry_drone/Death.png', frames: 9, speed: 6 },
         hurt: { path: 'assets/img/08_explosions/plasma_explosion.png', frames: 6, speed: 2 }
     };
 
