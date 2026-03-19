@@ -64,6 +64,7 @@ class BossBomb extends ThrowableObject {
         this.speedY = -5;
         this.acceleration = 1.5;
         this.hasExploded = false;
+        this.hasHit = false;
         this.offset = { top: 10, bottom: 10, left: 10, right: 10 };
         this.animations = {
             explosion: { path: 'assets/img/08_explosions/rocket_explosion.png', frames: 8, speed: 4 }
@@ -71,11 +72,16 @@ class BossBomb extends ThrowableObject {
     }
 
     updateState() {
+        this.animate();
         if (this.hasExploded) {
-            this.animate();
+            if (this.currentFrame >= this.frameCount - 1) {
+                this.hasHit = true;
+            }
             return;
         }
+
         this.applyGravity();
+
         if (this.y >= this.world.groundLevel - this.height) {
             this.y = this.world.groundLevel - this.height;
             this.explode();
@@ -87,7 +93,7 @@ class BossBomb extends ThrowableObject {
         this.hasExploded = true;
         this.speedY = 0;
         this.acceleration = 0;
-
+        this.speed = 0;
         let oldW = this.width;
         this.width = 250;
         this.height = 250;
@@ -99,6 +105,5 @@ class BossBomb extends ThrowableObject {
         }
 
         this.playAnimation('explosion');
-        setTimeout(() => this.hasHit = true, 500);
     }
 }
