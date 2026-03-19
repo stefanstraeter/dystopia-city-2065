@@ -45,6 +45,7 @@ class UIManager {
 
         this.ctx.font = '80px "Cyberway Riders"';
 
+
         let glitch_x = (Math.random() - 0.5) * 7;
         let glitch_y = (Math.random() - 0.5) * 3;
 
@@ -82,6 +83,74 @@ class UIManager {
             this.ctx.translate(offset_x, offset_y);
             this.ctx.fillRect(-8, -8, this.canvas.width + 16, this.canvas.height + 16);
             this.ctx.restore();
+        }
+    }
+
+    drawHelpOverlay() {
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.ctx.strokeStyle = this.secondaryColor;
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeRect(50, 50, this.canvas.width - 100, this.canvas.height - 100);
+
+        const centerX = this.canvas.width / 2;
+        this.ctx.textAlign = 'center';
+        this.ctx.font = '40px "Cyberway Riders"';
+        this.ctx.fillStyle = '#e3e3e3';
+        this.ctx.fillText('SYSTEM CONTROLS', centerX, 110);
+
+        const controls = [
+            { k: '[LEFT / RIGHT]', a: 'MOVE LEFT / RIGHT' },
+            { k: '[UP]', a: 'JETPACK' },
+            { k: '[SPACE]', a: 'PLASMA ATTACK' },
+            { k: '[ENTER]', a: 'START MISSION' },
+            { k: '[H]', a: 'CLOSE MANUAL' }
+        ];
+
+        this.ctx.font = '600 18px "Science Gothic"';
+
+        controls.forEach((c, i) => {
+            let y = 180 + i * 45;
+            let fullText = `${c.k}  —  ${c.a}`;
+            this.ctx.shadowBlur = 5;
+            this.ctx.shadowColor = this.primaryColor;
+            this.ctx.fillStyle = this.primaryColor;
+            this.ctx.fillText(fullText, centerX, y);
+            this.ctx.shadowBlur = 0;
+        });
+
+        this.ctx.font = '400 14px "Science Gothic"';
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+
+
+        this.drawEffectLayers();
+    }
+
+    drawHelpHint() {
+        this.ctx.save();
+        let pulse = 0.25 + Math.sin(Date.now() / 1000) * 0.15;
+        this.ctx.globalAlpha = pulse;
+        this.ctx.textAlign = 'left';
+        this.ctx.font = '800 12px "Science Gothic"';
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText('[H] CONTROLS', 25, this.canvas.height - 25);
+        this.ctx.restore();
+    }
+
+    drawEndScreen(gameOverType) {
+        if (gameOverType === 'LOSE') {
+            this.drawMessage(
+                'TERMINATED',
+                'PRESS ENTER TO REBOOT CLONE',
+                '#ff0055'
+            );
+        } else if (gameOverType === 'WIN') {
+            this.drawMessage(
+                'MISSION COMPLETE',
+                'PRESS ENTER TO START NEW MISSION',
+                '#00f2ff'
+            );
         }
     }
 }
