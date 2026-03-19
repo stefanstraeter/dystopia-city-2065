@@ -15,18 +15,16 @@ class FlyingVehicle extends MoveableObject {
     }
 
     move() {
+
         this.x += this.speed * this.direction;
-
-        let currentCameraX = (-this.world.camera_x) * this.parallaxFactor;
-        let screenWidth = 800;
-
-        if (this.direction === -1 && this.x < currentCameraX - this.width) {
-            this.x = currentCameraX + screenWidth + Math.random() * 500;
+        let leftBoundary = -500;
+        let rightBoundary = this.world.level.level_end_x + 500;
+        if (this.direction === -1 && this.x < leftBoundary) {
+            this.x = rightBoundary;
             this.y = 20 + Math.random() * 200;
         }
-
-        if (this.direction === 1 && this.x > currentCameraX + screenWidth + this.width) {
-            this.x = currentCameraX - this.width - Math.random() * 500;
+        if (this.direction === 1 && this.x > rightBoundary) {
+            this.x = leftBoundary;
             this.y = 20 + Math.random() * 200;
         }
     }
