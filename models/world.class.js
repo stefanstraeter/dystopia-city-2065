@@ -155,15 +155,18 @@ class World {
         if (!projectile.isEnemy && target === this.character) return;
 
         if (!projectile.hasHit && !target.isDead() && projectile.isColliding(target)) {
-            projectile.hasHit = true;
-            target.hit(projectile.damage, projectile.damageType);
-
-            if (target === this.character) {
-                this.healthBar.setPercentage(this.character.energy);
-            }
-
-            if (typeof projectile.explode === 'function') {
-                projectile.explode();
+            if (projectile instanceof BossBomb) {
+                if (!projectile.hasExploded) {
+                    target.hit(projectile.damage, projectile.damageType);
+                    this.healthBar.setPercentage(this.character.energy);
+                    projectile.explode();
+                }
+            } else {
+                projectile.hasHit = true;
+                target.hit(projectile.damage, projectile.damageType);
+                if (target === this.character) {
+                    this.healthBar.setPercentage(this.character.energy);
+                }
             }
         }
     }
@@ -211,10 +214,6 @@ class World {
         if (item instanceof PlasmaCore || item instanceof PowerCell) {
             this.collectedItems = Math.min(100, this.collectedItems + item.value);
             this.collectableBar.setPercentage(this.collectedItems);
-        }
-        if (item instanceof RocketAmmo) {
-            this.collectedRockets = Math.min(100, this.collectedRockets + item.value);
-            this.rocketBar.setPercentage(this.collectedRockets);
         }
         this.level.collectableItems.splice(index, 1);
     }
