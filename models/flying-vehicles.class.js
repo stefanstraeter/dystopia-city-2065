@@ -47,7 +47,7 @@ class Police extends FlyingVehicle {
 
 class Truck extends FlyingVehicle {
     constructor(x, y, speed, direction, world, parallaxFactor) {
-        super('assets/img/04_vehicles/truck.png', x, y, speed, 120, 40, direction, world, parallaxFactor);
+        super('assets/img/04_vehicles/truck.png', x, y, speed, 120, 50, direction, world, parallaxFactor);
     }
 }
 
