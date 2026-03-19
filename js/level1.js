@@ -14,10 +14,7 @@ const level1 = {
         new PlasmaCore(650, 300),
         new PlasmaCore(1250, 130),
         new PowerCell(2555, 120),
-        new PlasmaCore(3300, 350),
-        new RocketAmmo(150, 50),
-        new RocketAmmo(950, 20),
-        new RocketAmmo(2350, 200)
+        new PlasmaCore(3300, 350)
     ],
     enemies: [
         new Spider(900, 130, 130, 1),
