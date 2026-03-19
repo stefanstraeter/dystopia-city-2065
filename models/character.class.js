@@ -94,7 +94,7 @@ class Character extends MoveableObject {
                 plasmaX = this.x + 140;
             }
 
-            let newPlasma = new Plasma(plasmaX, plasmaY, this.isMirrored);
+            let newPlasma = new PlayerPlasma(plasmaX, plasmaY, this.isMirrored);
             this.world.throwableObjects.push(newPlasma);
             this.lastShootTime = currentTime;
         }
