@@ -2,18 +2,22 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
-function init() {
+async function init() {
     canvas = document.getElementById('canvas');
     if (!canvas) return;
 
     setupInputListeners();
     resizeGame();
 
-    document.fonts.ready.then(() => {
-        world = new World(canvas, keyboard);
-        window.addEventListener('mousedown', startInitialAudio, { once: true });
-        window.addEventListener('keydown', startInitialAudio, { once: true });
-    });
+    await Promise.all([
+        document.fonts.ready,
+        preloadAssets()
+    ]);
+
+    world = new World(canvas, keyboard);
+
+    window.addEventListener('mousedown', startInitialAudio, { once: true });
+    window.addEventListener('keydown', startInitialAudio, { once: true });
 }
 
 function setupInputListeners() {
