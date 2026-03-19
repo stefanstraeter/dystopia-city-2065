@@ -23,20 +23,20 @@ class SentryDrone extends MoveableObject {
         this.speedY = 0;
         this.acceleration = 0;
         this.lastShootTime = 0;
-        this.shootCooldown = 1000;
+        this.shootCooldown = 1500;
         this.playAnimation('idle');
     }
 
     updateState() {
+        this.animate();
+
         if (this.isDead()) {
             this.handleDeath();
-            super.animate();
             return;
         }
 
         this.updateBehavior();
         this.floatEffect();
-        super.animate();
     }
 
     floatEffect() {
@@ -62,18 +62,13 @@ class SentryDrone extends MoveableObject {
     executeShooting(diffX) {
         let currentTime = Date.now();
         if (currentTime - this.lastShootTime > this.shootCooldown) {
-
             if (this.currentFrame === 2) {
-
                 let shootMirrored = diffX > 0;
                 this.isMirrored = shootMirrored;
-
-                let projectileX = shootMirrored ? this.x : this.x + this.width;
+                let projectileX = shootMirrored ? this.x : this.x + this.width - 20;
                 let projectileY = this.y + 40;
 
-                let shot = new EnemyPlasma(projectileX, projectileY, shootMirrored);
-                this.world.throwableObjects.push(shot);
-
+                this.world.throwableObjects.push(new EnemyPlasma(projectileX, projectileY, shootMirrored));
                 this.lastShootTime = currentTime;
             }
         }
@@ -89,11 +84,9 @@ class SentryDrone extends MoveableObject {
     }
 
     handleDeath() {
-
         this.playAnimation('death');
-        this.y += 1.5;
-        this.x += this.isMirrored ? 1 : -1;
-        if (this.currentFrame >= this.animations.death.frames - 1) {
+        this.y += 2;
+        if (this.currentFrame >= this.frameCount - 1) {
             this.isFinished = true;
         }
     }
