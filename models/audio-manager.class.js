@@ -1,7 +1,7 @@
 class AudioManager {
     constructor() {
         this.sounds = {
-            background: new Audio('../assets/audio/cyberpunk-street.mp3'),
+            background: new Audio('assets/audio/cyberpunk-street.mp3'),
         };
 
         this.initSettings();
@@ -9,14 +9,12 @@ class AudioManager {
 
     initSettings() {
         this.sounds.background.loop = true;
-        this.sounds.background.volume = 0.4; // Etwas leiser im Hintergrund
+        this.sounds.background.volume = 0.4;
     }
 
     play(name) {
         const s = this.sounds[name];
         if (!s) return;
-
-        // Bei kurzen Sounds: Zurückspulen, falls sie gerade noch spielen
         if (name !== 'background') {
             s.currentTime = 0;
         }

@@ -31,12 +31,11 @@ function setupInputListeners() {
 
 function handleKeyboard(code, isPressed) {
     const keyMap = {
-        'Space': 'KEY_SPACE',
         'ArrowLeft': 'KEY_LEFT',
-        'ArrowUp': 'KEY_UP',
         'ArrowRight': 'KEY_RIGHT',
+        'ArrowUp': 'KEY_UP',
         'ArrowDown': 'KEY_DOWN',
-        'KeyX': 'KEY_X',
+        'Space': 'KEY_SPACE',
         'Enter': 'KEY_ENTER',
         'KeyH': 'KEY_H'
     };
