@@ -3,25 +3,27 @@ const level1 = {
     UIElements: [
         new HealthBar(),
         new PlasmaBar(),
-        new GunBar()
+        new AmmoBar()
     ],
     statusIcons: [
         new HealthIcon(),
         new PlasmaIcon(),
-        new GunIcon()
+        new AmmoIcon()
     ],
     collectableItems: [
-        new PlasmaCore(650, 300),
-        new PlasmaCore(1250, 130),
-        new PowerCell(2555, 120),
-        new PlasmaCore(3300, 350)
+        new PlasmaCore(660, 100),
+        new Mediapack(100, 70),
+        new PlasmaCore(1250, 60),
+        new PowerCell(1950, 90),
+        new Mediapack(2250, 120),
+        new PlasmaCore(3100, 350)
     ],
     enemies: [
         new Spider(900, 130, 130, 1),
-        new Spider(1200, 110, 110, 0.8),
-        new Spider(1350, 110, 110, 0.4),
+        new Spider(1200, 130, 130, 0.8),
+        new Spider(1350, 130, 130, 0.4),
         new SentryDrone(1700, 100),
-        new Spider(1950, 120, 120, 0.9),
+        new Spider(1950, 130, 130, 0.9),
         new SentryDrone(2200, 150),
         new SentryDrone(2500, 80),
         new SentryDrone(2700, 200),
