@@ -20,6 +20,10 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+
+        this.uiManager = new UIManager(this.ctx, this.canvas);
+        this.gameStarted = false;
+
         this.level = level1;
 
         this.healthBar = this.level.UIElements[0];
@@ -60,6 +64,15 @@ class World {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        if (!this.gameStarted) {
+            this.uiManager.drawStartScreen();
+            this.checkStartKey();
+            // Wir müssen den Loop trotzdem am Leben erhalten!
+            requestAnimationFrame(() => this.draw());
+            return;
+        }
+
+        // --- Ab hier: Der eigentliche Spiel-Code ---
         this.drawParallaxLayer(0.2, this.backgroundLayers.back);
         this.drawParallaxLayer(0.3, this.flyingVehicles.background);
         this.drawParallaxLayer(0.6, this.backgroundLayers.middle);
@@ -72,7 +85,20 @@ class World {
         this.addObjectsToMap(this.level.UIElements);
         this.addObjectsToMap(this.level.statusIcons);
 
+        // Endbildschirme prüfen
+        if (this.character.energy <= 0) {
+            this.uiManager.drawMessage('TERMINATED. Better luck in the next clone, Bud.', '#ff0055');
+        } else if (this.bossIsDead()) {
+            this.uiManager.drawMessage('MISSION COMPLETE', 'Neon city is secured!', '#00f2ff');
+        }
+
         requestAnimationFrame(() => this.draw());
+    }
+
+    checkStartKey() {
+        if (this.keyboard.KEY_ENTER || this.keyboard.LEFT_CLICK) {
+            this.gameStarted = true;
+        }
     }
 
     drawParallaxLayer(speed, objects) {
@@ -262,6 +288,11 @@ class World {
 
     addObjectsToMap(objects) {
         objects.forEach(obj => this.addToMap(obj));
+    }
+
+    bossIsDead() {
+        let boss = this.enemies.find(e => e instanceof Endboss);
+        return boss && boss.isDead();
     }
 
     resetBossBehavior() {
