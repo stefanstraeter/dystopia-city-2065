@@ -23,7 +23,11 @@ const level1 = {
         new Spider(900, 130, 130, 1),
         new Spider(1200, 110, 110, 0.8),
         new Spider(1350, 110, 110, 0.4),
+        new SentryDrone(1700, 100),
         new Spider(1950, 120, 120, 0.9),
+        new SentryDrone(2200, 150),
+        new SentryDrone(2500, 80),
+        new SentryDrone(2700, 200),
         new Endboss(2900, 330, 330, 0.4)
     ],
     vehicles: {
