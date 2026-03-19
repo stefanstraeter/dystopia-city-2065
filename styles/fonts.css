@@ -1,15 +1,9 @@
 @font-face {
-  font-display: block;
-  font-family: "Cyberway Riders";
-  font-style: normal;
-  font-weight: 300;
-  src: url("../assets/fonts/CyberwayRiders.woff2") format("woff2");
+  font-family: "ByteBounce";
+  src: url("../assets/fonts/ByteBounce.woff2") format("woff2");
 }
 
 @font-face {
-  font-display: swap;
-  font-family: "ByteBounce";
-  font-style: normal;
-  font-weight: 500;
-  src: url("../assets/fonts/ByteBounce.woff2") format("woff2");
+  font-family: "Cyberway";
+  src: url("../assets/fonts/CyberwayRiders.woff2") format("woff2");
 }
