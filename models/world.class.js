@@ -41,6 +41,9 @@ class World {
         this.backgroundLayers = this.level.backgrounds;
         this.neonSigns = this.level.neonSigns;
 
+        this.showHelp = false;
+        this.hKeyPressed = false;
+
         this.setWorld();
         this.draw();
         this.run();
@@ -64,15 +67,15 @@ class World {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        // 1. STARTBILDSCHIRM
         if (!this.gameStarted) {
             this.uiManager.drawStartScreen();
             this.checkStartKey();
-            // Wir müssen den Loop trotzdem am Leben erhalten!
             requestAnimationFrame(() => this.draw());
             return;
         }
 
-        // --- Ab hier: Der eigentliche Spiel-Code ---
+        // --- Normaler Spiel-Draw-Code ---
         this.drawParallaxLayer(0.2, this.backgroundLayers.back);
         this.drawParallaxLayer(0.3, this.flyingVehicles.background);
         this.drawParallaxLayer(0.6, this.backgroundLayers.middle);
@@ -85,17 +88,48 @@ class World {
         this.addObjectsToMap(this.level.UIElements);
         this.addObjectsToMap(this.level.statusIcons);
 
-        // Endbildschirme prüfen
+        if (!this.showHelp) {
+            this.uiManager.drawHelpHint();
+        }
+
+        this.checkHelpToggle();
+        if (this.showHelp) {
+            this.uiManager.drawHelpOverlay();
+        }
+
+        // --- 2. ENDBILDSCHIRM LOGIK ---
         if (this.character.energy <= 0) {
-            this.uiManager.drawMessage('TERMINATED. Better luck in the next clone, Bud.', '#ff0055');
+            this.uiManager.drawEndScreen('LOSE');
+            this.checkStartKey(); // WICHTIG: Hier auf Enter prüfen!
         } else if (this.bossIsDead()) {
-            this.uiManager.drawMessage('MISSION COMPLETE', 'Neon city is secured!', '#00f2ff');
+            this.uiManager.drawEndScreen('WIN');
+            this.checkStartKey(); // WICHTIG: Hier auf Enter prüfen!
         }
 
         requestAnimationFrame(() => this.draw());
     }
 
+    checkHelpToggle() {
+        if (this.keyboard.KEY_H) {
+            if (!this.hKeyPressed) {
+                this.showHelp = !this.showHelp;
+                this.hKeyPressed = true;
+            }
+        } else {
+            this.hKeyPressed = false;
+        }
+    }
+
     checkStartKey() {
+        // Falls das Spiel läuft und jemand stirbt oder gewinnt:
+        if (this.character.energy <= 0 || this.bossIsDead()) {
+            if (this.keyboard.KEY_ENTER) {
+                this.restartGame();
+            }
+            return; // Verhindert, dass die normale Start-Logik greift
+        }
+
+        // Die normale Logik für den allerersten Start
         if (this.keyboard.KEY_ENTER || this.keyboard.LEFT_CLICK) {
             this.gameStarted = true;
         }
@@ -120,8 +154,10 @@ class World {
 
     run() {
         setInterval(() => {
-            this.updateAllObjects();
-            this.checkCollisions();
+            if (this.gameStarted && !this.showHelp && this.character.energy > 0) {
+                this.updateAllObjects();
+                this.checkCollisions();
+            }
         }, 1000 / 60);
     }
 
@@ -303,5 +339,16 @@ class World {
                 }
             }
         });
+    }
+
+    restartGame() {
+        this.character.energy = 100;
+        this.character.x = 100;
+        this.character.plasma = 100;
+        this.character.ammo = 20;
+        this.camera_x = 0;
+        this.healthBar.setPercentage(100);
+        this.plasmaBar.setPercentage(100);
+        location.reload();
     }
 }
