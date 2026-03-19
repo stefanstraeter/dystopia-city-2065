@@ -10,6 +10,8 @@ class Character extends MoveableObject {
     };
 
     lastShootTime = 0;
+    ammo = 100; // Das aktuelle Magazin
+    plasma = 0; // Der Reserve-Vorrat (wird durch Items gefüllt)
 
     constructor(x, width, height, speed) {
         super();
@@ -32,6 +34,7 @@ class Character extends MoveableObject {
             return;
         }
         super.animate();
+        this.rechargeAmmoFromPlasma();
         this.handleMovement();
     }
 
@@ -93,6 +96,44 @@ class Character extends MoveableObject {
 
             let newPlasma = new PlayerPlasma(plasmaX, plasmaY, this.isMirrored);
             this.world.throwableObjects.push(newPlasma);
+            this.lastShootTime = currentTime;
+        }
+    }
+
+    rechargeAmmoFromPlasma() {
+        if (this.plasma > 0 && this.ammo < 100 && this.world) {
+
+            let consumeRate = 0.1;
+            let gainRate = 0.5;
+
+            this.plasma -= consumeRate;
+            this.ammo += gainRate;
+
+            if (this.plasma < 0) this.plasma = 0;
+            if (this.ammo > 100) this.ammo = 100;
+
+            this.world.plasmaBar.setPercentage(Math.round(this.plasma));
+            this.world.ammoBar.setPercentage(Math.round(this.ammo));
+        }
+    }
+
+    shoot() {
+        if (this.isDead() || !this.world) return;
+
+        let currentTime = new Date().getTime();
+
+        if (this.ammo >= 10 && (currentTime - this.lastShootTime > 400)) {
+            this.ammo -= 10;
+            this.world.ammoBar.setPercentage(this.ammo);
+
+            this.playAnimation('attackGun');
+
+            let plasmaX = this.isMirrored ? this.x + 20 : this.x + 140;
+            let plasmaY = this.y + 80;
+
+            let newPlasma = new PlayerPlasma(plasmaX, plasmaY, this.isMirrored);
+            this.world.throwableObjects.push(newPlasma);
+
             this.lastShootTime = currentTime;
         }
     }
