@@ -16,6 +16,9 @@ class Spider extends MoveableObject {
     constructor(x, width, height, speed) {
         super();
         this.x = x;
+        this.spawnX = x;
+        this.patrolRange = 150;
+        this.patrolDirection = -1;
         this.width = width;
         this.height = height;
         this.speed = speed;
@@ -53,17 +56,15 @@ class Spider extends MoveableObject {
         let distance = Math.abs(diff);
 
         if (distance > this.VIEW_DISTANCE) {
-            this.isMirrored = true;
-            this.playAnimation('idle');
+            this.patrol();
             return;
         }
+
         if (this.isColliding(this.world.character)) {
             this.playAnimation('attack');
-        }
-        else if (distance > 10) {
+        } else if (distance > 10) {
             this.pursueCharacter(diff, distance);
-        }
-        else {
+        } else {
             this.playAnimation('idle');
         }
     }
@@ -77,5 +78,22 @@ class Spider extends MoveableObject {
             this.moveRight();
         }
         this.playAnimation('walk');
+    }
+
+    patrol() {
+        this.speed = this.NORMAL_SPEED;
+        this.playAnimation('walk');
+
+        if (this.x < this.spawnX - this.patrolRange) {
+            this.patrolDirection = 1;
+        } else if (this.x > this.spawnX + this.patrolRange) {
+            this.patrolDirection = -1;
+        }
+
+        if (this.patrolDirection === -1) {
+            this.moveLeft();
+        } else {
+            this.moveRight();
+        }
     }
 }
