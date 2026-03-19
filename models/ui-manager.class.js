@@ -53,7 +53,7 @@ class UIManager {
     }
 
     drawMessage(title, sub, color) {
-        this.drawOverlay(color); // Hier gab es den Fehler!
+        this.drawOverlay(color);
         this.drawGlitchedTitle(title, color);
         this.prepareText('400 2.4rem "ByteBounce"', 'center', color);
         this.ctx.fillText(sub, this.canvas.width / 2, this.canvas.height / 2 + 85);
@@ -61,7 +61,7 @@ class UIManager {
     }
 
     drawGlitchedTitle(text, color) {
-        this.prepareText('4rem "Cyberway Riders"');
+        this.prepareText('4rem "Cyberway"');
         let gx = (Math.random() - 0.5) * 7;
         let gy = (Math.random() - 0.5) * 3;
         this.drawTextLayer(text, UIManager.THEMES.SECONDARY, gx, gy);
@@ -80,10 +80,10 @@ class UIManager {
 
     drawHelpOverlay() {
         this.drawOverlay(UIManager.THEMES.SECONDARY);
-        this.prepareText('3rem "Cyberway Riders"');
+        this.prepareText('3rem "Cyberway"');
         this.ctx.fillText('MISSION', this.canvas.width / 2, 90);
         this.renderControlList();
-        this.prepareText('1.6rem "Cyberway Riders"', 'center', UIManager.THEMES.TEXT);
+        this.prepareText('1.6rem "Cyberway"', 'center', UIManager.THEMES.TEXT);
         this.renderSystemInfo();
 
         this.drawEffectLayers();
