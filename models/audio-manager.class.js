@@ -1,7 +1,7 @@
 class AudioManager {
     constructor() {
         this.sounds = {
-            background: new Audio('assets/audio/cyberpunk-street.mp3'),
+            background: new Audio('./assets/audio/cyberpunk-street.mp3'),
         };
 
         this.initSettings();
