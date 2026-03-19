@@ -1,72 +1,135 @@
 class UIManager {
+    static THEMES = {
+        PRIMARY: '#b72299',
+        SECONDARY: '#00ffff',
+        WIN: '#00f2ff',
+        LOSE: '#ff0055',
+        TEXT: '#e3e3e3'
+    };
+
     constructor(ctx, canvas) {
         this.ctx = ctx;
         this.canvas = canvas;
-        this.primaryColor = '#b72299';
-        this.secondaryColor = '#00ffff';
-        this.grainPattern = null;
         this.generateGrainPattern();
     }
 
     generateGrainPattern() {
-        let grainCanvas = document.createElement('canvas');
-        let grainCtx = grainCanvas.getContext('2d');
-        grainCanvas.width = 128;
-        grainCanvas.height = 128;
-        let imageData = grainCtx.createImageData(grainCanvas.width, grainCanvas.height);
-        let data = imageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-            let value = Math.random() * 255;
-            data[i] = value;
-            data[i + 1] = value;
-            data[i + 2] = value;
-            data[i + 3] = 12;
+        let gCanvas = document.createElement('canvas');
+        let gCtx = gCanvas.getContext('2d');
+        gCanvas.width = gCanvas.height = 128;
+        let imgData = gCtx.createImageData(128, 128);
+        for (let i = 0; i < imgData.data.length; i += 4) {
+            let val = Math.random() * 255;
+            imgData.data.set([val, val, val, 12], i);
         }
-        grainCtx.putImageData(imageData, 0, 0);
-        this.grainPattern = this.ctx.createPattern(grainCanvas, 'repeat');
+        gCtx.putImageData(imgData, 0, 0);
+        this.grainPattern = this.ctx.createPattern(gCanvas, 'repeat');
+    }
+
+    prepareText(font, align = 'center', color = UIManager.THEMES.TEXT) {
+        this.ctx.font = font;
+        this.ctx.textAlign = align;
+        this.ctx.fillStyle = color;
+    }
+
+    setShadow(blur, color = 'transparent') {
+        this.ctx.shadowBlur = blur;
+        this.ctx.shadowColor = color;
     }
 
     drawOverlay(color) {
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.88)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawNeonBorder(color);
+    }
 
-        let glowPulse = 15 + Math.sin(Date.now() / 300) * 5;
-        this.ctx.shadowBlur = glowPulse;
-        this.ctx.shadowColor = color;
+    drawNeonBorder(color) {
+        let pulse = 15 + Math.sin(Date.now() / 300) * 5;
+        this.setShadow(pulse, color);
         this.ctx.strokeStyle = color;
         this.ctx.lineWidth = 4;
         this.ctx.strokeRect(20, 20, this.canvas.width - 40, this.canvas.height - 40);
-        this.ctx.shadowBlur = 0;
+        this.setShadow(0);
     }
 
-    drawMessage(title, subtext, color) {
-        this.drawOverlay(color);
-        this.ctx.textAlign = 'center';
+    drawMessage(title, sub, color) {
+        this.drawOverlay(color); // Hier gab es den Fehler!
+        this.drawGlitchedTitle(title, color);
+        this.prepareText('400 2.4rem "ByteBounce"', 'center', color);
+        this.ctx.fillText(sub, this.canvas.width / 2, this.canvas.height / 2 + 85);
+        this.drawEffectLayers();
+    }
 
-        this.ctx.font = '80px "Cyberway Riders"';
+    drawGlitchedTitle(text, color) {
+        this.prepareText('4rem "Cyberway Riders"');
+        let gx = (Math.random() - 0.5) * 7;
+        let gy = (Math.random() - 0.5) * 3;
+        this.drawTextLayer(text, UIManager.THEMES.SECONDARY, gx, gy);
+        this.drawTextLayer(text, color, -gx * 0.5, -gy * 0.5);
+        this.drawTextLayer(text, UIManager.THEMES.TEXT, 0, 0);
+    }
 
-
-        let glitch_x = (Math.random() - 0.5) * 7;
-        let glitch_y = (Math.random() - 0.5) * 3;
-
-        this.ctx.fillStyle = this.secondaryColor;
-        this.ctx.fillText(title, this.canvas.width / 2 + glitch_x, this.canvas.height / 2 + glitch_y);
-
+    drawTextLayer(text, color, ox, oy) {
         this.ctx.fillStyle = color;
-        this.ctx.fillText(title, this.canvas.width / 2 - (glitch_x * 0.5), this.canvas.height / 2 - (glitch_y * 0.5));
+        this.ctx.fillText(text, this.canvas.width / 2 + ox, this.canvas.height / 2 + oy);
+    }
 
-        this.ctx.fillStyle = '#e3e3e3';
-        this.ctx.fillText(title, this.canvas.width / 2, this.canvas.height / 2);
+    drawStartScreen() {
+        this.drawMessage('NEON CITY 2065', 'ENTER THE GRID', UIManager.THEMES.PRIMARY);
+    }
 
-        this.ctx.font = '400 18px "Science Gothic"';
-        this.ctx.fillStyle = color;
-        this.ctx.fillText(subtext, this.canvas.width / 2, this.canvas.height / 2 + 85);
+    drawHelpOverlay() {
+        this.drawOverlay(UIManager.THEMES.SECONDARY);
+        this.prepareText('3rem "Cyberway Riders"');
+        this.ctx.fillText('MISSION', this.canvas.width / 2, 90);
+        this.renderControlList();
+        this.prepareText('1.6rem "Cyberway Riders"', 'center', UIManager.THEMES.TEXT);
+        this.renderSystemInfo();
 
         this.drawEffectLayers();
     }
 
-    drawStartScreen() {
-        this.drawMessage('NEON CITY 2065', 'ENTER THE GRID', this.primaryColor);
+    renderControlList() {
+        const controls = [
+            { k: '[ LEFT / RIGHT ]', a: 'MOVE' },
+            { k: '[ UP ]', a: 'JETPACK' },
+            { k: '[ SPACE ]', a: 'PLASMA' },
+            { k: '[ ENTER ]', a: 'START' },
+            { k: '[ H ]', a: 'CLOSE' }
+        ];
+        this.prepareText('500 2rem "ByteBounce"', 'center', UIManager.THEMES.PRIMARY);
+        controls.forEach((c, i) => {
+            this.setShadow(3, UIManager.THEMES.PRIMARY);
+            this.ctx.fillText(`${c.k}  ${c.a}`, this.canvas.width / 2, 160 + i * 35);
+        });
+        this.setShadow(0);
+    }
+
+    renderSystemInfo() {
+        const info = [
+            'HEALTH-KITS: REPAIR CHASSIS',
+            'PLASMA: RECHARGE WEAPONS'
+        ];
+        this.prepareText('400 1.6rem "ByteBounce"', 'center', UIManager.THEMES.SECONDARY);
+        info.forEach((text, i) => {
+            this.ctx.fillText(text, this.canvas.width / 2, 340 + i * 30);
+        });
+    }
+
+    drawHelpHint() {
+        this.ctx.save();
+        this.ctx.globalAlpha = 0.25 + Math.sin(Date.now() / 1000) * 0.15;
+        this.prepareText('500 1.2rem "ByteBounce"', 'left', 'white');
+        this.ctx.fillText('[ H ] MISSION', 25, this.canvas.height - 25);
+        this.ctx.restore();
+    }
+
+    drawEndScreen(type) {
+        const isWin = type === 'WIN';
+        const title = isWin ? 'MISSION COMPLETE' : 'TERMINATED';
+        const sub = isWin ? 'PRESS ENTER FOR NEW MISSION' : 'PRESS ENTER TO REBOOT';
+        const color = isWin ? UIManager.THEMES.WIN : UIManager.THEMES.LOSE;
+        this.drawMessage(title, sub, color);
     }
 
     drawEffectLayers() {
@@ -74,83 +137,15 @@ class UIManager {
         for (let i = 0; i < this.canvas.height; i += 4) {
             this.ctx.fillRect(0, i, this.canvas.width, 1);
         }
-
-        if (this.grainPattern) {
-            this.ctx.save();
-            this.ctx.fillStyle = this.grainPattern;
-            let offset_x = (Math.random() - 0.5) * 8;
-            let offset_y = (Math.random() - 0.5) * 8;
-            this.ctx.translate(offset_x, offset_y);
-            this.ctx.fillRect(-8, -8, this.canvas.width + 16, this.canvas.height + 16);
-            this.ctx.restore();
-        }
+        this.renderGrain();
     }
 
-    drawHelpOverlay() {
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.ctx.strokeStyle = this.secondaryColor;
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeRect(50, 50, this.canvas.width - 100, this.canvas.height - 100);
-
-        const centerX = this.canvas.width / 2;
-        this.ctx.textAlign = 'center';
-        this.ctx.font = '40px "Cyberway Riders"';
-        this.ctx.fillStyle = '#e3e3e3';
-        this.ctx.fillText('SYSTEM CONTROLS', centerX, 110);
-
-        const controls = [
-            { k: '[LEFT / RIGHT]', a: 'MOVE LEFT / RIGHT' },
-            { k: '[UP]', a: 'JETPACK' },
-            { k: '[SPACE]', a: 'PLASMA ATTACK' },
-            { k: '[ENTER]', a: 'START MISSION' },
-            { k: '[H]', a: 'CLOSE MANUAL' }
-        ];
-
-        this.ctx.font = '600 18px "Science Gothic"';
-
-        controls.forEach((c, i) => {
-            let y = 180 + i * 45;
-            let fullText = `${c.k}  —  ${c.a}`;
-            this.ctx.shadowBlur = 5;
-            this.ctx.shadowColor = this.primaryColor;
-            this.ctx.fillStyle = this.primaryColor;
-            this.ctx.fillText(fullText, centerX, y);
-            this.ctx.shadowBlur = 0;
-        });
-
-        this.ctx.font = '400 14px "Science Gothic"';
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-
-
-        this.drawEffectLayers();
-    }
-
-    drawHelpHint() {
+    renderGrain() {
+        if (!this.grainPattern) return;
         this.ctx.save();
-        let pulse = 0.25 + Math.sin(Date.now() / 1000) * 0.15;
-        this.ctx.globalAlpha = pulse;
-        this.ctx.textAlign = 'left';
-        this.ctx.font = '800 12px "Science Gothic"';
-        this.ctx.fillStyle = 'white';
-        this.ctx.fillText('[H] CONTROLS', 25, this.canvas.height - 25);
+        this.ctx.fillStyle = this.grainPattern;
+        this.ctx.translate((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8);
+        this.ctx.fillRect(-8, -8, this.canvas.width + 16, this.canvas.height + 16);
         this.ctx.restore();
-    }
-
-    drawEndScreen(gameOverType) {
-        if (gameOverType === 'LOSE') {
-            this.drawMessage(
-                'TERMINATED',
-                'PRESS ENTER TO REBOOT CLONE',
-                '#ff0055'
-            );
-        } else if (gameOverType === 'WIN') {
-            this.drawMessage(
-                'MISSION COMPLETE',
-                'PRESS ENTER TO START NEW MISSION',
-                '#00f2ff'
-            );
-        }
     }
 }
