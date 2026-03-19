@@ -7,7 +7,7 @@ class SentryDrone extends MoveableObject {
         idle: { path: 'assets/img/03_enemies/drone/Idle.png', frames: 4, speed: 6 },
         forward: { path: 'assets/img/03_enemies/drone/Forward.png', frames: 4, speed: 4 },
         fire: { path: 'assets/img/03_enemies/drone/Fire.png', frames: 16, speed: 5 },
-        death: { path: 'assets/img/03_enemies/drone/Death.png', frames: 8, speed: 6 },
+        death: { path: 'assets/img/03_enemies/drone/Death.png', frames: 9, speed: 6 },
         hurt: { path: 'assets/img/09_explosions/plasma_explosion.png', frames: 6, speed: 2 }
     };
 
@@ -23,15 +23,17 @@ class SentryDrone extends MoveableObject {
         this.speedY = 0;
         this.acceleration = 0;
         this.lastShootTime = 0;
-        this.shootCooldown = 2000;
+        this.shootCooldown = 1000;
         this.playAnimation('idle');
     }
 
     updateState() {
         if (this.isDead()) {
             this.handleDeath();
+            super.animate();
             return;
         }
+
         this.updateBehavior();
         this.floatEffect();
         super.animate();
@@ -49,7 +51,7 @@ class SentryDrone extends MoveableObject {
 
         if (distance < this.FIRE_RANGE) {
             this.playAnimation('fire');
-            this.executeShooting(diffX); // Hier wird geschossen
+            this.executeShooting(diffX);
         } else if (distance < this.AGGRO_RANGE) {
             this.pursueCharacter(diffX);
         } else {
@@ -59,19 +61,15 @@ class SentryDrone extends MoveableObject {
 
     executeShooting(diffX) {
         let currentTime = Date.now();
-
-        // Check 1: Ist der Cooldown abgelaufen?
         if (currentTime - this.lastShootTime > this.shootCooldown) {
 
-            // Check 2: Wir schießen erst, wenn die Animation ein paar Frames gelaufen ist (Realismus!)
             if (this.currentFrame === 2) {
-                // Richtung bestimmen: Wenn diffX > 0, ist Bud links von der Drohne
+
                 let shootMirrored = diffX > 0;
                 this.isMirrored = shootMirrored;
 
-                // Projektil erstellen
                 let projectileX = shootMirrored ? this.x : this.x + this.width;
-                let projectileY = this.y + 40; // Höhe anpassen, damit es aus der Mitte kommt
+                let projectileY = this.y + 40;
 
                 let shot = new EnemyPlasma(projectileX, projectileY, shootMirrored);
                 this.world.throwableObjects.push(shot);
@@ -91,9 +89,11 @@ class SentryDrone extends MoveableObject {
     }
 
     handleDeath() {
+
         this.playAnimation('death');
-        this.y += 3; // Sinkt langsam zu Boden beim Absturz
-        if (this.currentFrame >= this.frameCount - 1) {
+        this.y += 1.5;
+        this.x += this.isMirrored ? 1 : -1;
+        if (this.currentFrame >= this.animations.death.frames - 1) {
             this.isFinished = true;
         }
     }
