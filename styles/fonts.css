@@ -1,5 +1,5 @@
 @font-face {
-  font-display: swap;
+  font-display: block;
   font-family: "Cyberway Riders";
   font-style: normal;
   font-weight: 300;
@@ -8,16 +8,8 @@
 
 @font-face {
   font-display: swap;
-  font-family: "Science Gothic";
+  font-family: "ByteBounce";
   font-style: normal;
-  font-weight: 400;
-  src: url("../assets/fonts/science-gothic-v5-latin-regular.woff2") format("woff2");
-}
-
-@font-face {
-  font-display: swap;
-  font-family: "Science Gothic";
-  font-style: normal;
-  font-weight: 800;
-  src: url("../assets/fonts/science-gothic-v5-latin-800.woff2") format("woff2");
+  font-weight: 500;
+  src: url("../assets/fonts/ByteBounce.woff2") format("woff2");
 }
