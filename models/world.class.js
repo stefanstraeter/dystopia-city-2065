@@ -45,7 +45,9 @@ class World {
         this.character.y = this.groundLevel - this.character.height;
         this.enemies.forEach(enemy => {
             enemy.world = this;
-            enemy.y = this.groundLevel - enemy.height;
+            if (!(enemy instanceof SentryDrone)) {
+                enemy.y = this.groundLevel - enemy.height;
+            }
         });
         this.neonSigns.forEach(sign => sign.world = this);
         this.flyingVehicles.background.forEach(vehicle => vehicle.world = this);
@@ -138,12 +140,44 @@ class World {
         this.throwableObjects.forEach((projectile) => {
             if (projectile.hasHit) return;
 
-            if (projectile instanceof BossBomb) {
-                this.checkBossBombCollision(projectile);
+            if (projectile.isEnemy) {
+                this.checkHit(projectile, this.character);
             } else {
-                this.checkPlayerProjectileCollision(projectile);
+                this.enemies.forEach(enemy => {
+                    this.checkHit(projectile, enemy);
+                });
             }
         });
+    }
+
+    checkHit(projectile, target) {
+        if (projectile.isEnemy && target !== this.character) return;
+        if (!projectile.isEnemy && target === this.character) return;
+
+        if (!projectile.hasHit && !target.isDead() && projectile.isColliding(target)) {
+            projectile.hasHit = true;
+            target.hit(projectile.damage, projectile.damageType);
+
+            if (target === this.character) {
+                this.healthBar.setPercentage(this.character.energy);
+            }
+
+            if (typeof projectile.explode === 'function') {
+                projectile.explode();
+            }
+        }
+    }
+
+    checkEnemyProjectileHitPlayer(projectile) {
+        if (this.character.isColliding(projectile)) {
+            projectile.hasHit = true;
+            this.character.hit(projectile.damage, projectile.damageType);
+            this.healthBar.setPercentage(this.character.energy);
+
+            if (projectile instanceof BossBomb && !projectile.hasExploded) {
+                projectile.explode();
+            }
+        }
     }
 
     checkBossBombCollision(bomb) {
@@ -156,7 +190,7 @@ class World {
         }
     }
 
-    checkPlayerProjectileCollision(projectile) {
+    checkPlayerProjectileHitEnemy(projectile) {
         this.enemies.forEach((enemy) => {
             if (!projectile.hasHit && !enemy.isDead() && projectile.isColliding(enemy)) {
                 projectile.hasHit = true;
