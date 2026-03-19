@@ -2,8 +2,9 @@ class ThrowableObject extends MoveableObject {
 
     static BLUEPRINTS = {
         MELEE: { damage: 10, cooldown: 0.8, type: 'melee' },
-        PLASMA: { damage: 10, speed: 15, cooldown: 0.05, type: 'plasma', img: '02_character_bud/Plasma.png', width: 120, height: 40, frames: 4 },
+        PLAYER_PLASMA: { damage: 10, speed: 15, cooldown: 0.05, type: 'plasma', img: '02_character_bud/Plasma.png', width: 120, height: 40, frames: 4 },
         ROCKET: { damage: 50, speed: 10, cooldown: 0.2, type: 'rocket', img: '02_character_bud/Rocket.png', width: 100, height: 50, frames: 1 },
+        ENEMY_PLASMA: { damage: 10, speed: 8, cooldown: 1.5, type: 'plasma', img: '03_enemies/drone/Plasma.png', width: 60, height: 20, frames: 4 },
         BOMB: { damage: 50, speed: 0, cooldown: 2.0, type: 'bomb', img: '03_enemies/endboss/Bomb.png', width: 150, height: 150, frames: 1 }
     };
 
@@ -37,9 +38,15 @@ class ThrowableObject extends MoveableObject {
     }
 }
 
-class Plasma extends ThrowableObject {
+class PlayerPlasma extends ThrowableObject {
     constructor(x, y, isMirrored) {
-        super(x, y, isMirrored, ThrowableObject.BLUEPRINTS.PLASMA);
+        super(x, y, isMirrored, ThrowableObject.BLUEPRINTS.PLAYER_PLASMA);
+    }
+}
+
+class EnemyPlasma extends ThrowableObject {
+    constructor(x, y, isMirrored) {
+        super(x, y, isMirrored, ThrowableObject.BLUEPRINTS.ENEMY_PLASMA);
     }
 }
 
