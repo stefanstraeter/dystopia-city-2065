@@ -23,21 +23,18 @@ class MoveableObject extends DrawableObject {
 
     animate() {
         this.frameCounter++;
-        if (this.frameCounter > this.frameSpeed) {
-            this.frameCounter = 0;
+        if (this.frameCounter <= this.frameSpeed) return;
 
-            let isDeathAnim = this.currentAnimation === 'death';
-            let isOneTimeAnim = this.isAnimatingOnce;
-            let isAtLastFrame = this.currentFrame >= this.frameCount - 1;
+        this.frameCounter = 0;
+        const isLastFrame = this.currentFrame >= this.frameCount - 1;
 
-            if (isDeathAnim && isAtLastFrame) {
-                this.currentFrame = this.frameCount - 1;
-            } else if (isOneTimeAnim && isAtLastFrame) {
-                this.isAnimatingOnce = false;
-                this.currentFrame = 0;
-            } else {
-                this.currentFrame = (this.currentFrame + 1) % this.frameCount;
-            }
+        if (this.currentAnimation === 'death' && isLastFrame) {
+            this.currentFrame = this.frameCount - 1;
+        } else if (this.isAnimatingOnce && isLastFrame) {
+            this.isAnimatingOnce = false;
+            this.currentFrame = 0;
+        } else {
+            this.currentFrame = (this.currentFrame + 1) % this.frameCount;
         }
     }
 
@@ -67,16 +64,17 @@ class MoveableObject extends DrawableObject {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;
         } else {
+            this.speedY = 0;
             if (this.world) {
                 this.y = this.world.groundLevel - this.height + this.footOffset;
             }
-            this.speedY = 0;
         }
     }
 
     isAboveGround() {
-        if (!this.world) return false;
-        return this.y < (this.world.groundLevel - this.height + this.footOffset);
+        if (this instanceof ThrowableObject) return true;
+        let ground = this.world ? this.world.groundLevel : 490;
+        return this.y < (ground - this.height + this.footOffset);
     }
 
     moveLeft() {
