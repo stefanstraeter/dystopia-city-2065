@@ -51,6 +51,7 @@ function handleKeyboard(keyCode, isPressed) {
     if (keyCode == 40) keyboard.KEY_DOWN = isPressed;
     if (keyCode == 88) keyboard.KEY_X = isPressed;
     if (keyCode == 13) keyboard.KEY_ENTER = isPressed;
+    if (keyCode == 72) keyboard.KEY_H = isPressed;
 }
 
 window.addEventListener('resize', resizeGame);
