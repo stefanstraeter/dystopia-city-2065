@@ -166,6 +166,26 @@ class MoveableObject extends DrawableObject {
     isDead() {
         return this.energy <= 0;
     }
+
+    drawShadow(ctx, groundLevel) {
+        const isCharacter = this.constructor.name === 'Character';
+        const shadowYOffset = isCharacter ? 50 : 70;
+        const baseWidth = isCharacter ? 90 : (this.width * 0.7);
+        const baseHeight = isCharacter ? 10 : 12;
+        const opacity = isCharacter ? 0.3 : 0.2;
+        const centerX = this.x + this.width / 2;
+        const shadowY = groundLevel - shadowYOffset;
+        const footPoint = this.y + this.height - (isCharacter ? 80 : Math.abs(this.footOffset));
+        const distanceFromGround = Math.max(0, groundLevel - shadowYOffset - footPoint);
+        const scale = Math.max(0.3, 1 - (distanceFromGround / 400));
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.ellipse(centerX, shadowY, (baseWidth / 2) * scale, (baseHeight / 2) * scale, 0, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 0, 0, ${opacity * scale})`;
+        ctx.fill();
+        ctx.restore();
+    }
 }
 
 
