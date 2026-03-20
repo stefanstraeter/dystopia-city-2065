@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="styles/reset.css" />
     <link rel="stylesheet" href="styles/fonts.css" />
     <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/mobile.css" />
 
     <script src="models/drawable-object.class.js" defer></script>
     <script src="models/moveable-object.class.js" defer></script>
@@ -42,7 +43,7 @@
     <script src="models/collision-manager.class.js" defer></script>
     <script src="models/world.class.js" defer></script>
 
-    <script src="js/preloader.js"></script>
+    <script src="js/preloader.js" defer></script>
     <script src="js/mobile-controls.js" defer></script>
     <script src="js/game.js" defer></script>
   </head>
@@ -51,16 +52,18 @@
     <div class="game-container">
       <canvas id="canvas" class="game-canvas" width="800" height="450"></canvas>
 
+      <div class="controls-group system-btns">
+        <button id="btn-mission" class="ctrl-btn-small btn-neon-yellow">M</button>
+        <button id="btn-controls" class="ctrl-btn-small btn-neon-yellow">C</button>
+      </div>
+
       <div class="mobile-controls-overlay">
         <div class="controls-group movement-btns">
           <button id="btn-left" class="ctrl-btn btn-neon-blue">◀</button>
           <button id="btn-right" class="ctrl-btn btn-neon-blue">▶</button>
         </div>
 
-        <div class="controls-group system-btns">
-          <button id="btn-mission" class="ctrl-btn-small btn-neon-yellow">M</button>
-          <button id="btn-controls" class="ctrl-btn-small btn-neon-yellow">C</button>
-        </div>
+        <button id="btn-start-game">Start Game</button>
 
         <div class="controls-group action-btns">
           <button id="btn-jump" class="ctrl-btn btn-neon-pink">JUMP</button>
@@ -75,8 +78,7 @@
 
     <button class="btn-fullscreen" onclick="toggleFullscreen()">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M14 10l8 -8m0 0h-6m6 0v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-        <path d="M10 14l-8 8m0 0h6m-6 0v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <path d="M14 10l8 -8m0 0h-6m6 0v6M10 14l-8 8m0 0h6m-6 0v-6" stroke="currentColor" stroke-width="2" fill="none" />
       </svg>
     </button>
   </body>
