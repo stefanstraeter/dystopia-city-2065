@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     <link rel="icon" type="image/svg+xml" href="./assets/favicon/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
@@ -45,7 +45,30 @@
   </head>
 
   <body>
-    <canvas id="canvas" class="game-canvas" width="800" height="450"></canvas>
+    <div class="game-container">
+      <canvas id="canvas" class="game-canvas" width="800" height="450"></canvas>
+
+      <div class="mobile-controls-overlay">
+        <div class="controls-group movement-btns">
+          <button id="btn-left" class="ctrl-btn btn-neon-blue">◀</button>
+          <button id="btn-right" class="ctrl-btn btn-neon-blue">▶</button>
+        </div>
+
+        <div class="controls-group system-btns">
+          <button id="btn-mission" class="ctrl-btn-small btn-neon-yellow">M</button>
+          <button id="btn-controls" class="ctrl-btn-small btn-neon-yellow">C</button>
+        </div>
+
+        <div class="controls-group action-btns">
+          <button id="btn-jump" class="ctrl-btn btn-neon-pink">JUMP</button>
+          <button id="btn-shoot" class="ctrl-btn btn-neon-pink">SHOOT</button>
+        </div>
+      </div>
+
+      <div class="orientation-overlay">
+        <p>PLEASE ROTATE YOUR DEVICE</p>
+      </div>
+    </div>
 
     <button class="btn-fullscreen" onclick="toggleFullscreen()">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

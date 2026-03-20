@@ -7,6 +7,7 @@ async function init() {
     if (!canvas) return;
 
     setupInputListeners();
+    bindMobileEvents();
     resizeGame();
 
     await Promise.all([
@@ -17,7 +18,7 @@ async function init() {
     world = new World(canvas, keyboard);
 
     window.addEventListener('mousedown', startInitialAudio, { once: true });
-    window.addEventListener('keydown', startInitialAudio, { once: true });
+    window.addEventListener('touchstart', startInitialAudio, { once: true });
 }
 
 function setupInputListeners() {
@@ -56,6 +57,45 @@ function startInitialAudio() {
     }
 }
 
+function initMobileControls() {
+    const btnMap = {
+        'btn-left': 'KEY_LEFT',
+        'btn-right': 'KEY_RIGHT',
+        'btn-jump': 'KEY_UP',
+        'btn-shoot': 'KEY_SPACE',
+        'btn-mission': 'KEY_M',
+        'btn-controls': 'KEY_C'
+    };
+
+    Object.keys(btnMap).forEach(id => {
+        const element = document.getElementById(id);
+        const key = btnMap[id];
+
+        element.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            keyboard[key] = true;
+        }, { passive: false });
+
+        element.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            keyboard[key] = false;
+        }, { passive: false });
+        element.addEventListener('touchcancel', (e) => {
+            e.preventDefault();
+            keyboard[key] = false;
+        }, { passive: false });
+    });
+
+}
+
+
+function bindMobileEvents() {
+    const controls = document.querySelector('.mobile-controls-overlay');
+    if (window.getComputedStyle(controls).display !== 'none') {
+        initMobileControls();
+    }
+}
+
 function resizeGame() {
     if (!canvas) return;
 
@@ -79,9 +119,10 @@ function resizeGame() {
 }
 
 function toggleFullscreen() {
+    let container = document.querySelector('.game-container');
     if (!document.fullscreenElement) {
-        canvas.requestFullscreen().catch(err => {
-            console.error(err.message);
+        container.requestFullscreen().catch(err => {
+            console.error("Fullscreen failed:", err);
         });
     } else {
         document.exitFullscreen();
