@@ -46,18 +46,31 @@ body::after {
   border: 0.1875rem solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 1.25rem 3.75rem rgba(0, 0, 0, 0.9);
   border-radius: 0.625rem;
-  max-width: 100vw;
-  max-height: 100vh;
 }
 
-.game-canvas:fullscreen {
-  width: 100vw;
-  height: 100vh;
+.game-container:fullscreen,
+.game-container:-webkit-full-screen {
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: #000;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.game-container:fullscreen .game-canvas,
+.game-container:-webkit-full-screen .game-canvas {
+  width: 100vw !important;
+  height: calc(100vw / (800 / 450)) !important;
+  max-height: 100vh !important;
+  max-width: calc(100vh * (800 / 450)) !important;
+  object-fit: contain;
   border: none;
   border-radius: 0;
-  object-fit: contain;
+  box-shadow: none;
 }
 
+/* --- 3. FULLSCREEN BUTTON --- */
 .btn-fullscreen {
   position: fixed;
   bottom: 2rem;
@@ -67,162 +80,23 @@ body::after {
   color: #e3dbc9;
   cursor: pointer;
   z-index: 1000;
+  display: block;
   transition: transform 0.2s ease;
 }
 
 .btn-fullscreen svg {
   width: 2rem;
   height: 2rem;
-  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 
-.btn-fullscreen:hover svg {
+.btn-fullscreen:hover {
   transform: scale(1.1);
 }
 
-/* --- 3. MOBILE CONTROLS LOGIC --- */
-.mobile-controls-overlay {
+.mobile-controls-overlay,
+.system-btns,
+.orientation-overlay,
+#btn-start-game {
   display: none;
-}
-
-@media (max-width: 64rem), (pointer: coarse) {
-  .mobile-controls-overlay {
-    display: block;
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 50;
-    padding: 1.25rem;
-    box-sizing: border-box;
-  }
-
-  .btn-fullscreen {
-    display: flex;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    position: fixed;
-    z-index: 1000;
-  }
-
-  .btn-fullscreen svg {
-    width: 1.6rem;
-    height: 1.6rem;
-    opacity: 0.7;
-  }
-}
-
-.controls-group {
-  position: absolute;
-  display: flex;
-  gap: 0.9375rem;
-  pointer-events: none;
-}
-
-.movement-btns {
-  bottom: 1.5625rem;
-  left: 1.5625rem;
-}
-
-.action-btns {
-  bottom: 1.5625rem;
-  right: 1.5625rem;
-  flex-direction: row-reverse;
-}
-
-.system-btns {
-  top: 1.75rem;
-  right: 1.75rem;
-}
-
-/* --- 4. BUTTON STYLING & NEON --- */
-button {
-  touch-action: manipulation;
-}
-
-.ctrl-btn,
-.ctrl-btn-small {
-  pointer-events: auto;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: 0.125rem solid;
-  text-transform: uppercase;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  opacity: 0.5;
-  transition:
-    opacity 0.2s,
-    transform 0.1s;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-}
-
-.ctrl-btn {
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 0.9375rem;
-  font-size: 1rem;
-}
-
-.ctrl-btn-small {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-}
-
-.btn-neon-blue {
-  border-color: #00f2ff;
-  box-shadow: 0 0 0.625rem rgba(0, 242, 255, 0.3);
-  text-shadow: 0 0 0.3125rem #00f2ff;
-}
-
-.btn-neon-pink {
-  border-color: #ff00ff;
-  box-shadow: 0 0 0.625rem rgba(255, 0, 255, 0.3);
-  text-shadow: 0 0 0.3125rem #ff00ff;
-}
-
-.btn-neon-yellow {
-  border-color: #dcdcdc;
-  color: #dcdcdc;
-  box-shadow: 0 0 0.625rem rgba(255, 234, 0, 0.3);
-}
-
-.ctrl-btn:active,
-.ctrl-btn-small:active {
-  transform: scale(0.9);
-  background: rgba(255, 255, 255, 0.2);
-  filter: brightness(1.5);
-  opacity: 1;
-}
-
-/* --- 5. ORIENTATION & OVERLAY --- */
-.orientation-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: #080808;
-  z-index: 9999;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #00f2ff;
-  text-align: center;
-  padding: 1.25rem;
-}
-
-@media (orientation: portrait) and (max-width: 64rem) {
-  .orientation-overlay {
-    display: flex;
-  }
-  .game-canvas,
-  .mobile-controls-overlay {
-    display: none;
-  }
 }
