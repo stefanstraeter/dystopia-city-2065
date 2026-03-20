@@ -43,7 +43,11 @@ class CollisionManager {
         } else {
             projectile.hasHit = true;
         }
-
+        if (target instanceof Endboss) {
+            if (this.world.level.StatusBar[3]) {
+                this.world.level.StatusBar[3].setPercentage(target.energy);
+            }
+        }
         if (target === this.world.character) {
             this.world.healthBar.setPercentage(this.world.character.energy);
             this.world.camera.activateShake(200, 10);

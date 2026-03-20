@@ -3,7 +3,8 @@ const level1 = {
     StatusBar: [
         new HealthBar(),
         new PlasmaBar(),
-        new AmmoBar()
+        new AmmoBar(),
+        new BossBar()
     ],
     statusIcons: [
         new HealthIcon(),

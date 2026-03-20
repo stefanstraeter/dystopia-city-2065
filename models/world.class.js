@@ -78,11 +78,21 @@ class World {
             this.uiManager.drawStartScreen();
             this.checkStartKey();
         } else {
+            this.updateBossBar();
             this.renderGame();
             this.renderUI();
             this.checkEndStates();
         }
         requestAnimationFrame(() => this.draw());
+    }
+
+    updateBossBar() {
+        let boss = this.level.enemies.find(e => e instanceof Endboss);
+        let bossBar = this.level.StatusBar[3];
+
+        if (boss && bossBar) {
+            bossBar.updatePosition(boss);
+        }
     }
 
     renderGame() {
@@ -101,20 +111,26 @@ class World {
         this.addObjectsToMap(this.level.backgrounds.foreground);
         this.addObjectsToMap(this.level.collectableItems);
         this.addObjectsToMap(this.level.neonSigns);
+
         this.character.drawShadow(this.ctx, this.groundLevel);
         this.level.enemies.forEach(enemy => {
-            const isGroundEnemy = !(enemy instanceof SentryDrone) && !(enemy instanceof FlyingVehicle);
-            if (isGroundEnemy) {
+            if (!(enemy instanceof SentryDrone) && !(enemy instanceof FlyingVehicle)) {
                 enemy.drawShadow(this.ctx, this.groundLevel);
             }
         });
+
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
+        if (this.level.StatusBar[3]) {
+            this.addToMap(this.level.StatusBar[3]);
+        }
     }
 
     renderUI() {
-        this.addObjectsToMap(this.level.StatusBar);
+        for (let i = 0; i < 3; i++) {
+            this.addToMap(this.level.StatusBar[i]);
+        }
         this.addObjectsToMap(this.level.statusIcons);
         this.checkUIToggles();
         this.uiManager.drawOverlays(this.showMission, this.showControls);
