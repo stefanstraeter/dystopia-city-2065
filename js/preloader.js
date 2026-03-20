@@ -1,5 +1,4 @@
 const ASSETS_TO_PRELOAD = [
-
     'assets/img/01_background/back-buildings.png',
     'assets/img/01_background/far-buildings.png',
     'assets/img/01_background/foreground.png',
@@ -7,7 +6,7 @@ const ASSETS_TO_PRELOAD = [
     'assets/img/02_character_bud/Idle.png',
     'assets/img/02_character_bud/Walk.png',
     'assets/img/02_character_bud/Jump.png',
-    'assets/img/02_character_bud/Attack_gun.png',
+    'assets/img/02_character_bud/Attack.png',
     'assets/img/02_character_bud/Hurt.png',
     'assets/img/02_character_bud/Death.png',
     'assets/img/02_character_bud/Plasma.png',
@@ -20,18 +19,15 @@ const ASSETS_TO_PRELOAD = [
 ];
 
 async function preloadAssets() {
-    console.log("Preloading started...");
     const promises = ASSETS_TO_PRELOAD.map(src => {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = src;
             img.onload = () => resolve();
             img.onerror = () => {
-                console.warn("Failed to load:", src);
                 resolve();
             };
         });
     });
     await Promise.all(promises);
-    console.log("Preloading finished.");
 }
