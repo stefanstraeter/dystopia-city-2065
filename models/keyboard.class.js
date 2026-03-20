@@ -6,5 +6,6 @@ class Keyboard {
     KEY_SPACE = false;
     KEY_ENTER = false;
     LEFT_CLICK = false;
-    KEY_H = false;
+    KEY_M = false;
+    KEY_C = false;
 }
