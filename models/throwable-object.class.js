@@ -51,12 +51,6 @@ class EnemyPlasma extends ThrowableObject {
     }
 }
 
-class Rocket extends ThrowableObject {
-    constructor(x, y, isMirrored) {
-        super(x, y, isMirrored, ThrowableObject.BLUEPRINTS.ROCKET);
-    }
-}
-
 class BossBomb extends ThrowableObject {
     constructor(x, y, world) {
         super(x, y, false, ThrowableObject.BLUEPRINTS.BOMB);
@@ -99,11 +93,9 @@ class BossBomb extends ThrowableObject {
         this.height = 250;
         this.x -= (this.width - oldW) / 2;
         this.y = this.world.groundLevel - this.height + 20;
-
-        if (this.world && typeof this.world.triggerCameraShake === 'function') {
-            this.world.triggerCameraShake();
+        if (this.world && this.world.camera) {
+            this.world.camera.activateShake(600, 30);
         }
-
         this.playAnimation('explosion');
     }
 }
