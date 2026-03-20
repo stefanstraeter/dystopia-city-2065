@@ -105,15 +105,22 @@ class World {
         this.ctx.restore();
     }
 
+
     drawWorldEntities() {
         this.addObjectsToMap(this.level.vehicles.midground);
         this.addObjectsToMap(this.level.backgrounds.foreground);
         this.addObjectsToMap(this.level.collectableItems);
         this.addObjectsToMap(this.level.neonSigns);
+        this.drawCharacterShadow();
+        this.level.enemies.forEach(enemy => {
+            const isGroundEnemy = !(enemy instanceof SentryDrone) && !(enemy instanceof FlyingVehicle);
+            if (isGroundEnemy) {
+                this.drawObjectShadow(enemy, enemy.width * 0.7, 12);
+            }
+        });
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
-
     }
 
     renderUI() {
@@ -220,5 +227,37 @@ class World {
 
             this.level.vehicles.background.push(v);
         }
+    }
+
+    drawCharacterShadow() {
+        const centerX = this.character.x + this.character.width / 2;
+        const shadowY = this.groundLevel - 50;
+        const distanceFromGround = (this.groundLevel - this.character.height) - this.character.y;
+        const scale = Math.max(0.3, 1 - (distanceFromGround / 450));
+
+        const radiusX = 45 * scale;
+        const radiusY = 5 * scale;
+
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.ellipse(centerX, shadowY, radiusX, radiusY, 0, 0, Math.PI * 2);
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${0.3 * scale})`;
+        this.ctx.fill();
+        this.ctx.restore();
+    }
+
+    drawObjectShadow(obj, width = 100, height = 12) {
+        const centerX = obj.x + obj.width / 2;
+        const shadowY = this.groundLevel - 70;
+        const footOffset = obj.footOffset || 80;
+        const currentFootY = obj.y + obj.height + (obj.footOffset ? obj.footOffset : -80);
+        const distanceFromGround = Math.max(0, this.groundLevel - currentFootY);
+        const scale = Math.max(0.3, 1 - (distanceFromGround / 400));
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.ellipse(centerX, shadowY, (width / 2) * scale, (height / 2) * scale, 0, 0, Math.PI * 2);
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${0.2 * scale})`;
+        this.ctx.fill();
+        this.ctx.restore();
     }
 }
