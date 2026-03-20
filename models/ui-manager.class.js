@@ -128,7 +128,7 @@ class UIManager {
             { k: '[ UP ]', a: 'JETPACK' },
             { k: '[ SPACE ]', a: 'PLASMA' },
             { k: '[ ENTER ]', a: 'START' },
-            { k: '[ M / C ]', a: 'CLOSE' } // M oder C zum Schließen
+            { k: '[ M / C ]', a: 'CLOSE' }
         ];
         this.prepareText('500 2rem "ByteBounce"', 'center', UIManager.THEMES.PRIMARY);
         controls.forEach((c, i) => {
@@ -155,7 +155,7 @@ class UIManager {
 
     drawEndScreen(type) {
         const isWin = type === 'WIN';
-        const title = isWin ? 'MISSION COMPLETE' : 'TERMINATED';
+        const title = isWin ? 'SECTOR 7 CLEARED' : 'CONNECTION LOST...';
         const sub = isWin ? 'PRESS ENTER FOR NEW MISSION' : 'PRESS ENTER TO REBOOT';
         const color = isWin ? UIManager.THEMES.WIN : UIManager.THEMES.LOSE;
         this.drawMessage(title, sub, color);
