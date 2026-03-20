@@ -150,7 +150,7 @@ class MoveableObject extends DrawableObject {
 
         let timePassed = (Date.now() - lastHitTime) / 1000;
         const thresholds = {
-            'melee': 0.8,
+            'melee': 1.0,
             'plasma': 0.05,
             'bomb': 1.0,
             'default': 0.2

@@ -14,7 +14,7 @@ class CollisionManager {
 
         this.world.level.enemies.forEach((enemy) => {
             if (!enemy.isDead() && this.world.character.isColliding(enemy)) {
-                this.world.character.hit(meleeDamage);
+                this.world.character.hit(meleeDamage, 'melee');
                 this.world.healthBar.setPercentage(this.world.character.energy);
                 this.world.camera.activateShake(100, 5);
             }

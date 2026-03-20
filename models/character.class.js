@@ -5,7 +5,7 @@ class Character extends MoveableObject {
         attack: { path: 'assets/img/02_character_bud/Attack.png', frames: 6, speed: 1 },
         jump: { path: 'assets/img/02_character_bud/Jump.png', frames: 7, speed: 3 },
         hurt: { path: 'assets/img/02_character_bud/Hurt.png', frames: 2, speed: 4 },
-        death: { path: 'assets/img/02_character_bud/Death.png', frames: 7, speed: 2 }
+        death: { path: 'assets/img/02_character_bud/Death.png', frames: 7, speed: 12 }
     };
 
     lastShootTime = 0;
