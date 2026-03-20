@@ -13,7 +13,7 @@ class AudioManager {
         this.sounds.background.loop = true;
         this.sounds.background.volume = 0.2;
         if (this.sounds.plasma) {
-            this.sounds.plasma.volume = 0.05;
+            this.sounds.plasma.volume = 0.02;
         }
         if (this.sounds.explosion) {
             this.sounds.explosion.volume = 0.3;
