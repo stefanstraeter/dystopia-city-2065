@@ -72,5 +72,6 @@ class CollisionManager {
             this.world.character.energy = Math.min(100, this.world.character.energy + 20);
             this.world.healthBar.setPercentage(this.world.character.energy);
         }
+        this.world.audioManager.play('collect');
     }
 }

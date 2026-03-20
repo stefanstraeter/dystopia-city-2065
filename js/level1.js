@@ -14,7 +14,9 @@ const level1 = {
     collectableItems: [
         new PlasmaCore(660, 100),
         new Mediapack(100, 70),
+        new PowerCell(1020, 90),
         new PlasmaCore(1250, 60),
+        new Mediapack(1850, 30),
         new PowerCell(1950, 90),
         new Mediapack(2250, 120),
         new PlasmaCore(3100, 350)
@@ -44,10 +46,12 @@ const level1 = {
     },
     neonSigns: [
         new NeonSign('assets/img/05_neon_signs/monitor_face.png', 10, 80, 120, 120, 4, 6),
+        new NeonSign('assets/img/05_neon_signs/coke.png', 220, 20, 45, 110, 3, 10),
         new NeonSign('assets/img/05_neon_signs/side-sign.png', 645, 25, 35, 140, 4, 7),
         new NeonSign('assets/img/05_neon_signs/green-sign.png', 1055, 60, 60, 140, 4, 8),
         new NeonSign('assets/img/05_neon_signs/coke.png', 1140, -10, 45, 110, 3, 10),
         new NeonSign('assets/img/05_neon_signs/scroll-sign.png', 1850, 10, 30, 140, 4, 9),
+        new NeonSign('assets/img/05_neon_signs/green-sign.png', 2000, -10, 60, 140, 4, 8),
         new NeonSign('assets/img/05_neon_signs/monitor_face.png', 2255, 100, 120, 120, 4, 6),
         new NeonSign('assets/img/05_neon_signs/chinese-sign.png', 2435, 10, 60, 140, 4, 9),
     ],

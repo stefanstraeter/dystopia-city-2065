@@ -69,6 +69,7 @@ class Character extends MoveableObject {
             let plasmaY = this.y + 80;
 
             this.world.throwableObjects.push(new PlayerPlasma(plasmaX, plasmaY, this.isMirrored));
+            this.world.audioManager.play('plasma');
             this.lastShootTime = currentTime;
         }
     }
@@ -86,4 +87,4 @@ class Character extends MoveableObject {
     isDeadAnimationFinished() {
         return this.energy <= 0 && this.currentFrame >= this.frameCount - 1;
     }
-}
+} 

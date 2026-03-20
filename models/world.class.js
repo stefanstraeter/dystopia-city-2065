@@ -148,10 +148,12 @@ class World {
 
     checkStartKey() {
         const isGameOver = (this.character && this.character.energy <= 0) || this.bossIsDead();
+
         if (isGameOver && this.keyboard.KEY_ENTER) {
             location.reload();
         } else if (!this.gameStarted && (this.keyboard.KEY_ENTER || this.keyboard.LEFT_CLICK)) {
             this.gameStarted = true;
+            this.audioManager.play('background');
         }
     }
 
