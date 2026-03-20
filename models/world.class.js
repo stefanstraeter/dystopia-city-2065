@@ -1,7 +1,5 @@
 class World {
     canvas; ctx; keyboard;
-    camera_x = 0;
-    isShaking = false;
     groundLevel = 490;
     character; level; enemies;
     throwableObjects = [];
@@ -17,50 +15,33 @@ class World {
         this.keyboard = keyboard;
         this.uiManager = new UIManager(this.ctx, this.canvas);
         this.collisionManager = new CollisionManager(this);
+        this.levelPopulator = new LevelPopulator(this);
         this.level = level1;
         this.audioManager = new AudioManager();
-
+        this.camera = new Camera();
         this.initLevel();
         this.draw();
         this.run();
+
     }
 
     initLevel() {
-        this.healthBar = this.level.UIElements[0];
-        this.plasmaBar = this.level.UIElements[1];
-        this.ammoBar = this.level.UIElements[2];
+        this.healthBar = this.level.StatusBar[0];
+        this.plasmaBar = this.level.StatusBar[1];
+        this.ammoBar = this.level.StatusBar[2];
         this.character = new Character(100, 250, 250, 5);
         this.character.world = this;
         this.character.y = this.groundLevel - this.character.height;
-        this.spawnTraffic(15);
-        this.applyWorldToObjects();
-    }
-
-    applyWorldToObjects() {
-        const allObjects = [
-            ...this.level.enemies,
-            ...this.level.neonSigns,
-            ...this.level.collectableItems,
-            ...this.level.vehicles.background,
-            ...this.level.vehicles.midground
-        ];
-
-        allObjects.forEach(obj => {
-            obj.world = this;
-
-            const isFlying = obj instanceof FlyingVehicle || obj instanceof SentryDrone;
-            const isItem = obj instanceof CollectableObject;
-
-            if (obj instanceof MoveableObject && !isFlying && !isItem) {
-                obj.y = this.groundLevel - obj.height;
-            }
-        });
+        this.levelPopulator.spawnTraffic(15);
+        this.levelPopulator.applyWorldToObjects();
     }
 
     run() {
         setInterval(() => {
-            const isDying = this.character.energy <= 0 && !this.character.isDeadAnimationFinished();
-            const canUpdate = this.gameStarted && !this.showMission && !this.showControls && (this.character.energy > 0 || isDying);
+            const characterIsDying = this.character.energy <= 0 && !this.character.isDeadAnimationFinished();
+            const gameIsPaused = this.showMission || this.showControls;
+            const canUpdate = this.gameStarted && !gameIsPaused && (this.character.energy > 0 || characterIsDying);
+
             if (canUpdate) {
                 this.updateAllObjects();
                 this.collisionManager.checkAll();
@@ -68,16 +49,25 @@ class World {
         }, 1000 / 60);
     }
 
-    updateAllObjects() {
-        const objects = [
-            this.character, ...this.level.enemies, ...this.throwableObjects,
-            ...this.level.neonSigns, ...this.level.vehicles.background,
-            ...this.level.vehicles.midground, ...this.level.collectableItems
+    getAllObjects() {
+        return [
+            this.character,
+            ...this.level.enemies,
+            ...this.throwableObjects,
+            ...this.level.neonSigns,
+            ...this.level.vehicles.background,
+            ...this.level.vehicles.midground,
+            ...this.level.collectableItems
         ];
-        objects.forEach(obj => obj.updateState());
+    }
 
+    updateAllObjects() {
+        this.getAllObjects().forEach(object => {
+            if (object) object.updateState();
+        });
         this.filterProjectiles();
         this.filterEnemies();
+        this.level.collectableItems = this.level.collectableItems.filter(item => !item.isCollected);
         this.updateCamera();
         if (this.character.isDead()) this.resetBossBehavior();
     }
@@ -100,7 +90,7 @@ class World {
         this.drawParallaxLayer(0.3, this.level.vehicles.background);
         this.drawParallaxLayer(0.6, this.level.backgrounds.middle);
         this.ctx.save();
-        this.ctx.translate(this.camera_x, 0);
+        this.ctx.translate(this.camera.x, 0);
         this.drawWorldEntities();
         this.ctx.restore();
     }
@@ -111,11 +101,11 @@ class World {
         this.addObjectsToMap(this.level.backgrounds.foreground);
         this.addObjectsToMap(this.level.collectableItems);
         this.addObjectsToMap(this.level.neonSigns);
-        this.drawCharacterShadow();
+        this.character.drawShadow(this.ctx, this.groundLevel);
         this.level.enemies.forEach(enemy => {
             const isGroundEnemy = !(enemy instanceof SentryDrone) && !(enemy instanceof FlyingVehicle);
             if (isGroundEnemy) {
-                this.drawObjectShadow(enemy, enemy.width * 0.7, 12);
+                enemy.drawShadow(this.ctx, this.groundLevel);
             }
         });
         this.addToMap(this.character);
@@ -124,18 +114,10 @@ class World {
     }
 
     renderUI() {
-        this.addObjectsToMap(this.level.UIElements);
+        this.addObjectsToMap(this.level.StatusBar);
         this.addObjectsToMap(this.level.statusIcons);
-
         this.checkUIToggles();
-
-        if (this.showMission) {
-            this.uiManager.drawMissionOverlay();
-        } else if (this.showControls) {
-            this.uiManager.drawControlsOverlay();
-        } else {
-            this.uiManager.drawHelpHint();
-        }
+        this.uiManager.drawOverlays(this.showMission, this.showControls);
     }
 
     checkEndStates() {
@@ -149,9 +131,12 @@ class World {
     }
 
     checkStartKey() {
-        const isGameOver = this.character.energy <= 0 || this.bossIsDead();
-        if (isGameOver && this.keyboard.KEY_ENTER) location.reload();
-        else if (!this.gameStarted && (this.keyboard.KEY_ENTER || this.keyboard.LEFT_CLICK)) this.gameStarted = true;
+        const isGameOver = (this.character && this.character.energy <= 0) || this.bossIsDead();
+        if (isGameOver && this.keyboard.KEY_ENTER) {
+            location.reload();
+        } else if (!this.gameStarted && (this.keyboard.KEY_ENTER || this.keyboard.LEFT_CLICK)) {
+            this.gameStarted = true;
+        }
     }
 
     checkUIToggles() {
@@ -173,15 +158,13 @@ class World {
 
     drawParallaxLayer(speed, objects) {
         this.ctx.save();
-        this.ctx.translate(this.camera_x * speed, 0);
+        this.ctx.translate(this.camera.x * speed, 0);
         this.addObjectsToMap(objects);
         this.ctx.restore();
     }
 
     updateCamera() {
-        let target_x = Math.max(-(this.level.level_end_x - this.canvas.width), Math.min(0, -this.character.x + 100));
-        let shake = this.isShaking ? (Math.random() - 0.5) * 20 : 0;
-        this.camera_x = target_x + shake;
+        this.camera.update(this.character, this.level, this.canvas);
     }
 
     filterProjectiles() {
@@ -196,7 +179,7 @@ class World {
     }
 
     bossIsDead() {
-        let boss = this.level.enemies.find(e => e instanceof Endboss);
+        let boss = this.level.enemies.find(enemy => enemy instanceof Endboss);
         return boss && boss.isDead();
     }
 
@@ -207,57 +190,5 @@ class World {
     addToMap(mo) { mo.draw(this.ctx); }
     addObjectsToMap(objs) { objs.forEach(obj => this.addToMap(obj)); }
 
-    spawnTraffic(count) {
-        for (let i = 0; i < count; i++) {
-            let x = Math.random() * this.level.level_end_x;
-            let y = 20 + Math.random() * 180;
-            let speed = 0.5 + Math.random() * 2;
-            let direction = Math.random() > 0.5 ? 1 : -1;
 
-            let type = Math.random();
-            let v;
-
-            if (type < 0.3) {
-                v = new Police(x, y, speed, direction, this, 0.3);
-            } else if (type < 0.6) {
-                v = new Drone(x, y, speed, direction, this, 0.3);
-            } else {
-                v = new Truck(x, y, speed, direction, this, 0.3);
-            }
-
-            this.level.vehicles.background.push(v);
-        }
-    }
-
-    drawCharacterShadow() {
-        const centerX = this.character.x + this.character.width / 2;
-        const shadowY = this.groundLevel - 50;
-        const distanceFromGround = (this.groundLevel - this.character.height) - this.character.y;
-        const scale = Math.max(0.3, 1 - (distanceFromGround / 450));
-
-        const radiusX = 45 * scale;
-        const radiusY = 5 * scale;
-
-        this.ctx.save();
-        this.ctx.beginPath();
-        this.ctx.ellipse(centerX, shadowY, radiusX, radiusY, 0, 0, Math.PI * 2);
-        this.ctx.fillStyle = `rgba(0, 0, 0, ${0.3 * scale})`;
-        this.ctx.fill();
-        this.ctx.restore();
-    }
-
-    drawObjectShadow(obj, width = 100, height = 12) {
-        const centerX = obj.x + obj.width / 2;
-        const shadowY = this.groundLevel - 70;
-        const footOffset = obj.footOffset || 80;
-        const currentFootY = obj.y + obj.height + (obj.footOffset ? obj.footOffset : -80);
-        const distanceFromGround = Math.max(0, this.groundLevel - currentFootY);
-        const scale = Math.max(0.3, 1 - (distanceFromGround / 400));
-        this.ctx.save();
-        this.ctx.beginPath();
-        this.ctx.ellipse(centerX, shadowY, (width / 2) * scale, (height / 2) * scale, 0, 0, Math.PI * 2);
-        this.ctx.fillStyle = `rgba(0, 0, 0, ${0.2 * scale})`;
-        this.ctx.fill();
-        this.ctx.restore();
-    }
 }
