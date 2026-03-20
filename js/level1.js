@@ -1,6 +1,6 @@
 const level1 = {
     level_end_x: 3400,
-    UIElements: [
+    StatusBar: [
         new HealthBar(),
         new PlasmaBar(),
         new AmmoBar()
