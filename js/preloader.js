@@ -1,3 +1,5 @@
+window.IMAGE_CACHE = {};
+
 const ASSETS_TO_PRELOAD = [
     'assets/img/01_background/back-buildings.png',
     'assets/img/01_background/far-buildings.png',
@@ -23,11 +25,19 @@ async function preloadAssets() {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = src;
-            img.onload = () => resolve();
-            img.onerror = () => {
+
+            img.onload = async () => {
+                try {
+                    await img.decode();
+                } catch (e) { }
+
+                window.IMAGE_CACHE[src] = img;
                 resolve();
             };
+
+            img.onerror = () => resolve();
         });
     });
+
     await Promise.all(promises);
 }

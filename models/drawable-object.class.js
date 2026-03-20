@@ -14,8 +14,22 @@ class DrawableObject {
     world;
 
     loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
+        if (window.IMAGE_CACHE && window.IMAGE_CACHE[path]) {
+            this.img = window.IMAGE_CACHE[path];
+        } else {
+            const img = new Image();
+            img.src = path;
+            img.onload = async () => {
+                try {
+                    await img.decode();
+                } catch (e) { }
+
+                if (window.IMAGE_CACHE) {
+                    window.IMAGE_CACHE[path] = img;
+                }
+            };
+            this.img = img;
+        }
     }
 
     animate() {
@@ -27,12 +41,15 @@ class DrawableObject {
     }
 
     draw(ctx) {
-        if (!this.visible || !this.img || !this.img.complete) return;
+        if (!this.visible || !this.img || !this.img.naturalWidth) return;
         this.drawImage(ctx);
     }
 
     drawImage(ctx) {
+        if (!this.img.width) return;
+
         const frameWidth = this.img.width / this.frameCount;
+
         ctx.drawImage(
             this.img,
             this.currentFrame * frameWidth, 0,
