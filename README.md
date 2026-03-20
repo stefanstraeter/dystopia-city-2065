@@ -14,7 +14,7 @@
 
 ### Links
 
-- **Live Site:** [Live Demo](https://dein-username.github.io/neon-city-2065/)
+- **Live Site:** [Live Demo](https://stefanstraeter.github.io/neon-city-2065/)
 
 ### Mockup
 
