@@ -12,35 +12,40 @@ class AudioManager {
     initSettings() {
         this.sounds.background.loop = true;
         this.sounds.background.volume = 0.2;
-        if (this.sounds.plasma) {
-            this.sounds.plasma.volume = 0.02;
-        }
-        if (this.sounds.explosion) {
-            this.sounds.explosion.volume = 0.3;
-        }
-        if (this.sounds.collect) {
-            this.sounds.collect.volume = 0.3;
-        }
-    }
 
-    setVolume(name, volume) {
-        if (this.sounds[name]) {
-            this.sounds[name].volume = Math.max(0, Math.min(1, volume));
-        }
+        this.sounds.plasma.volume = 0.02;
+        this.sounds.explosion.volume = 0.3;
+        this.sounds.collect.volume = 0.3;
     }
 
     play(name) {
         const s = this.sounds[name];
         if (!s) return;
+
         if (name !== 'background') {
             s.currentTime = 0;
         }
-        s.play().catch(e => console.warn("Audio-Autoplay blockiert:", e));
+
+        s.play().catch(() => { });
     }
+
     stop(name) {
-        if (this.sounds[name]) {
-            this.sounds[name].pause();
-            this.sounds[name].currentTime = 0;
-        }
+        const s = this.sounds[name];
+        if (!s) return;
+
+        s.pause();
+        s.currentTime = 0;
+    }
+
+    unlockAudio() {
+        Object.values(this.sounds).forEach(sound => {
+            sound.muted = true;
+
+            sound.play().then(() => {
+                sound.pause();
+                sound.currentTime = 0;
+                sound.muted = false;
+            }).catch(() => { });
+        });
     }
 }

@@ -14,13 +14,18 @@ async function init() {
     if (!canvas) return;
 
     setupInput();
-    setupMobile();
     resizeGame();
 
     await loadInitialAssets();
-
     world = new World(canvas, keyboard);
-    setupAudioTrigger();
+    setupMobile();
+}
+
+
+function setupMobile() {
+    if (typeof MobileControls !== 'undefined') {
+        MobileControls.init(keyboard);
+    }
 }
 
 
@@ -38,12 +43,6 @@ function toggleMouseClick(event, isPressed) {
     if (event.button === 0) keyboard.LEFT_CLICK = isPressed;
 }
 
-function setupMobile() {
-    if (typeof MobileControls !== 'undefined') {
-        MobileControls.init();
-    }
-}
-
 async function loadInitialAssets() {
     await Promise.all([
         document.fonts.ready,
@@ -51,12 +50,6 @@ async function loadInitialAssets() {
     ]);
 }
 
-function setupAudioTrigger() {
-    const startAudio = () => startInitialAudio();
-    window.addEventListener('mousedown', startAudio, { once: true });
-    window.addEventListener('touchstart', startAudio, { once: true });
-    window.addEventListener('keydown', startAudio, { once: true });
-}
 
 function handleKeyboard(code, isPressed) {
     const keyMap = {
@@ -75,12 +68,18 @@ function handleKeyboard(code, isPressed) {
     }
 }
 
-function startInitialAudio() {
+async function startInitialAudio() {
     if (world && world.audioManager) {
-        if (world.audioManager.context && world.audioManager.context.state === 'suspended') {
-            world.audioManager.context.resume();
+        const am = world.audioManager;
+        if (am.context && am.context.state === 'suspended') {
+            await am.context.resume();
         }
-        world.audioManager.play('background');
+
+        try {
+            await am.play('background');
+        } catch (err) {
+            console.warn("Audio konnte noch nicht gestartet werden:", err);
+        }
     }
 }
 
@@ -107,12 +106,40 @@ function toggleFullscreen() {
     const isFS = document.fullscreenElement || document.webkitFullscreenElement;
 
     if (!isFS) {
-        if (container.requestFullscreen) container.requestFullscreen();
-        else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+        if (container.requestFullscreen) {
+            container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) {
+            container.webkitRequestFullscreen();
+        }
     } else {
-        if (document.exitFullscreen) document.exitFullscreen();
-        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
     }
 }
 
+
+function unlockAudio() {
+    if (world && world.audioManager) {
+        if (world.audioManager.context && world.audioManager.context.state === 'suspended') {
+            world.audioManager.context.resume();
+        }
+        const playPromise = world.audioManager.play('background');
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(err => {
+                console.warn("Musik-Autoplay wurde blockiert:", err);
+            });
+        }
+    }
+}
+
+window.addEventListener('keydown', () => {
+    if (!world.gameStarted) unlockAudio();
+}, { once: true });
+
+
 document.addEventListener('DOMContentLoaded', init);
+
+

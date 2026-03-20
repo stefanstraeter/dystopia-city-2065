@@ -1,25 +1,13 @@
 const MobileControls = {
-    init: function () {
-        if (this.isMobileVisible()) {
+    keyboard: null,
+
+    init: function (keyboardInstance) {
+        this.keyboard = keyboardInstance;
+        const startBtn = document.getElementById("btn-start-game");
+        if (startBtn) {
             this.bindButtonEvents();
             this.setupStartScreen();
         }
-    },
-
-    isMobileVisible: function () {
-        const controls = document.querySelector(".mobile-controls-overlay");
-        return controls && window.getComputedStyle(controls).display !== "none";
-    },
-
-    bindButtonEvents: function () {
-        const btnMap = this.getButtonMapping();
-
-        Object.keys(btnMap).forEach((id) => {
-            const element = document.getElementById(id);
-            if (element) {
-                this.addTouchListeners(element, btnMap[id]);
-            }
-        });
     },
 
     getButtonMapping: function () {
@@ -33,39 +21,63 @@ const MobileControls = {
         };
     },
 
+    bindButtonEvents: function () {
+        const btnMap = this.getButtonMapping();
+        Object.keys(btnMap).forEach((id) => {
+            const element = document.getElementById(id);
+            if (element) {
+                this.addTouchListeners(element, btnMap[id]);
+            }
+        });
+    },
+
     addTouchListeners: function (element, keyCode) {
         element.addEventListener("touchstart", (e) => this.handleTouch(e, keyCode, true), { passive: false });
         element.addEventListener("touchend", (e) => this.handleTouch(e, keyCode, false), { passive: false });
         element.addEventListener("touchcancel", (e) => this.handleTouch(e, keyCode, false), { passive: false });
     },
 
-
     handleTouch: function (event, keyCode, isPressed) {
         event.preventDefault();
-        keyboard[keyCode] = isPressed;
+        if (this.keyboard) {
+            this.keyboard[keyCode] = isPressed;
+        }
     },
-
     setupStartScreen: function () {
         const startBtn = document.getElementById("btn-start-game");
         if (!startBtn) return;
 
-        startBtn.addEventListener("click", () => this.executeStartSequence());
-        startBtn.addEventListener("touchstart", (e) => {
+        startBtn.addEventListener("pointerdown", (e) => {
             e.preventDefault();
+
+            this.startMusic();          // 🔥 ausgelagert
             this.executeStartSequence();
-        }, { passive: false }
-        );
+
+        }, { once: true });
     },
 
+    startMusic: function () {
+        const bg = world?.audioManager?.sounds?.background;
+        if (!bg || !bg.paused) return;
+
+        bg.volume = 0;
+        bg.muted = true;
+
+        bg.play().then(() => {
+            bg.muted = false;
+
+            setTimeout(() => {
+                bg.volume = 0.2;
+            }, 2000);
+
+        }).catch(() => { });
+    },
 
     executeStartSequence: function () {
-        keyboard.KEY_ENTER = true;
-        setTimeout(() => (keyboard.KEY_ENTER = false), 100);
+        if (world) world.gameStarted = true;
 
-        const startOverlay = document.getElementById("start-screen");
-        if (startOverlay) startOverlay.style.display = "none";
+        const btn = document.getElementById("btn-start-game");
+        if (btn) btn.style.display = "none";
+    }
 
-        if (typeof startInitialAudio === "function") startInitialAudio();
-        if (typeof toggleFullscreen === "function") toggleFullscreen();
-    },
 };
