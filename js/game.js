@@ -77,6 +77,9 @@ function handleKeyboard(code, isPressed) {
 
 function startInitialAudio() {
     if (world && world.audioManager) {
+        if (world.audioManager.context && world.audioManager.context.state === 'suspended') {
+            world.audioManager.context.resume();
+        }
         world.audioManager.play('background');
     }
 }
