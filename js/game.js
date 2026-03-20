@@ -41,7 +41,8 @@ function handleKeyboard(code, isPressed) {
         'ArrowDown': 'KEY_DOWN',
         'Space': 'KEY_SPACE',
         'Enter': 'KEY_ENTER',
-        'KeyH': 'KEY_H'
+        'KeyM': 'KEY_M',
+        'KeyC': 'KEY_C'
     };
 
     if (keyMap[code]) {

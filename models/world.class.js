@@ -6,7 +6,10 @@ class World {
     character; level; enemies;
     throwableObjects = [];
     gameStarted = false;
-    showHelp = false;
+    showMission = false;
+    showControls = false;
+    mKeyPressed = false;
+    cKeyPressed = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -57,7 +60,7 @@ class World {
     run() {
         setInterval(() => {
             const isDying = this.character.energy <= 0 && !this.character.isDeadAnimationFinished();
-            const canUpdate = this.gameStarted && !this.showHelp && (this.character.energy > 0 || isDying);
+            const canUpdate = this.gameStarted && !this.showMission && !this.showControls && (this.character.energy > 0 || isDying);
             if (canUpdate) {
                 this.updateAllObjects();
                 this.collisionManager.checkAll();
@@ -116,8 +119,16 @@ class World {
     renderUI() {
         this.addObjectsToMap(this.level.UIElements);
         this.addObjectsToMap(this.level.statusIcons);
-        this.checkHelpToggle();
-        this.showHelp ? this.uiManager.drawHelpOverlay() : this.uiManager.drawHelpHint();
+
+        this.checkUIToggles();
+
+        if (this.showMission) {
+            this.uiManager.drawMissionOverlay();
+        } else if (this.showControls) {
+            this.uiManager.drawControlsOverlay();
+        } else {
+            this.uiManager.drawHelpHint();
+        }
     }
 
     checkEndStates() {
@@ -136,12 +147,20 @@ class World {
         else if (!this.gameStarted && (this.keyboard.KEY_ENTER || this.keyboard.LEFT_CLICK)) this.gameStarted = true;
     }
 
-    checkHelpToggle() {
-        if (this.keyboard.KEY_H && !this.hKeyPressed) {
-            this.showHelp = !this.showHelp;
-            this.hKeyPressed = true;
-        } else if (!this.keyboard.KEY_H) {
-            this.hKeyPressed = false;
+    checkUIToggles() {
+        if (this.keyboard.KEY_M && !this.mKeyPressed) {
+            this.showMission = !this.showMission;
+            if (this.showMission) this.showControls = false;
+            this.mKeyPressed = true;
+        } else if (!this.keyboard.KEY_M) {
+            this.mKeyPressed = false;
+        }
+        if (this.keyboard.KEY_C && !this.cKeyPressed) {
+            this.showControls = !this.showControls;
+            if (this.showControls) this.showMission = false;
+            this.cKeyPressed = true;
+        } else if (!this.keyboard.KEY_C) {
+            this.cKeyPressed = false;
         }
     }
 

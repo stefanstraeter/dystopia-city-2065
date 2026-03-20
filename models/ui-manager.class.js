@@ -60,18 +60,19 @@ class UIManager {
         this.drawEffectLayers();
     }
 
-    drawGlitchedTitle(text, color) {
+    drawGlitchedTitle(text, color, y = this.canvas.height / 2) {
         this.prepareText('4rem "Cyberway"');
         let gx = (Math.random() - 0.5) * 7;
         let gy = (Math.random() - 0.5) * 3;
-        this.drawTextLayer(text, UIManager.THEMES.SECONDARY, gx, gy);
-        this.drawTextLayer(text, color, -gx * 0.5, -gy * 0.5);
-        this.drawTextLayer(text, UIManager.THEMES.TEXT, 0, 0);
+
+        this.drawTextLayer(text, UIManager.THEMES.SECONDARY, gx, y + gy);
+        this.drawTextLayer(text, color, -gx * 0.5, y - gy * 0.5);
+        this.drawTextLayer(text, UIManager.THEMES.TEXT, 0, y);
     }
 
-    drawTextLayer(text, color, ox, oy) {
+    drawTextLayer(text, color, ox, y) {
         this.ctx.fillStyle = color;
-        this.ctx.fillText(text, this.canvas.width / 2 + ox, this.canvas.height / 2 + oy);
+        this.ctx.fillText(text, this.canvas.width / 2 + ox, y);
     }
 
     drawStartScreen() {
@@ -89,13 +90,45 @@ class UIManager {
         this.drawEffectLayers();
     }
 
+    drawMissionOverlay() {
+        this.drawOverlay(UIManager.THEMES.PRIMARY);
+        this.drawGlitchedTitle('MISSION', UIManager.THEMES.PRIMARY, 60);
+
+        const story = [
+            'STATUS: OPERATIVE BUD DETECTED',
+            'LOCATION: NEON CITY SECTOR 7',
+            '',
+            'OBJECTIVE: NEUTRALIZE INFESTATION',
+            'CLEAR SPIDERS & SENTRY DRONES',
+            'ELIMINATE: V0ID-CRUSHER (PRIME)',
+            '',
+            '--- SYSTEM LOGS ---',
+            'HEALTH-KITS: REPAIR CHASSIS',
+            'PLASMA: RECHARGE WEAPONS'
+        ];
+
+        this.prepareText('400 2rem "ByteBounce"', 'center', UIManager.THEMES.TEXT);
+        story.forEach((text, i) => {
+            this.ctx.fillStyle = text.includes('---') ? UIManager.THEMES.SECONDARY : UIManager.THEMES.TEXT;
+            this.ctx.fillText(text, this.canvas.width / 2, 130 + i * 25);
+        });
+        this.drawEffectLayers();
+    }
+
+    drawControlsOverlay() {
+        this.drawOverlay(UIManager.THEMES.SECONDARY);
+        this.drawGlitchedTitle('CONTROLS', UIManager.THEMES.SECONDARY, 60);
+        this.renderControlList();
+        this.drawEffectLayers();
+    }
+
     renderControlList() {
         const controls = [
             { k: '[ LEFT / RIGHT ]', a: 'MOVE' },
             { k: '[ UP ]', a: 'JETPACK' },
             { k: '[ SPACE ]', a: 'PLASMA' },
             { k: '[ ENTER ]', a: 'START' },
-            { k: '[ H ]', a: 'CLOSE' }
+            { k: '[ M / C ]', a: 'CLOSE' } // M oder C zum Schließen
         ];
         this.prepareText('500 2rem "ByteBounce"', 'center', UIManager.THEMES.PRIMARY);
         controls.forEach((c, i) => {
@@ -105,22 +138,18 @@ class UIManager {
         this.setShadow(0);
     }
 
-    renderSystemInfo() {
-        const info = [
-            'HEALTH-KITS: REPAIR CHASSIS',
-            'PLASMA: RECHARGE WEAPONS'
-        ];
-        this.prepareText('400 1.6rem "ByteBounce"', 'center', UIManager.THEMES.SECONDARY);
-        info.forEach((text, i) => {
-            this.ctx.fillText(text, this.canvas.width / 2, 340 + i * 30);
-        });
-    }
 
     drawHelpHint() {
         this.ctx.save();
-        this.ctx.globalAlpha = 0.25 + Math.sin(Date.now() / 1000) * 0.15;
+        let pulse = 0.3 + Math.sin(Date.now() / 600) * 0.2;
+        this.ctx.globalAlpha = pulse;
         this.prepareText('500 1.2rem "ByteBounce"', 'left', 'white');
-        this.ctx.fillText('[ H ] MISSION', 25, this.canvas.height - 25);
+
+        const x = 25;
+        const yBase = this.canvas.height - 45;
+
+        this.ctx.fillText('[M] MISSION', x, yBase);
+        this.ctx.fillText('[C] CONTROLS', x, yBase + 20);
         this.ctx.restore();
     }
 
@@ -136,6 +165,9 @@ class UIManager {
         this.ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
         for (let i = 0; i < this.canvas.height; i += 4) {
             this.ctx.fillRect(0, i, this.canvas.width, 1);
+        }
+        for (let j = 0; j < this.canvas.width; j += 4) {
+            this.ctx.fillRect(j, 0, 1, this.canvas.height);
         }
         this.renderGrain();
     }
