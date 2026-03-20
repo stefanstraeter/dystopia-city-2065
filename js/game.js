@@ -1,3 +1,10 @@
+const GAME_CONFIG = {
+    MAX_WIDTH: 800,
+    MAX_HEIGHT: 450,
+    TARGET_RATIO: 800 / 450,
+    SCREEN_MARGIN: 0.9
+};
+
 let canvas;
 let world;
 let keyboard = new Keyboard();
@@ -6,32 +13,49 @@ async function init() {
     canvas = document.getElementById('canvas');
     if (!canvas) return;
 
-    setupInputListeners();
-    bindMobileEvents();
+    setupInput();
+    setupMobile();
     resizeGame();
 
+    await loadInitialAssets();
+
+    world = new World(canvas, keyboard);
+    setupAudioTrigger();
+}
+
+
+function setupInput() {
+    canvas.addEventListener('mousedown', (e) => toggleMouseClick(e, true));
+    canvas.addEventListener('mouseup', (e) => toggleMouseClick(e, false));
+
+    window.addEventListener('keydown', (e) => handleKeyboard(e.code, true));
+    window.addEventListener('keyup', (e) => handleKeyboard(e.code, false));
+
+    window.addEventListener('resize', resizeGame);
+}
+
+function toggleMouseClick(event, isPressed) {
+    if (event.button === 0) keyboard.LEFT_CLICK = isPressed;
+}
+
+function setupMobile() {
+    if (typeof MobileControls !== 'undefined') {
+        MobileControls.init();
+    }
+}
+
+async function loadInitialAssets() {
     await Promise.all([
         document.fonts.ready,
         preloadAssets()
     ]);
-
-    world = new World(canvas, keyboard);
-
-    window.addEventListener('mousedown', startInitialAudio, { once: true });
-    window.addEventListener('touchstart', startInitialAudio, { once: true });
 }
 
-function setupInputListeners() {
-    canvas.addEventListener('mousedown', (e) => {
-        if (e.button === 0) keyboard.LEFT_CLICK = true;
-    });
-    canvas.addEventListener('mouseup', (e) => {
-        if (e.button === 0) keyboard.LEFT_CLICK = false;
-    });
-
-    window.addEventListener('keydown', (e) => handleKeyboard(e.code, true));
-    window.addEventListener('keyup', (e) => handleKeyboard(e.code, false));
-    window.addEventListener('resize', resizeGame);
+function setupAudioTrigger() {
+    const startAudio = () => startInitialAudio();
+    window.addEventListener('mousedown', startAudio, { once: true });
+    window.addEventListener('touchstart', startAudio, { once: true });
+    window.addEventListener('keydown', startAudio, { once: true });
 }
 
 function handleKeyboard(code, isPressed) {
@@ -57,75 +81,34 @@ function startInitialAudio() {
     }
 }
 
-function initMobileControls() {
-    const btnMap = {
-        'btn-left': 'KEY_LEFT',
-        'btn-right': 'KEY_RIGHT',
-        'btn-jump': 'KEY_UP',
-        'btn-shoot': 'KEY_SPACE',
-        'btn-mission': 'KEY_M',
-        'btn-controls': 'KEY_C'
-    };
-
-    Object.keys(btnMap).forEach(id => {
-        const element = document.getElementById(id);
-        const key = btnMap[id];
-
-        element.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            keyboard[key] = true;
-        }, { passive: false });
-
-        element.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            keyboard[key] = false;
-        }, { passive: false });
-        element.addEventListener('touchcancel', (e) => {
-            e.preventDefault();
-            keyboard[key] = false;
-        }, { passive: false });
-    });
-
-}
-
-
-function bindMobileEvents() {
-    const controls = document.querySelector('.mobile-controls-overlay');
-    if (window.getComputedStyle(controls).display !== 'none') {
-        initMobileControls();
-    }
-}
-
 function resizeGame() {
     if (!canvas) return;
 
-    const maxWidth = 800;
-    const maxHeight = 450;
-    const targetRatio = maxWidth / maxHeight;
+    let newWidth = window.innerWidth * GAME_CONFIG.SCREEN_MARGIN;
+    let newHeight = newWidth / GAME_CONFIG.TARGET_RATIO;
 
-    let newWidth = window.innerWidth * 0.9;
-    let newHeight = newWidth / targetRatio;
-
-    if (newHeight > window.innerHeight * 0.9) {
-        newHeight = window.innerHeight * 0.9;
-        newWidth = newHeight * targetRatio;
+    if (newHeight > window.innerHeight * GAME_CONFIG.SCREEN_MARGIN) {
+        newHeight = window.innerHeight * GAME_CONFIG.SCREEN_MARGIN;
+        newWidth = newHeight * GAME_CONFIG.TARGET_RATIO;
     }
 
-    newWidth = Math.min(newWidth, maxWidth);
-    newHeight = Math.min(newHeight, maxHeight);
+    newWidth = Math.min(newWidth, GAME_CONFIG.MAX_WIDTH);
+    newHeight = Math.min(newHeight, GAME_CONFIG.MAX_HEIGHT);
 
     canvas.style.width = `${newWidth}px`;
     canvas.style.height = `${newHeight}px`;
 }
 
 function toggleFullscreen() {
-    let container = document.querySelector('.game-container');
-    if (!document.fullscreenElement) {
-        container.requestFullscreen().catch(err => {
-            console.error("Fullscreen failed:", err);
-        });
+    const container = document.querySelector('.game-container');
+    const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+
+    if (!isFS) {
+        if (container.requestFullscreen) container.requestFullscreen();
+        else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
     } else {
-        document.exitFullscreen();
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     }
 }
 
