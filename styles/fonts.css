@@ -1,9 +1,11 @@
 @font-face {
   font-family: "ByteBounce";
   src: url("../assets/fonts/ByteBounce.woff2") format("woff2");
+  font-display: block;
 }
 
 @font-face {
   font-family: "Cyberway";
   src: url("../assets/fonts/CyberwayRiders.woff2") format("woff2");
+  font-display: block;
 }
