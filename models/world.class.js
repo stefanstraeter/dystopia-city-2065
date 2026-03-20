@@ -110,8 +110,8 @@ class World {
         this.addObjectsToMap(this.level.backgrounds.foreground);
         this.addObjectsToMap(this.level.collectableItems);
         this.addObjectsToMap(this.level.neonSigns);
-        this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.character);
+        this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
 
     }
