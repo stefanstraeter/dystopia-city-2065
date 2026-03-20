@@ -1,0 +1,171 @@
+/* --- MOBILE CONTROLS LOGIC --- */
+@media (max-width: 64rem) {
+  .mobile-controls-overlay {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  .movement-btns {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    display: flex;
+    gap: 1rem;
+    pointer-events: none;
+  }
+
+  .action-btns {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 1rem;
+    pointer-events: none;
+  }
+
+  .system-btns {
+    display: flex;
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    gap: 0.8rem;
+    z-index: 60;
+    pointer-events: none;
+  }
+
+  #btn-start-game {
+    display: block;
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: auto !important;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.8);
+    color: #00f2ff;
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
+    font-family: "ByteBounce", sans-serif;
+    text-transform: uppercase;
+    border: 0.125rem solid #00f2ff;
+    border-radius: 0.625rem;
+    box-shadow: 0 0 1rem rgba(0, 242, 255, 0.4);
+    text-shadow: 0 0 0.4rem #00f2ff;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  /* --- FULLSCREEN BUTTON MOBIL --- */
+  .btn-fullscreen {
+    position: absolute;
+
+    bottom: 1.2rem;
+    right: 1.2rem;
+    top: auto;
+    left: auto;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.4rem;
+    z-index: 1000;
+  }
+
+  .btn-fullscreen svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    opacity: 0.6;
+  }
+
+  /* --- BUTTON STYLING & NEON --- */
+  button {
+    touch-action: manipulation;
+  }
+
+  .ctrl-btn,
+  .ctrl-btn-small {
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.6);
+    color: #dfdfdf;
+    border: 0.125rem solid;
+    text-transform: uppercase;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    opacity: 0.6;
+    transition:
+      opacity 0.2s,
+      transform 0.1s;
+  }
+
+  .ctrl-btn {
+    width: 3.8rem;
+    height: 3.8rem;
+    border-radius: 0.625rem;
+    font-size: 0.9rem;
+  }
+
+  .ctrl-btn-small {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 0.4rem;
+    font-size: 1rem;
+  }
+
+  .btn-neon-blue {
+    border-color: #00f2ff;
+    box-shadow: 0 0 0.6rem rgba(0, 242, 255, 0.3);
+    text-shadow: 0 0 0.3rem #00f2ff;
+  }
+  .btn-neon-pink {
+    border-color: #ff00ff;
+    box-shadow: 0 0 0.6rem rgba(255, 0, 255, 0.3);
+    text-shadow: 0 0 0.3rem #ff00ff;
+  }
+  .btn-neon-yellow {
+    border-color: #dcdcdc;
+    color: #dcdcdc;
+    box-shadow: 0 0 0.6rem rgba(255, 255, 255, 0.2);
+  }
+
+  .ctrl-btn:active,
+  .ctrl-btn-small:active,
+  #btn-start-game:active {
+    transform: scale(0.9);
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+
+  /* --- 5. ORIENTATION & OVERLAY --- */
+  .orientation-overlay {
+    position: fixed;
+    inset: 0;
+    background: #080808;
+    z-index: 9999;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #00f2ff;
+    text-align: center;
+    display: none;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 64rem) {
+  .orientation-overlay {
+    display: flex;
+    pointer-events: auto;
+  }
+  .game-canvas,
+  .mobile-controls-overlay,
+  .system-btns {
+    display: none !important;
+  }
+}
