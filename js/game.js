@@ -1,5 +1,6 @@
 const byteBounce = new FontFace('ByteBounce', 'url(./assets/fonts/ByteBounce.woff2)');
 const cyberwayRiders = new FontFace('CyberwayRiders', 'url(./assets/fonts/CyberwayRiders.woff2)');
+const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 const GAME_CONFIG = {
     MAX_WIDTH: 800,
@@ -32,13 +33,11 @@ async function init() {
     }, { once: true });
 }
 
-
 function setupMobile() {
     if (typeof MobileControls !== 'undefined') {
         MobileControls.init(keyboard);
     }
 }
-
 
 function setupInput() {
     canvas.addEventListener('mousedown', (e) => toggleMouseClick(e, true));
@@ -89,7 +88,6 @@ async function startInitialAudio() {
         }
     }
 }
-
 
 async function loadFonts() {
     try {
@@ -146,6 +144,20 @@ function unlockAudio() {
             });
         }
     }
+}
+
+function setupInput() {
+    canvas.addEventListener('mousedown', (e) => toggleMouseClick(e, true));
+    canvas.addEventListener('mouseup', (e) => toggleMouseClick(e, false));
+    canvas.addEventListener('touchstart', (e) => {
+        keyboard.LEFT_CLICK = true;
+    }, { passive: false });
+    canvas.addEventListener('touchend', () => {
+        keyboard.LEFT_CLICK = false;
+    });
+    window.addEventListener('keydown', (e) => handleKeyboard(e.code, true));
+    window.addEventListener('keyup', (e) => handleKeyboard(e.code, false));
+    window.addEventListener('resize', resizeGame);
 }
 
 window.addEventListener('load', init);

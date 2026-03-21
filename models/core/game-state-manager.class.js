@@ -1,25 +1,27 @@
 class GameStateManager {
-
     constructor(world) {
         this.world = world;
         this.introStage = 0;
         this.gameStarted = false;
         this.showMission = false;
         this.showControls = false;
+        this.wasPressedLastFrame = false;
     }
 
     checkStartKey() {
         const isGameOver = (this.world.character && this.world.character.energy <= 0) || this.world.bossIsDead();
-        if (isGameOver && (this.world.keyboard.KEY_ENTER || this.world.keyboard.LEFT_CLICK)) {
+        const isPressedNow = this.world.keyboard.KEY_ENTER || this.world.keyboard.LEFT_CLICK;
+
+        if (isGameOver && isPressedNow) {
             location.reload();
             return;
         }
+
         if (!this.gameStarted) {
-            if (this.world.keyboard.KEY_ENTER || this.world.keyboard.LEFT_CLICK) {
+            if (isPressedNow && !this.wasPressedLastFrame) {
                 this.handleIntroProgression();
-                this.world.keyboard.KEY_ENTER = false;
-                this.world.keyboard.LEFT_CLICK = false;
             }
+            this.wasPressedLastFrame = isPressedNow;
         }
     }
 
@@ -27,6 +29,7 @@ class GameStateManager {
         if (this.world.audioManager) {
             this.world.audioManager.unlockAudio();
         }
+
         if (this.introStage === 0) {
             this.introStage = 1;
         } else if (this.introStage === 1) {
@@ -34,7 +37,7 @@ class GameStateManager {
         } else if (this.introStage === 2) {
             this.introStage = 3;
             this.gameStarted = true;
-            if (MobileControls) {
+            if (typeof MobileControls !== 'undefined') {
                 MobileControls.showButtonsOnGameStart();
             }
             if (this.world.audioManager) {
@@ -51,6 +54,7 @@ class GameStateManager {
         } else if (!this.world.keyboard.KEY_M) {
             this.world.mKeyPressed = false;
         }
+
         if (this.world.keyboard.KEY_C && !this.world.cKeyPressed) {
             this.showControls = !this.showControls;
             if (this.showControls) this.showMission = false;
