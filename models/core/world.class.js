@@ -51,19 +51,15 @@ class World {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         if (!this.gameState.gameStarted) {
-            if (this.gameState.introStage === 0) {
-                this.uiManager.drawStartScreen();
-            } else if (this.gameState.introStage === 1) {
-                this.uiManager.drawMissionOverlay(true);
-            } else if (this.gameState.introStage === 2) {
-                this.uiManager.drawControlsOverlay(true);
-            }
+            if (this.gameState.introStage === 0) this.uiManager.drawStartScreen();
+            else if (this.gameState.introStage === 1) this.uiManager.drawMissionOverlay(true);
+            else if (this.gameState.introStage === 2) this.uiManager.drawControlsOverlay(true);
             this.gameState.checkStartKey();
         } else {
             this.updateBossBar();
             this.renderGame();
             this.renderUI();
-            this.checkEndStates();
+            this.gameState.update();
         }
         requestAnimationFrame(() => this.draw());
     }
@@ -78,16 +74,6 @@ class World {
 
         if (this.gameState.gameStarted) {
             this.uiManager.drawOverlays(this.gameState.showMission, this.gameState.showControls);
-        }
-    }
-
-    checkEndStates() {
-        if (this.character.isDeadAnimationFinished()) {
-            this.uiManager.drawEndScreen('LOSE');
-            this.gameState.checkStartKey();
-        } else if (this.bossIsDead()) {
-            this.uiManager.drawEndScreen('WIN');
-            this.gameState.checkStartKey();
         }
     }
 
