@@ -6,13 +6,13 @@ class AudioManager {
             collect: new Audio('./assets/audio/collect.wav'),
             explosion: new Audio('./assets/audio/explosion.wav')
         };
+        this.isUnlocked = false;
         this.initSettings();
     }
 
     initSettings() {
         this.sounds.background.loop = true;
         this.sounds.background.volume = 0.2;
-
         this.sounds.plasma.volume = 0.02;
         this.sounds.explosion.volume = 0.3;
         this.sounds.collect.volume = 0.3;
@@ -21,31 +21,35 @@ class AudioManager {
     play(name) {
         const s = this.sounds[name];
         if (!s) return;
-
         if (name !== 'background') {
             s.currentTime = 0;
         }
-
-        s.play().catch(() => { });
+        let playPromise = s.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.warn(`Audio ${name} blocked:`, error);
+            });
+        }
     }
 
-    stop(name) {
-        const s = this.sounds[name];
-        if (!s) return;
+    async unlockAudio() {
+        if (this.isUnlocked) return;
 
-        s.pause();
-        s.currentTime = 0;
-    }
-
-    unlockAudio() {
-        Object.values(this.sounds).forEach(sound => {
-            sound.muted = true;
-
-            sound.play().then(() => {
-                sound.pause();
-                sound.currentTime = 0;
-                sound.muted = false;
-            }).catch(() => { });
+        const unlockPromises = Object.values(this.sounds).map(sound => {
+            return new Promise((resolve) => {
+                sound.muted = true;
+                sound.play()
+                    .then(() => {
+                        sound.pause();
+                        sound.currentTime = 0;
+                        sound.muted = false;
+                        resolve();
+                    })
+                    .catch(() => resolve());
+            });
         });
+
+        await Promise.all(unlockPromises);
+        this.isUnlocked = true;
     }
 }
