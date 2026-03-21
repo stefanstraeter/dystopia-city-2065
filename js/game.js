@@ -127,13 +127,18 @@ function resizeGame() {
 
 function toggleFullscreen() {
     const container = document.querySelector('.game-container');
-    const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+    const isFS = document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement;
 
     if (!isFS) {
         if (container.requestFullscreen) {
             container.requestFullscreen();
         } else if (container.webkitRequestFullscreen) {
             container.webkitRequestFullscreen();
+        } else if (container.msRequestFullscreen) {
+            container.msRequestFullscreen();
         }
     } else {
         if (document.exitFullscreen) {
