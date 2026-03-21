@@ -14,7 +14,6 @@ class GameStateManager {
             location.reload();
             return;
         }
-
         if (!this.gameStarted) {
             if (this.world.keyboard.KEY_ENTER || this.world.keyboard.LEFT_CLICK) {
                 this.handleIntroProgression();
@@ -28,7 +27,6 @@ class GameStateManager {
         if (this.world.audioManager) {
             this.world.audioManager.unlockAudio();
         }
-
         if (this.introStage === 0) {
             this.introStage = 1;
         } else if (this.introStage === 1) {
@@ -36,12 +34,9 @@ class GameStateManager {
         } else if (this.introStage === 2) {
             this.introStage = 3;
             this.gameStarted = true;
-
-            // 🔹 Mobile Controls Buttons sichtbar machen
             if (MobileControls) {
                 MobileControls.showButtonsOnGameStart();
             }
-
             if (this.world.audioManager) {
                 this.world.audioManager.play('background');
             }
