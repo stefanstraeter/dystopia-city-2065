@@ -8,9 +8,6 @@
     <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/apple-touch-icon.png" />
 
-    <link rel="preload" href="./assets/fonts/ByteBounce.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-    <link rel="preload" href="./assets/fonts/CyberwayRiders.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-
     <title>Neon City 2065</title>
 
     <link rel="stylesheet" href="styles/reset.css" />
@@ -52,6 +49,11 @@
       <div class="controls-group system-btns">
         <button id="btn-mission" class="ctrl-btn-small btn-neon-yellow">M</button>
         <button id="btn-controls" class="ctrl-btn-small btn-neon-yellow">C</button>
+        <button id="btn-fullscreen-mobile" class="ctrl-btn-small btn-neon-yellow" onclick="toggleFullscreen()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1.2rem; height: 1.2rem">
+            <path d="M14 10l8 -8m0 0h-6m6 0v6M10 14l-8 8m0 0h6m-6 0v-6" stroke="currentColor" stroke-width="2" fill="none" />
+          </svg>
+        </button>
       </div>
 
       <div class="mobile-controls-overlay">

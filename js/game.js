@@ -1,3 +1,6 @@
+const byteBounce = new FontFace('ByteBounce', 'url(./assets/fonts/ByteBounce.woff2)');
+const cyberwayRiders = new FontFace('CyberwayRiders', 'url(./assets/fonts/CyberwayRiders.woff2)');
+
 const GAME_CONFIG = {
     MAX_WIDTH: 800,
     MAX_HEIGHT: 450,
@@ -16,6 +19,7 @@ async function init() {
     setupInput();
     resizeGame();
 
+    await loadFonts();
     await loadInitialAssets();
 
     world = new World(canvas, keyboard);
@@ -27,6 +31,7 @@ async function init() {
         }
     }, { once: true });
 }
+
 
 function setupMobile() {
     if (typeof MobileControls !== 'undefined') {
@@ -82,6 +87,17 @@ async function startInitialAudio() {
             await am.play('background');
         } catch (err) {
         }
+    }
+}
+
+
+async function loadFonts() {
+    try {
+        const byteBounce = new FontFace('ByteBounce', 'url(./assets/fonts/ByteBounce.woff2)');
+        const cyberwayRiders = new FontFace('CyberwayRiders', 'url(./assets/fonts/CyberwayRiders.woff2)');
+        const fonts = await Promise.all([byteBounce.load(), cyberwayRiders.load()]);
+        fonts.forEach(font => document.fonts.add(font));
+    } catch (err) {
     }
 }
 
