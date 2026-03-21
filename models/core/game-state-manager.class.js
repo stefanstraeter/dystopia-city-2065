@@ -13,6 +13,8 @@ class GameStateManager {
         const isPressedNow = this.world.keyboard.KEY_ENTER || this.world.keyboard.LEFT_CLICK;
 
         if (isGameOver && isPressedNow) {
+            this.world.keyboard.KEY_ENTER = false;
+            this.world.keyboard.LEFT_CLICK = false;
             location.reload();
             return;
         }
@@ -61,6 +63,25 @@ class GameStateManager {
             this.world.cKeyPressed = true;
         } else if (!this.world.keyboard.KEY_C) {
             this.world.cKeyPressed = false;
+        }
+    }
+
+    update() {
+        const isDead = this.world.character && this.world.character.isDeadAnimationFinished();
+        const isWin = this.world.bossIsDead();
+
+        if (isDead || isWin) {
+            const type = isWin ? 'WIN' : 'LOSE';
+            this.world.uiManager.drawEndScreen(type);
+            this.hideMobileControls();
+            this.checkStartKey();
+        }
+    }
+
+    hideMobileControls() {
+        if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            document.querySelector('.mobile-controls-overlay')?.classList.remove('show-mobile-controls');
+            document.querySelector('.system-btns')?.classList.remove('show-system-buttons');
         }
     }
 }
