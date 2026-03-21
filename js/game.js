@@ -40,8 +40,19 @@ function setupMobile() {
 }
 
 function setupInput() {
-    canvas.addEventListener('mousedown', (e) => toggleMouseClick(e, true));
-    canvas.addEventListener('mouseup', (e) => toggleMouseClick(e, false));
+    canvas.addEventListener('pointerdown', (e) => {
+        keyboard.LEFT_CLICK = true;
+    });
+    canvas.addEventListener('pointerup', () => {
+        keyboard.LEFT_CLICK = false;
+    });
+    canvas.addEventListener('touchstart', (e) => {
+        keyboard.LEFT_CLICK = true;
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => {
+        keyboard.LEFT_CLICK = false;
+    });
     window.addEventListener('keydown', (e) => handleKeyboard(e.code, true));
     window.addEventListener('keyup', (e) => handleKeyboard(e.code, false));
     window.addEventListener('resize', resizeGame);
