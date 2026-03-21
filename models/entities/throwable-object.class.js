@@ -4,11 +4,12 @@ class ThrowableObject extends MoveableObject {
         MELEE: { damage: 10, cooldown: 0.8, type: 'melee' },
         PLAYER_PLASMA: { damage: 10, speed: 15, cooldown: 0.05, type: 'plasma', img: '02_character_bud/Plasma.png', width: 120, height: 40, frames: 4, isEnemy: false },
         ENEMY_PLASMA: { damage: 10, speed: 8, cooldown: 0.7, type: 'plasma', img: '03_enemies/sentry_drone/Plasma.png', width: 60, height: 20, frames: 3, isEnemy: true },
-        BOMB: { damage: 35, speed: 0, cooldown: 2.0, type: 'bomb', img: '03_enemies/endboss/Bomb.png', width: 150, height: 150, frames: 1, isEnemy: true },
+        BOMB: { damage: 40, speed: 0, cooldown: 2.0, type: 'bomb', img: '03_enemies/endboss/Bomb.png', width: 150, height: 150, frames: 1, isEnemy: true },
 
     };
 
     hasHit = false;
+    damageApplied = false;
 
     constructor(x, y, isMirrored, plan) {
         super();
@@ -68,7 +69,7 @@ class BossBomb extends ThrowableObject {
     updateState() {
         this.animate();
         if (this.hasExploded) {
-            if (this.currentFrame >= this.frameCount - 1) {
+            if (this.currentFrame >= this.animations.explosion.frames - 1) {
                 this.hasHit = true;
             }
             return;

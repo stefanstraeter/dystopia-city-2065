@@ -36,21 +36,19 @@ class CollisionManager {
     handleHit(projectile, target) {
         if (target.isDead() || !projectile.isColliding(target)) return;
 
-        target.hit(projectile.damage);
+        if (!projectile.damageApplied) {
+            target.hit(projectile.damage);
+            projectile.damageApplied = true;
 
-        if (projectile instanceof BossBomb) {
-            projectile.explode();
-        } else {
-            projectile.hasHit = true;
-        }
-        if (target instanceof Endboss) {
-            if (this.world.level.StatusBar[3]) {
-                this.world.level.StatusBar[3].setPercentage(target.energy);
+            if (projectile instanceof BossBomb) {
+                projectile.explode();
+            } else {
+                projectile.hasHit = true;
             }
-        }
-        if (target === this.world.character) {
-            this.world.healthBar.setPercentage(this.world.character.energy);
-            this.world.camera.activateShake(200, 10);
+            if (target === this.world.character) {
+                this.world.healthBar.setPercentage(this.world.character.energy);
+                this.world.camera.activateShake(200, 10);
+            }
         }
     }
 
