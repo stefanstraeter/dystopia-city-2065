@@ -24,23 +24,30 @@ const MobileControls = {
             "btn-shoot": "KEY_SPACE",
             "btn-mission": "KEY_M",
             "btn-controls": "KEY_C",
+            "btn-fullscreen-mobile": "FULLSCREEN"
         };
     },
 
     addTouchListeners: function (element, keyCode) {
-        element.addEventListener("touchstart", (e) => this.handleTouch(e, keyCode, true), { passive: false });
-        element.addEventListener("touchend", (e) => this.handleTouch(e, keyCode, false), { passive: false });
-        element.addEventListener("touchcancel", (e) => this.handleTouch(e, keyCode, false), { passive: false });
+        element.addEventListener("touchstart", (e) => this.handleTouch(e, keyCode, true, element), { passive: false });
+        element.addEventListener("touchend", (e) => this.handleTouch(e, keyCode, false, element), { passive: false });
+        element.addEventListener("touchcancel", (e) => this.handleTouch(e, keyCode, false, element), { passive: false });
     },
 
-    handleTouch: function (event, keyCode, isPressed) {
-        event.preventDefault();
+    handleTouch: function (event, keyCode, isPressed, element) {
+        if (keyCode !== 'FULLSCREEN' && event.cancelable) {
+            event.preventDefault();
+        }
+
         if (this.keyboard) {
             this.keyboard[keyCode] = isPressed;
-            const element = document.getElementById(keyCode.toLowerCase().replace("key_", "btn-"));
+
             if (element) {
-                if (isPressed) element.classList.add("button-pressed");
-                else element.classList.remove("button-pressed");
+                if (isPressed) {
+                    element.classList.add("button-pressed");
+                } else {
+                    element.classList.remove("button-pressed");
+                }
             }
         }
     },

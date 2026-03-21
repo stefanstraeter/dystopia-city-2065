@@ -46,7 +46,14 @@
     transition: opacity 0.3s;
   }
 
-  /* Anzeige, wenn Spiel gestartet */
+  .ctrl-btn,
+  .ctrl-btn-small,
+  .mobile-controls-overlay {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
   .system-btns.show-system-buttons {
     opacity: 1;
     pointer-events: auto;
