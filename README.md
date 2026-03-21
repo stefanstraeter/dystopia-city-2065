@@ -1,8 +1,8 @@
-# DEVELOPER AKADEMIE – NEON CITY 2065
+# NEON CITY 2065
 
 ## Overview
 
-**Neon City 2065** is a high-octane, side-scrolling action game built with **Vanilla JavaScript and HTML5 Canvas**. Set in a dystopian future, players take control of "Bud" to navigate through a neon-drenched metropolis. This project serves as a deep dive into **Object-Oriented Programming (OOP)**, custom physics, and scalable game architecture.
+**Neon City 2065** is a high-octane action game developed as a final project during my Front-End Development training at Developer Akademie. It is a side-scrolling action game built with **Vanilla JavaScript and HTML5 Canvas**. Set in a dystopian future, players take control of "Bud" to navigate through a neon-drenched metropolis. This project serves as a deep dive into **Object-Oriented Programming (OOP)**, custom physics, and scalable game architecture.
 
 ### Preview
 
