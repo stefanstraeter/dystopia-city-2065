@@ -1,11 +1,6 @@
 class World {
-    canvas; ctx; keyboard;
     groundLevel = 490;
-    character; level; enemies;
     throwableObjects = [];
-    gameStarted = false;
-    showMission = false;
-    showControls = false;
     mKeyPressed = false;
     cKeyPressed = false;
 
@@ -13,16 +8,19 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+
+        this.gameState = new GameStateManager(this); // Hier instanziiert
+
         this.uiManager = new UIManager(this.ctx, this.canvas);
         this.collisionManager = new CollisionManager(this);
         this.levelPopulator = new LevelPopulator(this);
         this.level = level1;
         this.audioManager = new AudioManager();
         this.camera = new Camera();
+
         this.initLevel();
         this.draw();
         this.run();
-
     }
 
     initLevel() {
@@ -39,8 +37,8 @@ class World {
     run() {
         setInterval(() => {
             const characterIsDying = this.character.energy <= 0 && !this.character.isDeadAnimationFinished();
-            const gameIsPaused = this.showMission || this.showControls;
-            const canUpdate = this.gameStarted && !gameIsPaused && (this.character.energy > 0 || characterIsDying);
+            const gameIsPaused = this.gameState.showMission || this.gameState.showControls;
+            const canUpdate = this.gameState.gameStarted && !gameIsPaused && (this.character.energy > 0 || characterIsDying);
 
             if (canUpdate) {
                 this.updateAllObjects();
@@ -49,34 +47,18 @@ class World {
         }, 1000 / 60);
     }
 
-    getAllObjects() {
-        return [
-            this.character,
-            ...this.level.enemies,
-            ...this.throwableObjects,
-            ...this.level.neonSigns,
-            ...this.level.vehicles.background,
-            ...this.level.vehicles.midground,
-            ...this.level.collectableItems
-        ];
-    }
-
-    updateAllObjects() {
-        this.getAllObjects().forEach(object => {
-            if (object) object.updateState();
-        });
-        this.filterProjectiles();
-        this.filterEnemies();
-        this.level.collectableItems = this.level.collectableItems.filter(item => !item.isCollected);
-        this.updateCamera();
-        if (this.character.isDead()) this.resetBossBehavior();
-    }
-
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        if (!this.gameStarted) {
-            this.uiManager.drawStartScreen();
-            this.checkStartKey();
+
+        if (!this.gameState.gameStarted) {
+            if (this.gameState.introStage === 0) {
+                this.uiManager.drawStartScreen();
+            } else if (this.gameState.introStage === 1) {
+                this.uiManager.drawMissionOverlay(true);
+            } else if (this.gameState.introStage === 2) {
+                this.uiManager.drawControlsOverlay(true);
+            }
+            this.gameState.checkStartKey();
         } else {
             this.updateBossBar();
             this.renderGame();
@@ -86,13 +68,33 @@ class World {
         requestAnimationFrame(() => this.draw());
     }
 
+    renderUI() {
+        for (let i = 0; i < 3; i++) {
+            this.addToMap(this.level.StatusBar[i]);
+        }
+        this.addObjectsToMap(this.level.statusIcons);
+
+        this.gameState.checkUIToggles();
+
+        if (this.gameState.gameStarted) {
+            this.uiManager.drawOverlays(this.gameState.showMission, this.gameState.showControls);
+        }
+    }
+
+    checkEndStates() {
+        if (this.character.isDeadAnimationFinished()) {
+            this.uiManager.drawEndScreen('LOSE');
+            this.gameState.checkStartKey();
+        } else if (this.bossIsDead()) {
+            this.uiManager.drawEndScreen('WIN');
+            this.gameState.checkStartKey();
+        }
+    }
+
     updateBossBar() {
         let boss = this.level.enemies.find(e => e instanceof Endboss);
         let bossBar = this.level.StatusBar[3];
-
-        if (boss && bossBar) {
-            bossBar.updatePosition(boss);
-        }
+        if (boss && bossBar) bossBar.updatePosition(boss);
     }
 
     renderGame() {
@@ -105,73 +107,21 @@ class World {
         this.ctx.restore();
     }
 
-
     drawWorldEntities() {
         this.addObjectsToMap(this.level.vehicles.midground);
         this.addObjectsToMap(this.level.backgrounds.foreground);
         this.addObjectsToMap(this.level.collectableItems);
         this.addObjectsToMap(this.level.neonSigns);
-
         this.character.drawShadow(this.ctx, this.groundLevel);
         this.level.enemies.forEach(enemy => {
             if (!(enemy instanceof SentryDrone) && !(enemy instanceof FlyingVehicle)) {
                 enemy.drawShadow(this.ctx, this.groundLevel);
             }
         });
-
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
-        if (this.level.StatusBar[3]) {
-            this.addToMap(this.level.StatusBar[3]);
-        }
-    }
-
-    renderUI() {
-        for (let i = 0; i < 3; i++) {
-            this.addToMap(this.level.StatusBar[i]);
-        }
-        this.addObjectsToMap(this.level.statusIcons);
-        this.checkUIToggles();
-        this.uiManager.drawOverlays(this.showMission, this.showControls);
-    }
-
-    checkEndStates() {
-        if (this.character.isDeadAnimationFinished()) {
-            this.uiManager.drawEndScreen('LOSE');
-            this.checkStartKey();
-        } else if (this.bossIsDead()) {
-            this.uiManager.drawEndScreen('WIN');
-            this.checkStartKey();
-        }
-    }
-
-    checkStartKey() {
-        const isGameOver = (this.character && this.character.energy <= 0) || this.bossIsDead();
-        if (isGameOver && this.keyboard.KEY_ENTER) {
-            location.reload();
-            return;
-        }
-        if (!this.gameStarted && (this.keyboard.KEY_ENTER || this.keyboard.LEFT_CLICK)) {
-            this.gameStarted = true;
-        }
-    }
-
-    checkUIToggles() {
-        if (this.keyboard.KEY_M && !this.mKeyPressed) {
-            this.showMission = !this.showMission;
-            if (this.showMission) this.showControls = false;
-            this.mKeyPressed = true;
-        } else if (!this.keyboard.KEY_M) {
-            this.mKeyPressed = false;
-        }
-        if (this.keyboard.KEY_C && !this.cKeyPressed) {
-            this.showControls = !this.showControls;
-            if (this.showControls) this.showMission = false;
-            this.cKeyPressed = true;
-        } else if (!this.keyboard.KEY_C) {
-            this.cKeyPressed = false;
-        }
+        if (this.level.StatusBar[3]) this.addToMap(this.level.StatusBar[3]);
     }
 
     drawParallaxLayer(speed, objects) {
@@ -187,26 +137,53 @@ class World {
 
     filterProjectiles() {
         this.throwableObjects = this.throwableObjects.filter(obj =>
-            Math.abs(obj.x - this.character.x) < 600 && !obj.hasHit
-        );
+            Math.abs(obj.x - this.character.x) < 600 && !obj.hasHit);
     }
 
     filterEnemies() {
-        this.level.enemies = this.level.enemies.filter(enemy => !enemy.isFinished);
-        this.enemies = this.level.enemies;
+        this.level.enemies = this.level.enemies.filter(enemy =>
+            !enemy.isFinished); this.enemies = this.level.enemies;
     }
 
     bossIsDead() {
-        let boss = this.level.enemies.find(enemy => enemy instanceof Endboss);
-        return boss && boss.isDead();
+        let boss = this.level.enemies.find(enemy =>
+            enemy instanceof Endboss); return boss && boss.isDead();
     }
 
     resetBossBehavior() {
-        this.level.enemies.forEach(e => { if (e instanceof Endboss) e.isAnimatingOnce = false; });
+        this.level.enemies.forEach(e => {
+            if (e instanceof Endboss) e.isAnimatingOnce = false;
+
+        });
     }
 
-    addToMap(mo) { mo.draw(this.ctx); }
-    addObjectsToMap(objs) { objs.forEach(obj => this.addToMap(obj)); }
+    addToMap(mo) {
+        mo.draw(this.ctx);
+    }
+    addObjectsToMap(objs) {
+        objs.forEach(obj =>
+            this.addToMap(obj));
+    }
 
+    getAllObjects() {
+        return [this.character,
+        ...this.level.enemies,
+        ...this.throwableObjects,
+        ...this.level.neonSigns,
+        ...this.level.vehicles.background,
+        ...this.level.vehicles.midground,
+        ...this.level.collectableItems];
 
+    }
+    updateAllObjects() {
+        this.getAllObjects().forEach(object => {
+            if (object) object.updateState();
+
+        });
+        this.filterProjectiles();
+        this.filterEnemies();
+        this.level.collectableItems = this.level.collectableItems.filter(item =>
+            !item.isCollected); this.updateCamera();
+        if (this.character.isDead()) this.resetBossBehavior();
+    }
 }
