@@ -73,7 +73,7 @@
   .ctrl-btn,
   .ctrl-btn-small {
     pointer-events: auto;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.8);
     color: #dfdfdf;
     border: 0.125rem solid;
     text-transform: uppercase;
@@ -90,14 +90,14 @@
   }
 
   .ctrl-btn {
-    width: 2.8rem;
-    height: 2.8rem;
+    width: 3.4rem;
+    height: 3.4rem;
     border-radius: 50%;
   }
 
   .ctrl-btn-small {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2.8rem;
+    height: 2.8rem;
     border-radius: 50%;
   }
 
