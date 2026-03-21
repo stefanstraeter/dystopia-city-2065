@@ -36,6 +36,12 @@ class GameStateManager {
         } else if (this.introStage === 2) {
             this.introStage = 3;
             this.gameStarted = true;
+
+            // 🔹 Mobile Controls Buttons sichtbar machen
+            if (MobileControls) {
+                MobileControls.showButtonsOnGameStart();
+            }
+
             if (this.world.audioManager) {
                 this.world.audioManager.play('background');
             }
