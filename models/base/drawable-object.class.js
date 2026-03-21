@@ -17,18 +17,18 @@ class DrawableObject {
         if (window.IMAGE_CACHE && window.IMAGE_CACHE[path]) {
             this.img = window.IMAGE_CACHE[path];
         } else {
-            const img = new Image();
-            img.src = path;
-            img.onload = async () => {
+            const tempImg = new Image();
+            tempImg.src = path;
+            tempImg.onload = async () => {
                 try {
-                    await img.decode();
+                    await tempImg.decode();
                 } catch (e) { }
 
                 if (window.IMAGE_CACHE) {
-                    window.IMAGE_CACHE[path] = img;
+                    window.IMAGE_CACHE[path] = tempImg;
                 }
+                this.img = tempImg;
             };
-            this.img = img;
         }
     }
 
