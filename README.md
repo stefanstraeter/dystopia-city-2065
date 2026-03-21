@@ -2,70 +2,62 @@
 
 ## Overview
 
-**Neon City 2065** is a high-octane, side-scrolling action game built with **Vanilla JavaScript and HTML5 Canvas**. Set in a dystopian future, players take control of "Bud" to navigate through a neon-drenched metropolis. The project demonstrates advanced game development patterns, including **object-oriented programming (OOP)**, a custom **physics engine**, and a dynamic **parallax background system**.
+**Neon City 2065** is a high-octane, side-scrolling action game built with **Vanilla JavaScript and HTML5 Canvas**. Set in a dystopian future, players take control of "Bud" to navigate through a neon-drenched metropolis. This project serves as a deep dive into **Object-Oriented Programming (OOP)**, custom physics, and scalable game architecture.
 
-### The Challenge
+### Preview
 
-- Implement a robust **Collision Manager** for complex entity interactions.
-- Create a seamless **Parallax Scrolling** effect across multiple background layers.
-- Manage game states (Start, Play, Pause, Game Over) via a centralized **UI Manager**.
-- Integrate a dedicated **Audio Manager** to handle ambient music and sound effects while bypassing browser autoplay restrictions.
-- Handle hardware-accelerated rendering at **60 FPS** using `requestAnimationFrame`.
+![Neon City 2065 Gameplay Mockup](assets/img/mockup.jpg)
 
-### Links
+### Live Demo
 
-- **Live Site:** [Live Demo](https://stefanstraeter.github.io/neon-city-2065/)
-
-### Mockup
-
-![Neon City 2065 Screenshot](assets/img/neonCity_mockup.jpg)
+- **Link:** [View Live Project](https://stefanstraeter.github.io/neon-city-2065/)
 
 ---
 
-## My Process
+## Technical Architecture
 
-### Built With
+The project follows a modular approach, separating concerns into specialized directories to ensure maintainability and scalability:
 
-- **HTML5 Canvas** – high-performance 2D rendering
-- **CSS3** – neon glow effects, scanline overlays, and glitch animations
-- **JavaScript (ES6+)** – strictly object-oriented (Classes, Inheritance)
-- **Custom Physics Engine** – gravity, velocity, and collision detection
-- **Web Audio API** – dynamic sound management
+### Project Structure
 
-### Key Features & Techniques
+- **`models/base`**: Fundamental classes (`DrawableObject`, `MoveableObject`) that provide the blueprint for inheritance.
+- **`models/core`**: The engine's heart, including the `World` controller, `Camera` logic, and the central `GameStateManager`.
+- **`models/entities`**: All living and interactive actors, including the protagonist "Bud", complex AI enemies (Sentry Drones, Spiders), and the Endboss.
+- **`models/managers`**: High-level systems for `Audio`, `Collisions`, `UI`, and the dynamic `Status Bar`.
+- **`models/environment`**: Logic for parallax backgrounds, decorative neon signs, and collectible items.
 
-#### Object-Oriented Architecture
+---
 
-- **Inheritance Pattern:** All game entities (Bud, Enemies, Projectiles) derive from a base `MoveableObject` class, ensuring DRY (_Don't Repeat Yourself_) code.
-- **Manager Pattern:** Dedicated classes (`UIManager`, `AudioManager`, `CollisionManager`) handle specific game domains, keeping the `World` class clean and maintainable.
+## Key Features & Implementation
 
-#### Advanced Rendering & FX
+### Advanced OOP & Inheritance
 
-- **Parallax System:** Multiple layers (background, midground, foreground) move at different speeds to create a sense of depth.
-- **Visual Juice:** Integrated screen-shake effects on damage, grain filters, and pulsing neon borders for an immersive cyberpunk atmosphere.
-- **Z-Index Management:** Precise drawing order ensures that explosions and UI elements always appear in the foreground of the action.
+By utilizing a hierarchical class structure, common behaviors like gravity, movement, and animation frames are defined in base classes and inherited by specific entities. This strictly follows the **DRY (Don't Repeat Yourself)** principle.
 
-#### Game Mechanics & Logic
+### Decoupled Game Logic
 
-- **Resource Management:** Players must collect **Cyber-Kits** to repair their chassis and **Plasma** to recharge weapon systems.
-- **AI Behavior:** Enemies feature distinct movement patterns and state-driven animations (Idle, Attack, Death).
-- **Responsive Controls:** Low-latency input handling for movement, jetpack flight, and combat.
+- **Collision Manager**: A dedicated system that handles complex hitbox calculations and interaction triggers, separate from the rendering loop.
+- **GameState Manager**: Centralized control for the game flow, managing transitions between the cinematic intro, active gameplay, and game-over states.
+- **Audio Manager**: A robust solution for the Web Audio API that handles sound sprites and bypasses modern browser autoplay restrictions through user-interaction triggers.
 
-#### Audio Implementation
+### Responsive Cyberpunk UI
 
-- A custom `AudioManager` handles the looping background score and synchronized sound effects.
-- Smart "User-Interaction-Trigger" to comply with modern browser autoplay policies.
+- **Adaptive Canvas**: The game utilizes a sophisticated resizing logic to maintain a consistent aspect ratio across all screen sizes.
+- **Mobile-First Controls**: A custom touch-interface implementation with orientation detection (Landscape enforcement) and safe-area optimizations for modern smartphones.
+- **Visual Juice**: Real-time filters, screen-shake effects, and a multi-layered parallax system create an immersive 2065 atmosphere.
 
 ---
 
 ## Getting Started
 
-1. Clone the repository: `git clone https://github.com/stefanstraeter/dystopia-city-2065`
-2. Open `index.html` in your browser (or use VS Code Live Server).
-3. Press **ENTER** to start the mission.
+1. **Clone the repository:** `git clone https://github.com/stefanstraeter/neon-city-2065`
+2. **Launch:** Open `index.html` via a local server (e.g., VS Code Live Server).
+3. **Controls:** - **Keyboard:** Arrow keys to move, Space to shoot, Up to jump.
+   - **System:** ENTER to progress intro, M for Mission, C for Controls.
+   - **Mobile:** Use the integrated neon-touch overlay.
 
 ---
 
 ## Author
 
-- GitHub: [@dein-username](https://github.com/stefanstraeter/)
+**Stefan Straeter** _Full Stack Developer_ - GitHub: [@stefanstraeter](https://github.com/stefanstraeter/)
