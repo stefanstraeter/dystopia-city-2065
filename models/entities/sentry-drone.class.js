@@ -1,6 +1,6 @@
 class SentryDrone extends MoveableObject {
     AGGRO_RANGE = 400;
-    FIRE_RANGE = 250;
+    FIRE_RANGE = 450;
     SPEED = 1;
 
     animations = {
