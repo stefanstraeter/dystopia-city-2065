@@ -3,17 +3,13 @@ class World {
     throwableObjects = [];
     mKeyPressed = false;
     cKeyPressed = false;
-    isMobile() {
-        return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    };
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
 
-        this.gameState = new GameStateManager(this); // Hier instanziiert
-
+        this.gameState = new GameStateManager(this);
         this.uiManager = new UIManager(this.ctx, this.canvas);
         this.collisionManager = new CollisionManager(this);
         this.levelPopulator = new LevelPopulator(this);
@@ -25,41 +21,6 @@ class World {
         this.draw();
         this.run();
 
-
-
-        if (this.isMobile()) {
-            this.canvas.addEventListener('pointerdown', async () => {
-                if (!this.gameState.gameStarted) {
-                    if (this.gameState.introStage < 2) {
-                        this.gameState.introStage++;
-                    } else {
-                        this.gameState.gameStarted = true;
-
-                        // Audio entsperren
-                        if (this.audioManager) await this.audioManager.unlockAudio();
-
-                        // Hintergrundmusik starten
-                        this.audioManager.play('background');
-
-                        // 🔹 Mobile Controls sichtbar machen
-                        if (MobileControls) MobileControls.showButtonsOnGameStart();
-                    }
-                }
-            });
-        } else {
-            // Desktop: Enter-Taste
-            window.addEventListener('keydown', async (e) => {
-                if (!this.gameState.gameStarted && e.code === 'Enter') {
-                    if (this.gameState.introStage < 2) {
-                        this.gameState.introStage++;
-                    } else {
-                        this.gameState.gameStarted = true;
-                        if (this.audioManager) await this.audioManager.unlockAudio();
-                        this.audioManager.play('background');
-                    }
-                }
-            });
-        }
     }
 
     initLevel() {
