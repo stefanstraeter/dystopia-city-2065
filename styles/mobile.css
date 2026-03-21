@@ -59,29 +59,6 @@
     transition: transform 0.1s;
   }
 
-  /* --- FULLSCREEN BUTTON MOBIL --- */
-  .btn-fullscreen {
-    position: absolute;
-
-    bottom: 1.2rem;
-    right: 1.2rem;
-    top: auto;
-    left: auto;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.4rem;
-    z-index: 1000;
-  }
-
-  .btn-fullscreen svg {
-    width: 1.2rem;
-    height: 1.2rem;
-    opacity: 0.6;
-  }
-
   /* --- BUTTON STYLING & NEON --- */
   button {
     touch-action: manipulation;
@@ -154,6 +131,10 @@
     color: #00f2ff;
     text-align: center;
     display: none;
+  }
+
+  .orientation-overlay p {
+    font-size: 1.4rem;
   }
 }
 

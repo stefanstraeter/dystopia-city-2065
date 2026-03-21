@@ -100,3 +100,9 @@ body::after {
 #btn-start-game {
   display: none;
 }
+
+@media (max-width: 64rem) {
+  .btn-fullscreen {
+    display: none;
+  }
+}
