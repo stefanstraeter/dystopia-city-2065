@@ -11,13 +11,13 @@
   }
 
   .mobile-controls-overlay.show-mobile-controls {
-    pointer-events: auto;
+    pointer-events: none;
     opacity: 1;
   }
 
   .movement-btns {
     position: absolute;
-    bottom: 4rem;
+    bottom: 1.8rem;
     left: 1.8rem;
     display: flex;
     flex-direction: column;
