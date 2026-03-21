@@ -17,10 +17,16 @@ async function init() {
     resizeGame();
 
     await loadInitialAssets();
+
     world = new World(canvas, keyboard);
     setupMobile();
-}
 
+    window.addEventListener('keydown', () => {
+        if (world && !world.gameState.gameStarted) {
+            world.audioManager.unlockAudio();
+        }
+    }, { once: true });
+}
 
 function setupMobile() {
     if (typeof MobileControls !== 'undefined') {
@@ -32,10 +38,8 @@ function setupMobile() {
 function setupInput() {
     canvas.addEventListener('mousedown', (e) => toggleMouseClick(e, true));
     canvas.addEventListener('mouseup', (e) => toggleMouseClick(e, false));
-
     window.addEventListener('keydown', (e) => handleKeyboard(e.code, true));
     window.addEventListener('keyup', (e) => handleKeyboard(e.code, false));
-
     window.addEventListener('resize', resizeGame);
 }
 
@@ -46,10 +50,9 @@ function toggleMouseClick(event, isPressed) {
 async function loadInitialAssets() {
     await Promise.all([
         document.fonts.ready,
-        preloadAssets()
+        typeof preloadAssets === 'function' ? preloadAssets() : Promise.resolve()
     ]);
 }
-
 
 function handleKeyboard(code, isPressed) {
     const keyMap = {
@@ -78,7 +81,6 @@ async function startInitialAudio() {
         try {
             await am.play('background');
         } catch (err) {
-            console.warn("Audio konnte noch nicht gestartet werden:", err);
         }
     }
 }
@@ -88,15 +90,12 @@ function resizeGame() {
 
     let newWidth = window.innerWidth * GAME_CONFIG.SCREEN_MARGIN;
     let newHeight = newWidth / GAME_CONFIG.TARGET_RATIO;
-
     if (newHeight > window.innerHeight * GAME_CONFIG.SCREEN_MARGIN) {
         newHeight = window.innerHeight * GAME_CONFIG.SCREEN_MARGIN;
         newWidth = newHeight * GAME_CONFIG.TARGET_RATIO;
     }
-
     newWidth = Math.min(newWidth, GAME_CONFIG.MAX_WIDTH);
     newHeight = Math.min(newHeight, GAME_CONFIG.MAX_HEIGHT);
-
     canvas.style.width = `${newWidth}px`;
     canvas.style.height = `${newHeight}px`;
 }
@@ -120,7 +119,6 @@ function toggleFullscreen() {
     }
 }
 
-
 function unlockAudio() {
     if (world && world.audioManager) {
         if (world.audioManager.context && world.audioManager.context.state === 'suspended') {
@@ -129,17 +127,9 @@ function unlockAudio() {
         const playPromise = world.audioManager.play('background');
         if (playPromise && typeof playPromise.catch === 'function') {
             playPromise.catch(err => {
-                console.warn("Musik-Autoplay wurde blockiert:", err);
             });
         }
     }
 }
 
-window.addEventListener('keydown', () => {
-    if (!world.gameStarted) unlockAudio();
-}, { once: true });
-
-
-document.addEventListener('DOMContentLoaded', init);
-
-
+window.addEventListener('load', init);
