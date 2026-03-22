@@ -1,4 +1,4 @@
-/* --- 1. GLOBAL & BACKGROUND --- */
+/* ------ GLOBAL & BACKGROUND ------ */
 html,
 body {
   margin: 0;
@@ -32,7 +32,7 @@ body::after {
   opacity: 0.2;
 }
 
-/* --- 2. CANVAS & CONTAINER --- */
+/* ------ CANVAS & CONTAINER ------ */
 canvas {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
@@ -79,7 +79,7 @@ canvas {
   box-shadow: none;
 }
 
-/* --- 3. FULLSCREEN BUTTON --- */
+/* ------  BUTTON ------ */
 .btn-fullscreen {
   position: fixed;
   bottom: 2rem;

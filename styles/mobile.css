@@ -1,4 +1,4 @@
-/* --- MOBILE CONTROLS  --- */
+/* ------ MOBILE CONTROLS  ------ */
 @media (max-width: 64rem) {
   .mobile-controls-overlay {
     display: block;
@@ -65,7 +65,7 @@
     filter: brightness(1.3);
   }
 
-  /* --- BUTTON STYLING --- */
+  /* ------ BUTTON ------ */
   button {
     touch-action: manipulation;
   }
@@ -126,7 +126,7 @@
     filter: brightness(1.3);
   }
 
-  /* --- 5. ORIENTATION & OVERLAY --- */
+  /* ------ ORIENTATION & OVERLAY ------ */
   .orientation-overlay {
     position: fixed;
     inset: 0;
