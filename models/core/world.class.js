@@ -3,6 +3,9 @@ class World {
     throwableObjects = [];
     mKeyPressed = false;
     cKeyPressed = false;
+    lastTime = 0;
+    fps = 60;
+    interval = 1000 / this.fps;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -35,16 +38,22 @@ class World {
     }
 
     run() {
-        setInterval(() => {
-            const characterIsDying = this.character.energy <= 0 && !this.character.isDeadAnimationFinished();
-            const gameIsPaused = this.gameState.showMission || this.gameState.showControls;
-            const canUpdate = this.gameState.gameStarted && !gameIsPaused && (this.character.energy > 0 || characterIsDying);
+        const gameLoop = (currentTime) => {
+            const deltaTime = currentTime - this.lastTime;
 
-            if (canUpdate) {
-                this.updateAllObjects();
-                this.collisionManager.checkAll();
+            if (deltaTime >= this.interval) {
+                const characterIsDying = this.character.energy <= 0 && !this.character.isDeadAnimationFinished();
+                const gameIsPaused = this.gameState.showMission || this.gameState.showControls;
+                const canUpdate = this.gameState.gameStarted && !gameIsPaused && (this.character.energy > 0 || characterIsDying);
+                if (canUpdate) {
+                    this.updateAllObjects();
+                    this.collisionManager.checkAll();
+                }
+                this.lastTime = currentTime - (deltaTime % this.interval);
             }
-        }, 1000 / 60);
+            requestAnimationFrame(gameLoop);
+        };
+        requestAnimationFrame(gameLoop);
     }
 
     draw() {
