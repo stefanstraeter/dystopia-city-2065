@@ -1,4 +1,10 @@
+/**
+ * Represents the player character with specific animations, 
+ * resource management (ammo/plasma), and input-based movement.
+ * @extends MoveableObject
+ */
 class Character extends MoveableObject {
+
     animations = {
         idle: { path: 'assets/img/02_character_bud/Idle.png', frames: 5, speed: 4 },
         walk: { path: 'assets/img/02_character_bud/Walk.png', frames: 4, speed: 3 },
@@ -12,6 +18,13 @@ class Character extends MoveableObject {
     ammo = 100;
     plasma = 0;
 
+    /**
+     * Initializes the character with position, dimensions, and default offsets.
+     * @param {number} x - Initial horizontal position.
+     * @param {number} width - Character width.
+     * @param {number} height - Character height.
+     * @param {number} speed - Movement speed.
+     */
     constructor(x, width, height, speed) {
         super();
         this.x = x;
@@ -23,6 +36,10 @@ class Character extends MoveableObject {
         this.playAnimation('idle');
     }
 
+    /**
+     * Main update loop for the character. Handles physics, death state, 
+     * movement, and resource regeneration.
+     */
     updateState() {
         this.applyGravity();
         if (this.isDead()) {
@@ -34,6 +51,9 @@ class Character extends MoveableObject {
         this.animate();
     }
 
+    /**
+     * Checks keyboard input and triggers movement, jumping, and shooting.
+     */
     handleMovement() {
         if (!this.world || !this.world.keyboard || this.isDead()) return;
 
@@ -45,6 +65,9 @@ class Character extends MoveableObject {
         this.updateAnimation();
     }
 
+    /**
+     * Decides which animation to play based on current character state and input.
+     */
     updateAnimation() {
         if (this.isHurt()) {
             this.playAnimation('hurt');
@@ -59,6 +82,9 @@ class Character extends MoveableObject {
         }
     }
 
+    /**
+     * Creates a new plasma projectile if enough ammo is available and cooldown has passed.
+     */
     shoot() {
         let currentTime = Date.now();
         if (this.ammo >= 10 && (currentTime - this.lastShootTime > 400)) {
@@ -74,6 +100,9 @@ class Character extends MoveableObject {
         }
     }
 
+    /**
+     * Automatically converts stored plasma into ammunition over time.
+     */
     rechargeAmmoFromPlasma() {
         if (this.plasma > 0 && this.ammo < 100) {
             this.plasma = Math.max(0, this.plasma - 0.1);
@@ -84,7 +113,11 @@ class Character extends MoveableObject {
         }
     }
 
+    /**
+     * Checks if the character is dead and the death animation has reached its final frame.
+     * @returns {boolean} True if the death sequence is complete.
+     */
     isDeadAnimationFinished() {
         return this.energy <= 0 && this.currentFrame >= this.frameCount - 1;
     }
-} 
+}

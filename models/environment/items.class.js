@@ -1,5 +1,19 @@
+/**
+ * Base class for all items that can be picked up by the player.
+ * Supports both static images and animated spritesheets.
+ * @extends MoveableObject
+ */
 class CollectableObject extends MoveableObject {
 
+    /**
+     * @param {string} path - Path to the item's image or spritesheet.
+     * @param {number} x - Horizontal position.
+     * @param {number} y - Vertical position.
+     * @param {number} [width=50] - Display width.
+     * @param {number} [height=50] - Display height.
+     * @param {number} [frames=4] - Number of animation frames.
+     * @param {number} [speed=8] - Animation playback speed.
+     */
     constructor(path, x, y, width = 50, height = 50, frames = 4, speed = 8) {
         super();
         this.loadImage(path);
@@ -15,6 +29,10 @@ class CollectableObject extends MoveableObject {
         this.offset = { top: 5, bottom: 5, left: 5, right: 5 };
     }
 
+    /**
+     * Updates the object's visual state. 
+     * Triggers animation only if the object has multiple frames.
+     */
     updateState() {
         if (this.frameCount > 1) {
             this.animate();
@@ -22,6 +40,10 @@ class CollectableObject extends MoveableObject {
     }
 }
 
+/**
+ * A collectable core that typically recharges the player's plasma resources.
+ * @extends CollectableObject
+ */
 class PlasmaCore extends CollectableObject {
     value = 25;
     constructor(x, y) {
@@ -29,6 +51,10 @@ class PlasmaCore extends CollectableObject {
     }
 }
 
+/**
+ * A power cell item, used for ammunition or energy replenishment.
+ * @extends CollectableObject
+ */
 class PowerCell extends CollectableObject {
     value = 25;
     constructor(x, y) {
@@ -36,6 +62,10 @@ class PowerCell extends CollectableObject {
     }
 }
 
+/**
+ * A medical pack used to restore the player character's health (energy).
+ * @extends CollectableObject
+ */
 class Mediapack extends CollectableObject {
     value = 5;
     constructor(x, y) {

@@ -1,3 +1,7 @@
+/**
+ * Base class for all objects that can be drawn on the canvas.
+ * Handles positioning, image loading, and frame-based animation.
+ */
 class DrawableObject {
 
     x = 140;
@@ -13,6 +17,10 @@ class DrawableObject {
     visible = true;
     world;
 
+    /**
+     * Loads an image from the cache or a URL.
+     * @param {string} path - The file path to the image.
+     */
     loadImage(path) {
         if (window.IMAGE_CACHE && window.IMAGE_CACHE[path]) {
             this.img = window.IMAGE_CACHE[path];
@@ -32,6 +40,9 @@ class DrawableObject {
         }
     }
 
+    /**
+     * Updates the animation frame based on the defined frame speed.
+     */
     animate() {
         this.frameCounter++;
         if (this.frameCounter > this.frameSpeed) {
@@ -40,11 +51,19 @@ class DrawableObject {
         }
     }
 
+    /**
+     * Validates if the object can be drawn and initiates the drawing process.
+     * @param {CanvasRenderingContext2D} ctx - The 2D rendering context of the canvas.
+     */
     draw(ctx) {
         if (!this.visible || !this.img || !this.img.naturalWidth) return;
         this.drawImage(ctx);
     }
 
+    /**
+     * Performs the actual drawing of the image (or current frame) on the canvas.
+     * @param {CanvasRenderingContext2D} ctx - The 2D rendering context of the canvas.
+     */
     drawImage(ctx) {
         if (!this.img.width) return;
 

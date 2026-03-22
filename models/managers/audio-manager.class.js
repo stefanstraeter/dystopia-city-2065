@@ -1,4 +1,12 @@
+/**
+ * Manages game audio, including sound effects and background music.
+ * Handles browser-specific audio unlocking and volume balancing.
+ */
 class AudioManager {
+
+    /**
+     * Initializes the audio library and sets default volumes.
+     */
     constructor() {
         this.sounds = {
             background: new Audio('./assets/audio/cyberpunk.mp3'),
@@ -10,6 +18,9 @@ class AudioManager {
         this.initSettings();
     }
 
+    /**
+     * Configures looping and initial volume levels for all sound assets.
+     */
     initSettings() {
         this.sounds.background.loop = true;
         this.sounds.background.volume = 0.2;
@@ -18,6 +29,11 @@ class AudioManager {
         this.sounds.collect.volume = 0.3;
     }
 
+    /**
+     * Plays a sound effect or music track by its defined name.
+     * Resets the playback time for sound effects to allow rapid re-firing.
+     * @param {string} name - The key of the sound in the sounds object.
+     */
     play(name) {
         const s = this.sounds[name];
         if (!s) return;
@@ -32,6 +48,12 @@ class AudioManager {
         }
     }
 
+    /**
+     * Unlocks all audio contexts by briefly playing and pausing them.
+     * Required to satisfy browser Autoplay policies upon first user interaction.
+     * @async
+     * @returns {Promise<void>} Resolves once all audio assets are primed for playback.
+     */
     async unlockAudio() {
         if (this.isUnlocked) return;
 

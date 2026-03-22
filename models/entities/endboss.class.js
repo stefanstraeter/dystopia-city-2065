@@ -1,3 +1,8 @@
+/**
+ * Represents the final boss enemy with advanced AI behavior including 
+ * patrolling, targeted attacks, and gravity-based physics.
+ * @extends MoveableObject
+ */
 class Endboss extends MoveableObject {
     animations = {
         idle: { path: 'assets/img/03_enemies/endboss/Idle.png', frames: 6, speed: 10 },
@@ -14,6 +19,13 @@ class Endboss extends MoveableObject {
     lastAttack = 0;
     attackCooldown = 3000;
 
+    /**
+     * Initializes the Endboss with its starting position and physical dimensions.
+     * @param {number} x - The initial horizontal position.
+     * @param {number} width - The width of the boss sprite.
+     * @param {number} height - The height of the boss sprite.
+     * @param {number} speed - The base movement speed.
+     */
     constructor(x, width, height, speed) {
         super(x, width, height, speed);
         this.x = x;
@@ -28,6 +40,10 @@ class Endboss extends MoveableObject {
         this.playAnimation('idle');
     }
 
+    /**
+     * Main update cycle for the boss. Handles death, gravity, 
+     * animation states, and AI decision making.
+     */
     updateState() {
         if (this.isDead()) {
             return this.handleDeath();
@@ -44,7 +60,9 @@ class Endboss extends MoveableObject {
         this.decideNextAction();
     }
 
-
+    /**
+     * AI logic to choose between attacking the player or performing a patrol routine.
+     */
     decideNextAction() {
         const characterIsAlive = !this.world.character.isDead();
         const distanceToCharacter = Math.abs(this.x - this.world.character.x);
@@ -56,16 +74,25 @@ class Endboss extends MoveableObject {
         }
     }
 
+    /**
+     * Triggers the final death animation.
+     */
     handleDeath() {
         this.playAnimation('death');
         super.animate();
     }
 
+    /**
+     * Executes the patrol movement and ensures the idle animation is active.
+     */
     performPatrol() {
         this.patrol();
         this.playAnimation('idle');
     }
 
+    /**
+     * Moves the boss back and forth within a specific range from its starting point.
+     */
     patrol() {
         if (this.walkingRight) {
             this.moveRight();
@@ -76,6 +103,9 @@ class Endboss extends MoveableObject {
         }
     }
 
+    /**
+     * Checks if the attack cooldown has passed to initiate a new attack sequence.
+     */
     checkAttack() {
         let now = new Date().getTime();
         if (now - this.lastAttack > this.attackCooldown) {
@@ -85,6 +115,9 @@ class Endboss extends MoveableObject {
         }
     }
 
+    /**
+     * Initiates the attack animation and schedules a bomb spawn.
+     */
     attack() {
         this.lastAttack = new Date().getTime();
         this.playAnimation('attack');
@@ -96,12 +129,18 @@ class Endboss extends MoveableObject {
         }, 600);
     }
 
+    /**
+     * Instantiates a new BossBomb targeting the player's current x-coordinate.
+     */
     spawnBomb() {
         this.world.throwableObjects.push(
             new BossBomb(this.world.character.x, -100, this.world)
         );
     }
 
+    /**
+     * Resets the one-time animation flag once the current sequence is complete.
+     */
     checkAnimationEnd() {
         if (this.currentAnimation === 'attack' && this.currentFrame >= this.frameCount - 1) {
             this.isAnimatingOnce = false;

@@ -1,4 +1,10 @@
+/**
+ * Represents a spider enemy with a multi-stage AI behavior including 
+ * patrolling, pursuing the player at varying speeds, and melee attacks.
+ * @extends MoveableObject
+ */
 class Spider extends MoveableObject {
+
     AGGRO_RANGE = 200;
     CHASE_SPEED = 2;
     NORMAL_SPEED = 1;
@@ -12,6 +18,13 @@ class Spider extends MoveableObject {
         hurt: { path: 'assets/img/08_explosions/plasma_explosion.png', frames: 6, speed: 2 }
     };
 
+    /**
+     * Initializes the spider with position, dimensions, and patrol settings.
+     * @param {number} x - Starting horizontal position.
+     * @param {number} width - Width of the spider sprite.
+     * @param {number} height - Height of the spider sprite.
+     * @param {number} speed - Initial movement speed.
+     */
     constructor(x, width, height, speed) {
         super();
         this.x = x;
@@ -27,6 +40,9 @@ class Spider extends MoveableObject {
         this.playAnimation('walk');
     }
 
+    /**
+     * Updates the spider's physical state (gravity, animation) and triggers AI logic.
+     */
     updateState() {
         this.applyGravity();
         this.animate();
@@ -39,6 +55,9 @@ class Spider extends MoveableObject {
         this.updateBehavior();
     }
 
+    /**
+     * Manages the death sequence, including animation and sinking before removal.
+     */
     handleDeath() {
         this.playAnimation('death');
         this.y += 0.2;
@@ -47,6 +66,10 @@ class Spider extends MoveableObject {
         }
     }
 
+    /**
+     * Determines the current behavior state based on the distance to the player character.
+     * Decisions range from patrolling to chasing or attacking.
+     */
     updateBehavior() {
         if (!this.world || !this.world.character) return;
 
@@ -67,6 +90,12 @@ class Spider extends MoveableObject {
         }
     }
 
+    /**
+     * Adjusts speed and moves toward the character.
+     * Increases speed if the character is within the aggro range.
+     * @param {number} diff - Horizontal difference to the character.
+     * @param {number} distance - Absolute distance to the character.
+     */
     pursueCharacter(diff, distance) {
         this.speed = (distance < this.AGGRO_RANGE) ? this.CHASE_SPEED : this.NORMAL_SPEED;
 
@@ -78,6 +107,9 @@ class Spider extends MoveableObject {
         this.playAnimation('walk');
     }
 
+    /**
+     * Moves the spider back and forth within its defined patrol range relative to spawn.
+     */
     patrol() {
         this.speed = this.NORMAL_SPEED;
 

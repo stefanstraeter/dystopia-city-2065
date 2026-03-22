@@ -1,4 +1,9 @@
+/**
+ * The main game engine class that coordinates the game loop, rendering, 
+ * collision handling, and object management.
+ */
 class World {
+
     groundLevel = 490;
     throwableObjects = [];
     mKeyPressed = false;
@@ -7,6 +12,11 @@ class World {
     fps = 60;
     interval = 1000 / this.fps;
 
+    /**
+     * Initializes the game world, managers, and starts the game loops.
+     * @param {HTMLCanvasElement} canvas - The canvas element for rendering.
+     * @param {Keyboard} keyboard - The input state manager.
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -23,9 +33,11 @@ class World {
         this.initLevel();
         this.draw();
         this.run();
-
     }
 
+    /**
+     * Sets up the initial level state, spawns traffic, and aligns entities.
+     */
     initLevel() {
         this.healthBar = this.level.StatusBar[0];
         this.plasmaBar = this.level.StatusBar[1];
@@ -37,6 +49,10 @@ class World {
         this.levelPopulator.applyWorldToObjects();
     }
 
+    /**
+     * Starts the high-frequency game logic loop using requestAnimationFrame.
+     * Handles delta time to maintain a consistent update rate.
+     */
     run() {
         const gameLoop = (currentTime) => {
             const deltaTime = currentTime - this.lastTime;
@@ -56,6 +72,9 @@ class World {
         requestAnimationFrame(gameLoop);
     }
 
+    /**
+     * Main rendering loop. Clears the canvas and draws game layers or UI overlays.
+     */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -73,6 +92,9 @@ class World {
         requestAnimationFrame(() => this.draw());
     }
 
+    /**
+     * Renders HUD elements, icons, and menu overlays.
+     */
     renderUI() {
         for (let i = 0; i < 3; i++) {
             this.addToMap(this.level.StatusBar[i]);
@@ -86,12 +108,18 @@ class World {
         }
     }
 
+    /**
+     * Synchronizes the boss health bar position with the boss entity.
+     */
     updateBossBar() {
         let boss = this.level.enemies.find(e => e instanceof Endboss);
         let bossBar = this.level.StatusBar[3];
         if (boss && bossBar) bossBar.updatePosition(boss);
     }
 
+    /**
+     * Renders the game world including parallax backgrounds and camera-translated entities.
+     */
     renderGame() {
         this.drawParallaxLayer(0.2, this.level.backgrounds.back);
         this.drawParallaxLayer(0.3, this.level.vehicles.background);
@@ -102,6 +130,9 @@ class World {
         this.ctx.restore();
     }
 
+    /**
+     * Draws all game entities that move with the camera (enemies, character, items).
+     */
     drawWorldEntities() {
         this.addObjectsToMap(this.level.vehicles.midground);
         this.addObjectsToMap(this.level.backgrounds.foreground);
@@ -119,6 +150,11 @@ class World {
         if (this.level.StatusBar[3]) this.addToMap(this.level.StatusBar[3]);
     }
 
+    /**
+     * Draws a group of objects with a specific scroll speed for parallax effects.
+     * @param {number} speed - The multiplier for the camera movement.
+     * @param {DrawableObject[]} objects - Array of objects to render in this layer.
+     */
     drawParallaxLayer(speed, objects) {
         this.ctx.save();
         this.ctx.translate(this.camera.x * speed, 0);
@@ -126,40 +162,70 @@ class World {
         this.ctx.restore();
     }
 
+    /**
+     * Updates the camera position based on current character movement.
+     */
     updateCamera() {
         this.camera.update(this.character, this.level, this.canvas);
     }
 
+    /**
+     * Removes projectiles that are off-screen or have already hit a target.
+     */
     filterProjectiles() {
         this.throwableObjects = this.throwableObjects.filter(obj =>
             Math.abs(obj.x - this.character.x) < 600 && !obj.hasHit);
     }
 
+    /**
+     * Removes enemies from the level that have finished their death sequence.
+     */
     filterEnemies() {
         this.level.enemies = this.level.enemies.filter(enemy =>
-            !enemy.isFinished); this.enemies = this.level.enemies;
+            !enemy.isFinished);
+        this.enemies = this.level.enemies;
     }
 
+    /**
+     * Checks if the level's endboss has been defeated.
+     * @returns {boolean} True if the boss exists and is dead.
+     */
     bossIsDead() {
         let boss = this.level.enemies.find(enemy =>
-            enemy instanceof Endboss); return boss && boss.isDead();
+            enemy instanceof Endboss);
+        return boss && boss.isDead();
     }
 
+    /**
+     * Resets the boss animation state when the character dies to prevent logic loops.
+     */
     resetBossBehavior() {
         this.level.enemies.forEach(e => {
             if (e instanceof Endboss) e.isAnimatingOnce = false;
-
         });
     }
 
+    /**
+     * Calls the draw method of a single DrawableObject.
+     * @param {DrawableObject} mo - The object to draw.
+     */
     addToMap(mo) {
         mo.draw(this.ctx);
     }
+
+    /**
+     * Calls the draw method for an array of DrawableObjects.
+     * @param {DrawableObject[]} objs - The objects to draw.
+     */
     addObjectsToMap(objs) {
         objs.forEach(obj =>
             this.addToMap(obj));
     }
 
+    /**
+     * Collects all active game objects into a single array for bulk processing.
+     * @returns {DrawableObject[]} List of all relevant game entities.
+     */
     getAllObjects() {
         return [this.character,
         ...this.level.enemies,
@@ -168,17 +234,20 @@ class World {
         ...this.level.vehicles.background,
         ...this.level.vehicles.midground,
         ...this.level.collectableItems];
-
     }
+
+    /**
+     * Updates the logical state of all objects and cleans up expired entities.
+     */
     updateAllObjects() {
         this.getAllObjects().forEach(object => {
             if (object) object.updateState();
-
         });
         this.filterProjectiles();
         this.filterEnemies();
         this.level.collectableItems = this.level.collectableItems.filter(item =>
-            !item.isCollected); this.updateCamera();
+            !item.isCollected);
+        this.updateCamera();
         if (this.character.isDead()) this.resetBossBehavior();
     }
 }

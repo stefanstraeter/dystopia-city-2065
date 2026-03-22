@@ -1,7 +1,6 @@
 const byteBounce = new FontFace('ByteBounce', 'url(./assets/fonts/ByteBounce.woff2)');
 const cyberwayRiders = new FontFace('CyberwayRiders', 'url(./assets/fonts/CyberwayRiders.woff2)');
 const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
 const GAME_CONFIG = {
     MAX_WIDTH: 800,
     MAX_HEIGHT: 450,
@@ -13,6 +12,10 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
+/**
+ * Initializes the game environment, canvas, and assets.
+ * @returns {Promise<void>}
+ */
 async function init() {
     canvas = document.getElementById('canvas');
     if (!canvas) return;
@@ -33,12 +36,18 @@ async function init() {
     }, { once: true });
 }
 
+/**
+ * Initializes mobile-specific controls if available.
+ */
 function setupMobile() {
     if (typeof MobileControls !== 'undefined') {
         MobileControls.init(keyboard);
     }
 }
 
+/**
+ * Sets up event listeners for mouse, touch, and keyboard input.
+ */
 function setupInput() {
     canvas.addEventListener('pointerdown', (e) => {
         keyboard.LEFT_CLICK = true;
@@ -58,10 +67,19 @@ function setupInput() {
     window.addEventListener('resize', resizeGame);
 }
 
+/**
+ * Updates the keyboard state based on mouse click events.
+ * @param {MouseEvent} event - The mouse event.
+ * @param {boolean} isPressed - Whether the button is pressed.
+ */
 function toggleMouseClick(event, isPressed) {
     if (event.button === 0) keyboard.LEFT_CLICK = isPressed;
 }
 
+/**
+ * Loads required fonts and initial game assets.
+ * @returns {Promise<void>}
+ */
 async function loadInitialAssets() {
     await Promise.all([
         document.fonts.ready,
@@ -69,6 +87,11 @@ async function loadInitialAssets() {
     ]);
 }
 
+/**
+ * Maps physical key codes to internal game input states.
+ * @param {string} code - The KeyboardEvent code.
+ * @param {boolean} isPressed - Whether the key is currently down.
+ */
 function handleKeyboard(code, isPressed) {
     const keyMap = {
         'ArrowLeft': 'KEY_LEFT',
@@ -86,6 +109,10 @@ function handleKeyboard(code, isPressed) {
     }
 }
 
+/**
+ * Resumes the AudioContext and starts background music.
+ * @returns {Promise<void>}
+ */
 async function startInitialAudio() {
     if (world && world.audioManager) {
         const am = world.audioManager;
@@ -100,6 +127,10 @@ async function startInitialAudio() {
     }
 }
 
+/**
+ * Loads custom WebFonts and adds them to the document.
+ * @returns {Promise<void>}
+ */
 async function loadFonts() {
     try {
         const byteBounce = new FontFace('ByteBounce', 'url(./assets/fonts/ByteBounce.woff2)');
@@ -110,6 +141,9 @@ async function loadFonts() {
     }
 }
 
+/**
+ * Adjusts canvas styling to maintain aspect ratio and fit the screen.
+ */
 function resizeGame() {
     if (!canvas) return;
 
@@ -125,6 +159,9 @@ function resizeGame() {
     canvas.style.height = `${newHeight}px`;
 }
 
+/**
+ * Toggles fullscreen mode for the game container.
+ */
 function toggleFullscreen() {
     const container = document.querySelector('.game-container');
     const isFS = document.fullscreenElement ||
@@ -149,6 +186,9 @@ function toggleFullscreen() {
     }
 }
 
+/**
+ * Unlocks the Web Audio API context via user interaction.
+ */
 function unlockAudio() {
     if (world && world.audioManager) {
         if (world.audioManager.context && world.audioManager.context.state === 'suspended') {
@@ -162,6 +202,9 @@ function unlockAudio() {
     }
 }
 
+/**
+ * Re-declares input setup (Note: duplicate of previous setupInput logic in original).
+ */
 function setupInput() {
     canvas.addEventListener('mousedown', (e) => toggleMouseClick(e, true));
     canvas.addEventListener('mouseup', (e) => toggleMouseClick(e, false));

@@ -1,16 +1,29 @@
+/**
+ * Base class for all projectiles and throwable objects. 
+ * Uses static blueprints to define shared properties like damage, speed, and visuals.
+ * @extends MoveableObject
+ */
 class ThrowableObject extends MoveableObject {
 
+    /** * Central configuration for different types of projectiles.
+     * @static 
+     */
     static BLUEPRINTS = {
         MELEE: { damage: 10, cooldown: 0.8, type: 'melee' },
         PLAYER_PLASMA: { damage: 10, speed: 15, cooldown: 0.05, type: 'plasma', img: '02_character_bud/Plasma.png', width: 120, height: 40, frames: 4, isEnemy: false },
         ENEMY_PLASMA: { damage: 10, speed: 8, cooldown: 0.7, type: 'plasma', img: '03_enemies/sentry_drone/Plasma.png', width: 60, height: 20, frames: 3, isEnemy: true },
         BOMB: { damage: 40, speed: 0, cooldown: 2.0, type: 'bomb', img: '03_enemies/endboss/Bomb.png', width: 150, height: 150, frames: 1, isEnemy: true },
-
     };
 
     hasHit = false;
     damageApplied = false;
 
+    /**
+     * @param {number} x - Horizontal starting position.
+     * @param {number} y - Vertical starting position.
+     * @param {boolean} isMirrored - Direction of flight (true for left, false for right).
+     * @param {Object} plan - A blueprint from ThrowableObject.BLUEPRINTS.
+     */
     constructor(x, y, isMirrored, plan) {
         super();
         this.x = x;
@@ -30,29 +43,53 @@ class ThrowableObject extends MoveableObject {
         }
     }
 
+    /**
+     * Updates animation and handles linear movement.
+     */
     updateState() {
         this.animate();
         this.move();
     }
 
+    /**
+     * Moves the object horizontally based on its speed and direction.
+     */
     move() {
         this.x += this.isMirrored ? -this.speed : this.speed;
     }
 }
 
+/**
+ * Projectile fired by the player character.
+ * @extends ThrowableObject
+ */
 class PlayerPlasma extends ThrowableObject {
     constructor(x, y, isMirrored) {
         super(x, y, isMirrored, ThrowableObject.BLUEPRINTS.PLAYER_PLASMA);
     }
 }
 
+/**
+ * Projectile fired by enemy units like the Sentry Drone.
+ * @extends ThrowableObject
+ */
 class EnemyPlasma extends ThrowableObject {
     constructor(x, y, isMirrored) {
         super(x, y, isMirrored, ThrowableObject.BLUEPRINTS.ENEMY_PLASMA);
     }
 }
 
+/**
+ * Heavy explosive projectile used by the Endboss. 
+ * Features gravity, ground collision, and screen-shake effects on explosion.
+ * @extends ThrowableObject
+ */
 class BossBomb extends ThrowableObject {
+    /**
+     * @param {number} x - Target X coordinate.
+     * @param {number} y - Vertical spawn height.
+     * @param {Object} world - Reference to the game world.
+     */
     constructor(x, y, world) {
         super(x, y, false, ThrowableObject.BLUEPRINTS.BOMB);
         this.world = world;
@@ -66,6 +103,9 @@ class BossBomb extends ThrowableObject {
         };
     }
 
+    /**
+     * Handles falling logic until ground contact, then manages explosion sequence.
+     */
     updateState() {
         this.animate();
         if (this.hasExploded) {
@@ -83,6 +123,10 @@ class BossBomb extends ThrowableObject {
         }
     }
 
+    /**
+     * Triggers the explosion: stops movement, expands hitboxes, 
+     * plays audio, and activates camera shake.
+     */
     explode() {
         if (this.hasExploded) return;
         this.hasExploded = true;

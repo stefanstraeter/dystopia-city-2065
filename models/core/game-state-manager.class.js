@@ -1,4 +1,12 @@
+/**
+ * Manages the high-level state of the game, including intro progression,
+ * game over logic, and UI toggles.
+ */
 class GameStateManager {
+
+    /**
+     * @param {Object} world - Reference to the main game world instance.
+     */
     constructor(world) {
         this.world = world;
         this.introStage = 0;
@@ -8,6 +16,9 @@ class GameStateManager {
         this.wasPressedLastFrame = false;
     }
 
+    /**
+     * Monitors input to advance the intro, start the game, or restart after game over.
+     */
     checkStartKey() {
         const isGameOver = (this.world.character && this.world.character.energy <= 0) || this.world.bossIsDead();
         const isPressedNow = this.world.keyboard.KEY_ENTER || this.world.keyboard.LEFT_CLICK;
@@ -27,6 +38,9 @@ class GameStateManager {
         }
     }
 
+    /**
+     * Advances the game through intro stages and triggers the game start.
+     */
     handleIntroProgression() {
         if (this.world.audioManager) {
             this.world.audioManager.unlockAudio();
@@ -48,6 +62,9 @@ class GameStateManager {
         }
     }
 
+    /**
+     * Handles toggling of Mission and Control overlays based on keyboard input.
+     */
     checkUIToggles() {
         if (this.world.keyboard.KEY_M && !this.world.mKeyPressed) {
             this.showMission = !this.showMission;
@@ -66,6 +83,9 @@ class GameStateManager {
         }
     }
 
+    /**
+     * Checks for win/loss conditions and triggers the corresponding end screens.
+     */
     update() {
         const isDead = this.world.character && this.world.character.isDeadAnimationFinished();
         const isWin = this.world.bossIsDead();
@@ -78,6 +98,9 @@ class GameStateManager {
         }
     }
 
+    /**
+     * Removes mobile control overlays from the DOM on mobile devices.
+     */
     hideMobileControls() {
         if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             document.querySelector('.mobile-controls-overlay')?.classList.remove('show-mobile-controls');

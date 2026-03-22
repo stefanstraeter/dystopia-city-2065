@@ -1,3 +1,7 @@
+/**
+ * Extension of DrawableObject that adds movement, gravity, collision detection, and combat logic.
+ * @extends DrawableObject
+ */
 class MoveableObject extends DrawableObject {
 
     speed = 0.15;
@@ -14,6 +18,10 @@ class MoveableObject extends DrawableObject {
     damage = 10;
     isAnimatingOnce = false;
 
+    /**
+     * Renders the object while handling horizontal flipping (mirroring).
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+     */
     draw(ctx) {
         if (!this.visible || !this.img || !this.img.complete) return;
         this.flipImage(ctx);
@@ -21,6 +29,9 @@ class MoveableObject extends DrawableObject {
         this.flipImageBack(ctx);
     }
 
+    /**
+     * Handles advanced animation logic, including one-time animations and death states.
+     */
     animate() {
         this.frameCounter++;
         if (this.frameCounter <= this.frameSpeed) return;
@@ -38,6 +49,10 @@ class MoveableObject extends DrawableObject {
         }
     }
 
+    /**
+     * Switches to a specific animation by name and updates frame properties.
+     * @param {string} name - The key of the animation to play.
+     */
     playAnimation(name) {
         if (this.currentAnimation === 'death') return;
         if (this.isAnimatingOnce && name !== 'death') return;
@@ -59,6 +74,9 @@ class MoveableObject extends DrawableObject {
         this.frameCounter = 0;
     }
 
+    /**
+     * Applies downward acceleration to the object if it is above the ground.
+     */
     applyGravity() {
         if (this.isAboveGround() || this.speedY > 0) {
             this.y -= this.speedY;
@@ -71,29 +89,46 @@ class MoveableObject extends DrawableObject {
         }
     }
 
+    /**
+     * Checks if the object is currently in the air.
+     * @returns {boolean} True if above ground level.
+     */
     isAboveGround() {
         if (this instanceof ThrowableObject) return true;
         let ground = this.world ? this.world.groundLevel : 490;
         return this.y < (ground - this.height + this.footOffset);
     }
 
+    /**
+     * Moves the object to the left and mirrors the sprite.
+     */
     moveLeft() {
         if (this.isDead()) return;
         this.x -= this.speed;
         this.isMirrored = true;
     }
 
+    /**
+     * Moves the object to the right and resets mirroring.
+     */
     moveRight() {
         if (this.isDead()) return;
         this.x += this.speed;
         this.isMirrored = false;
     }
 
+    /**
+     * Initiates a jump by setting upward vertical speed.
+     */
     jump() {
         if (this.isDead()) return;
         this.speedY = 21;
     }
 
+    /**
+     * Flips the canvas context horizontally if the object is mirrored.
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+     */
     flipImage(ctx) {
         if (this.isMirrored) {
             ctx.save();
@@ -103,6 +138,10 @@ class MoveableObject extends DrawableObject {
         }
     }
 
+    /**
+     * Restores the canvas context after a mirrored draw.
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+     */
     flipImageBack(ctx) {
         if (this.isMirrored) {
             this.x = this.x * -1;
@@ -110,6 +149,11 @@ class MoveableObject extends DrawableObject {
         }
     }
 
+    /**
+     * Detects collision with another MoveableObject using offsets (hitboxes).
+     * @param {MoveableObject} mo - The object to check collision against.
+     * @returns {boolean} True if objects are overlapping.
+     */
     isColliding(mo) {
         return this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
             this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
@@ -117,6 +161,11 @@ class MoveableObject extends DrawableObject {
             this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
     }
 
+    /**
+     * Reduces object energy, handles invulnerability frames and death state.
+     * @param {number} [damageReceived] - Amount of damage (defaults to this.damage).
+     * @param {string} [damageType='default'] - Type of damage for invulnerability checks.
+     */
     hit(damageReceived, damageType = 'default') {
         if (this.isInvulnerable(damageType)) return;
 
@@ -133,6 +182,9 @@ class MoveableObject extends DrawableObject {
         }
     }
 
+    /**
+     * Creates a brief flickering effect when taking damage.
+     */
     retroHitEffect() {
         this.visible = false;
         setTimeout(() => {
@@ -140,10 +192,19 @@ class MoveableObject extends DrawableObject {
         }, 50);
     }
 
+    /**
+     * Updates the timestamp for a specific damage type.
+     * @param {string} damageType - The source of the damage.
+     */
     setLastHit(damageType) {
         this.lastHits[damageType] = Date.now();
     }
 
+    /**
+     * Checks if the object is currently invulnerable to a specific damage type.
+     * @param {string} damageType - The type of damage to check.
+     * @returns {boolean} True if still in the invulnerability threshold.
+     */
     isInvulnerable(damageType) {
         let lastHitTime = this.lastHits[damageType];
         if (!lastHitTime) return false;
@@ -158,15 +219,28 @@ class MoveableObject extends DrawableObject {
         return timePassed < (thresholds[damageType] || thresholds.default);
     }
 
+    /**
+     * Checks if the object was recently hit.
+     * @returns {boolean} True if hit within the last 0.2 seconds.
+     */
     isHurt() {
         let timepassed = (Date.now() - this.lastHit) / 1000;
         return timepassed < 0.2;
     }
 
+    /**
+     * Checks if the object has no energy left.
+     * @returns {boolean} True if energy is 0 or less.
+     */
     isDead() {
         return this.energy <= 0;
     }
 
+    /**
+     * Renders a dynamic elliptical shadow on the ground based on height.
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+     * @param {number} groundLevel - The Y-coordinate of the ground.
+     */
     drawShadow(ctx, groundLevel) {
         const isCharacter = this.constructor.name === 'Character';
         const shadowYOffset = isCharacter ? 50 : 70;
@@ -187,5 +261,3 @@ class MoveableObject extends DrawableObject {
         ctx.restore();
     }
 }
-
-

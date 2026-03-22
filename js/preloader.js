@@ -1,3 +1,6 @@
+/** * Global cache object for storing preloaded Image elements.
+ * @type {Object<string, HTMLImageElement>} 
+ */
 window.IMAGE_CACHE = {};
 
 const ASSETS_TO_PRELOAD = [
@@ -58,6 +61,11 @@ const ASSETS_TO_PRELOAD = [
     'assets/img/08_explosions/rocket_explosion.png'
 ];
 
+/**
+ * Loads and decodes all game assets asynchronously to populate the IMAGE_CACHE.
+ * Uses Promise.all to wait for all assets to be ready.
+ * @returns {Promise<void>} Resolves when all assets are loaded and decoded.
+ */
 async function preloadAssets() {
     const promises = ASSETS_TO_PRELOAD.map(src => {
         return new Promise((resolve) => {
@@ -66,6 +74,9 @@ async function preloadAssets() {
 
             img.onload = async () => {
                 try {
+                    /** * Decode ensures the image is ready for the GPU, 
+                     * preventing frame drops on first render.
+                     */
                     await img.decode();
                 } catch (e) {
                     console.warn("Failed to decode image:", src);

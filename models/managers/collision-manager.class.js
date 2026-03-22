@@ -1,14 +1,29 @@
+/**
+ * Handles all collision-related logic within the game world.
+ * Detects interactions between the character, enemies, projectiles, and collectable items.
+ */
 class CollisionManager {
+
+    /**
+     * @param {Object} world - Reference to the main game world instance.
+     */
     constructor(world) {
         this.world = world;
     }
 
+    /**
+     * Executes all collision checks in a single cycle.
+     */
     checkAll() {
         this.checkEnemyCollisions();
         this.checkProjectileCollisions();
         this.checkItemCollisions();
     }
 
+    /**
+     * Checks for direct contact between the player character and enemies.
+     * Triggers melee damage, updates the health bar, and initiates a subtle camera shake.
+     */
     checkEnemyCollisions() {
         const meleeDamage = ThrowableObject.BLUEPRINTS.MELEE.damage;
 
@@ -21,6 +36,10 @@ class CollisionManager {
         });
     }
 
+    /**
+     * Iterates through all active projectiles to determine if they hit a valid target.
+     * Distinguishes between enemy projectiles (targeting the player) and player projectiles (targeting enemies).
+     */
     checkProjectileCollisions() {
         this.world.throwableObjects.forEach((projectile) => {
             if (projectile.hasHit) return;
@@ -33,6 +52,13 @@ class CollisionManager {
         });
     }
 
+    /**
+     * Processes a successful hit between a projectile and a target.
+     * Manages damage application, triggers specific projectile behaviors (like BossBomb explosions),
+     * and updates UI/effects if the player is hit.
+     * @param {ThrowableObject} projectile - The projectile in motion.
+     * @param {MoveableObject} target - The character or enemy being hit.
+     */
     handleHit(projectile, target) {
         if (target.isDead() || !projectile.isColliding(target)) return;
 
@@ -52,6 +78,9 @@ class CollisionManager {
         }
     }
 
+    /**
+     * Checks if the character overlaps with any uncollected items in the level.
+     */
     checkItemCollisions() {
         this.world.level.collectableItems.forEach((item) => {
             if (!item.isCollected && this.world.character.isColliding(item)) {
@@ -60,6 +89,10 @@ class CollisionManager {
         });
     }
 
+    /**
+     * Resolves the pickup of an item, updating character resources and playing sound effects.
+     * @param {CollectableObject} item - The item being picked up.
+     */
     handleItemPickup(item) {
         item.isCollected = true;
 
