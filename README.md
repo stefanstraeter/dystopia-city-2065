@@ -10,7 +10,7 @@
 
 ### Live Demo
 
-- **Link:** [View Live Project](https://stefanstraeter.github.io/neon-city-2065/)
+- **Link:** [View Live Project](assets/img/neon-city-2065.gif)
 
 ---
 
