@@ -26,7 +26,6 @@ class CollisionManager {
      */
     checkEnemyCollisions() {
         const meleeDamage = ThrowableObject.BLUEPRINTS.MELEE.damage;
-
         this.world.level.enemies.forEach((enemy) => {
             if (!enemy.isDead() && this.world.character.isColliding(enemy)) {
                 this.world.character.hit(meleeDamage, 'melee');
@@ -63,14 +62,18 @@ class CollisionManager {
         if (target.isDead() || !projectile.isColliding(target)) return;
 
         if (!projectile.damageApplied) {
-            target.hit(projectile.damage);
+            target.hit(projectile.damage, projectile.damageType, projectile.isMirrored);
             projectile.damageApplied = true;
+
+            let effectType = (projectile instanceof BossBomb) ? 'BOMB' : 'PLASMA';
+            this.world.spawnEffect(target.x, target.y, target.width, target.height, effectType);
 
             if (projectile instanceof BossBomb) {
                 projectile.explode();
             } else {
                 projectile.hasHit = true;
             }
+
             if (target === this.world.character) {
                 this.world.healthBar.setPercentage(this.world.character.energy);
                 this.world.camera.activateShake(200, 10);
