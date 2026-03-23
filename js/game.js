@@ -227,8 +227,6 @@ function setupInput() {
     window.addEventListener('resize', resizeGame);
 }
 
-
-
 window.toggleImprint = function () {
     const overlay = document.getElementById('imprint-overlay');
     if (!overlay) return;
