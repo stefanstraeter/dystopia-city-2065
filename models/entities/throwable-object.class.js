@@ -98,9 +98,6 @@ class BossBomb extends ThrowableObject {
         this.hasExploded = false;
         this.hasHit = false;
         this.offset = { top: 10, bottom: 10, left: 10, right: 10 };
-        this.animations = {
-            explosion: { path: 'assets/img/08_explosions/rocket_explosion.png', frames: 8, speed: 4 }
-        };
     }
 
     /**
@@ -108,15 +105,14 @@ class BossBomb extends ThrowableObject {
      */
     updateState() {
         this.animate();
+
+        // Wenn bereits explodiert, markieren wir das Objekt sofort als "Hit",
+        // damit es aus dem throwableObjects-Array gelöscht wird.
         if (this.hasExploded) {
-            if (this.currentFrame >= this.animations.explosion.frames - 1) {
-                this.hasHit = true;
-            }
+            this.hasHit = true;
             return;
         }
-
         this.applyGravity();
-
         if (this.y >= this.world.groundLevel - this.height) {
             this.y = this.world.groundLevel - this.height;
             this.explode();
@@ -124,8 +120,8 @@ class BossBomb extends ThrowableObject {
     }
 
     /**
-     * Triggers the explosion: stops movement, expands hitboxes, 
-     * plays audio, and activates camera shake.
+     * Triggers the explosion logic: stops movement, expands hitboxes for 
+     * damage calculation, plays audio, and activates camera shake.
      */
     explode() {
         if (this.hasExploded) return;
@@ -141,7 +137,7 @@ class BossBomb extends ThrowableObject {
         if (this.world && this.world.camera) {
             this.world.camera.activateShake(600, 30);
         }
-        this.playAnimation('explosion');
         this.world.audioManager.play('explosion');
+        this.world.spawnEffect(this.x, this.y, this.width, this.height, 'BOMB');
     }
 }

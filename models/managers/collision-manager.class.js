@@ -64,16 +64,12 @@ class CollisionManager {
         if (!projectile.damageApplied) {
             target.hit(projectile.damage, projectile.damageType, projectile.isMirrored);
             projectile.damageApplied = true;
-
-            let effectType = (projectile instanceof BossBomb) ? 'BOMB' : 'PLASMA';
-            this.world.spawnEffect(target.x, target.y, target.width, target.height, effectType);
-
             if (projectile instanceof BossBomb) {
                 projectile.explode();
             } else {
+                this.world.spawnEffect(target.x, target.y, target.width, target.height, 'PLASMA');
                 projectile.hasHit = true;
             }
-
             if (target === this.world.character) {
                 this.world.healthBar.setPercentage(this.world.character.energy);
                 this.world.camera.activateShake(200, 10);
