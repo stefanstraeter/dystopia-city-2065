@@ -28,11 +28,13 @@ const ASSETS_TO_PRELOAD = [
     'assets/img/03_enemies/sentry_drone/Forward.png',
     'assets/img/03_enemies/sentry_drone/Idle.png',
     'assets/img/03_enemies/sentry_drone/Plasma.png',
+    'assets/img/03_enemies/sentry_drone/Hurt.png',
 
     'assets/img/03_enemies/spider/Attack.png',
     'assets/img/03_enemies/spider/Death.png',
     'assets/img/03_enemies/spider/Idle.png',
     'assets/img/03_enemies/spider/Walk.png',
+    'assets/img/03_enemies/spider/Hurt.png',
 
     'assets/img/04_vehicles/drone.png',
     'assets/img/04_vehicles/police.png',
