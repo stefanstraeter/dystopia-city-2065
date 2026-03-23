@@ -52,6 +52,13 @@
   transition: all 0.2s ease;
 }
 
+.imprint-scroll-container h3 {
+  font-size: 2rem;
+}
+
+.imprint-scroll-container p {
+  font-size: 1.5rem;
+}
 .imprint-close-btn:hover {
   color: #00ffff;
   text-shadow: 0 0 12px #00ffff;
