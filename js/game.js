@@ -1,6 +1,6 @@
 const byteBounce = new FontFace('ByteBounce', 'url(./assets/fonts/ByteBounce.woff2)');
 const cyberwayRiders = new FontFace('CyberwayRiders', 'url(./assets/fonts/CyberwayRiders.woff2)');
-const IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const IS_TOUCH = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
 const GAME_CONFIG = {
     MAX_WIDTH: 800,
     MAX_HEIGHT: 450,
@@ -20,6 +20,11 @@ async function init() {
     canvas = document.getElementById('canvas');
     if (!canvas) return;
 
+    if (IS_TOUCH) {
+        document.body.classList.add('is-touch');
+        setupMobile();
+    }
+
     setupInput();
     resizeGame();
 
@@ -27,7 +32,10 @@ async function init() {
     await loadInitialAssets();
 
     world = new World(canvas, keyboard);
-    setupMobile();
+
+    if (IS_TOUCH) {
+        setupMobile();
+    }
 
     window.addEventListener('keydown', () => {
         if (world && !world.gameState.gameStarted) {

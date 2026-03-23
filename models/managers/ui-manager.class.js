@@ -29,7 +29,7 @@ class UIManager {
             { k: '[ UP ]', a: 'ACTIVATE JETPACK' },
             { k: '[ SPACE ]', a: 'FIRE PLASMA GUN' }
         ],
-        CONTROLS_MOBILE: [
+        CONTROLS_TOUCH: [
             { k: '( JOYSTICK )', a: 'MOVE CHARACTER' },
             { k: '( BTN UP )', a: 'ACTIVATE JETPACK' },
             { k: '( BTN SHOOT )', a: 'FIRE PLASMA GUN' }
@@ -111,8 +111,8 @@ class UIManager {
      * Renders the game's initial start screen.
      */
     drawStartScreen() {
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const startText = isMobile ? 'TAP TO ENTER SECTOR 7' : 'ENTER TO SECTOR 7';
+        const isTouch = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
+        const startText = isTouch ? 'TAP TO ENTER SECTOR 7' : 'ENTER TO SECTOR 7';
         this.drawMessage('NEON CITY 2065', startText, UIManager.THEMES.PRIMARY);
     }
 
@@ -121,7 +121,7 @@ class UIManager {
      * @param {boolean} [isIntro=false] - Whether this is shown during the initial intro.
      */
     drawMissionOverlay(isIntro = false) {
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isTouch = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
         this.drawBaseOverlay(UIManager.THEMES.PRIMARY);
         this.drawGlitchedTitle('MISSION', UIManager.THEMES.PRIMARY, 60);
         this.prepareText('400 2rem "ByteBounce"');
@@ -131,8 +131,8 @@ class UIManager {
             this.ctx.fillText(text, this.canvas.width / 2, 130 + i * 25);
         });
 
-        const footerIntro = isMobile ? 'TAP TO CONTINUE' : 'PRESS ENTER TO CONTINUE';
-        const footerGame = isMobile ? 'TAP BUTTON TO RETURN' : 'PRESS [M] TO RETURN TO GAME';
+        const footerIntro = isTouch ? 'TAP TO CONTINUE' : 'PRESS ENTER TO CONTINUE';
+        const footerGame = isTouch ? 'TAP BUTTON TO RETURN' : 'PRESS [M] TO RETURN TO GAME';
         this.drawFooter(isIntro, footerIntro, footerGame, UIManager.THEMES.SECONDARY);
     }
 
@@ -141,8 +141,8 @@ class UIManager {
      * @param {boolean} [isIntro=false] - Whether this is shown during the initial intro.
      */
     drawControlsOverlay(isIntro = false) {
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const controlText = isMobile ? UIManager.TEXTS.CONTROLS_MOBILE : UIManager.TEXTS.CONTROLS;
+        const isTouch = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
+        const controlText = isTouch ? UIManager.TEXTS.CONTROLS_TOUCH : UIManager.TEXTS.CONTROLS;
 
         this.drawBaseOverlay(UIManager.THEMES.SECONDARY);
         this.drawGlitchedTitle('CONTROLS', UIManager.THEMES.SECONDARY, 60);
@@ -156,8 +156,8 @@ class UIManager {
         });
 
         this.ctx.restore();
-        const footerIntro = isMobile ? 'TAP TO START MISSION' : 'ENTER TO START MISSION';
-        const footerGame = isMobile ? 'TAP BUTTON TO RETURN' : 'PRESS [C] TO RETURN TO GAME';
+        const footerIntro = isTouch ? 'TAP TO START MISSION' : 'ENTER TO START MISSION';
+        const footerGame = isTouch ? 'TAP BUTTON TO RETURN' : 'PRESS [C] TO RETURN TO GAME';
         this.drawFooter(isIntro, footerIntro, footerGame, UIManager.THEMES.PRIMARY);
     }
 
@@ -179,10 +179,10 @@ class UIManager {
      */
     drawEndScreen(type) {
         const isWin = type === 'WIN';
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isTouch = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
         let subText = isWin
-            ? (isMobile ? 'TAP TO START NEW MISSION' : 'PRESS ENTER FOR NEW MISSION')
-            : (isMobile ? 'TAP TO REBOOT SYSTEM' : 'PRESS ENTER TO REBOOT');
+            ? (isTouch ? 'TAP TO START NEW MISSION' : 'PRESS ENTER FOR NEW MISSION')
+            : (isTouch ? 'TAP TO REBOOT SYSTEM' : 'PRESS ENTER TO REBOOT');
 
         this.drawMessage(
             isWin ? 'SECTOR 7 CLEARED' : 'WASTED...',
@@ -214,7 +214,7 @@ class UIManager {
      * Displays small hint text in the corner (Desktop only).
      */
     drawHelpHint() {
-        if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return;
+        if (('ontouchstart' in window) || (navigator.maxTouchPoints > 0)) return;
         this.ctx.save();
         this.ctx.globalAlpha = 0.3 + Math.sin(Date.now() / 600) * 0.2;
         this.prepareText('500 1.2rem "ByteBounce"', 'left', 'white');
