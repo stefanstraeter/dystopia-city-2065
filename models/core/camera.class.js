@@ -19,7 +19,7 @@ class Camera {
      * @param {HTMLCanvasElement} canvas - The game canvas to determine viewport width.
      */
     update(character, level, canvas) {
-        let target_x = Math.max(-(level.level_end_x - canvas.width), Math.min(0, -character.x + 160));
+        let target_x = Math.max(-(level.level_end_x - canvas.width), Math.min(0, -character.x + 200));
         let shake = this.isShaking ? (Math.random() - 0.5) * this.shakeIntensity : 0;
         this.x = target_x + shake;
     }

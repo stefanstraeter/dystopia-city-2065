@@ -43,7 +43,7 @@ class World {
         this.healthBar = this.level.StatusBar[0];
         this.plasmaBar = this.level.StatusBar[1];
         this.ammoBar = this.level.StatusBar[2];
-        this.character = new Character(100, 250, 250, 5);
+        this.character = new Character(200, 250, 250, 5);
         this.character.world = this;
         this.character.y = this.groundLevel - this.character.height;
         this.levelPopulator.spawnTraffic(15);
