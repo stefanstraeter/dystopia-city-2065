@@ -6,11 +6,11 @@
 
 ### Preview
 
-![Neon City 2065 Gameplay Mockup](assets/img/mockup.jpg)
+![Neon City 2065 Gameplay Mockup](assets/img/neon-city-2065.gif)
 
 ### Live Demo
 
-- **Link:** [View Live Project](assets/img/neon-city-2065.gif)
+- **Link:** [View Live Project](https://stefanstraeter.github.io/neon-city-2065/)
 
 ---
 
