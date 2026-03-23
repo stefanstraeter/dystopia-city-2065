@@ -23,16 +23,39 @@
   cursor: default;
   border-radius: 0.625rem;
   overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .imprint-scroll-container {
   max-height: 60vh;
   overflow-y: auto;
-  scrollbar-gutter: stable; /* Kein Verspringen mehr */
+  scrollbar-gutter: stable;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.imprint-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #ff00ffae;
+  cursor: pointer;
+  text-shadow: 0 0 8px #ff00ff;
+  transition: all 0.2s ease;
+}
+
+.imprint-close-btn:hover {
+  color: #00ffff;
+  text-shadow: 0 0 12px #00ffff;
+  transform: scale(1.2);
 }
 
 .imprint-scroll-container::-webkit-scrollbar {
@@ -82,7 +105,7 @@
   color: #00ffff;
 }
 
-@media (max-width: 64rem) {
+@media (max-width: 50rem) {
   .game-footer {
     display: none;
   }
