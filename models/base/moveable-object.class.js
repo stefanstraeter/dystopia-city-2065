@@ -166,13 +166,19 @@ class MoveableObject extends DrawableObject {
      * @param {number} [damageReceived] - Amount of damage (defaults to this.damage).
      * @param {string} [damageType='default'] - Type of damage for invulnerability checks.
      */
-    hit(damageReceived, damageType = 'default') {
+    hit(damageReceived, damageType = 'default', isMirroredHit = false) {
         if (this.isInvulnerable(damageType)) return;
 
         this.energy -= damageReceived ?? this.damage;
         this.setLastHit(damageType);
         this.lastHit = Date.now();
 
+        const knockbackForce = 12;
+        if (isMirroredHit) {
+            this.x -= knockbackForce;
+        } else {
+            this.x += knockbackForce;
+        }
         if (this.energy > 0) {
             this.playAnimation('hurt');
             this.retroHitEffect();
