@@ -11,6 +11,7 @@ class World {
     lastTime = 0;
     fps = 60;
     interval = 1000 / this.fps;
+    visualEffects = [];
 
     /**
      * Initializes the game world, managers, and starts the game loops.
@@ -47,6 +48,20 @@ class World {
         this.character.y = this.groundLevel - this.character.height;
         this.levelPopulator.spawnTraffic(15);
         this.levelPopulator.applyWorldToObjects();
+    }
+
+    /**
+         * Creates and spawns a visual effect at a specific position in the world.
+         * @param {number} x - The horizontal coordinate to spawn the effect.
+         * @param {number} y - The vertical coordinate to spawn the effect.
+         * @param {number} w - The display width of the effect.
+         * @param {number} h - The display height of the effect.
+         * @param {string} type - The effect type key from VisualEffect.BLUEPRINTS (e.g., 'PLASMA', 'BOMB').
+         */
+    spawnEffect(x, y, w, h, type) {
+        let effect = new VisualEffect(x, y, w, h, type);
+        effect.world = this;
+        this.visualEffects.push(effect);
     }
 
     /**
@@ -147,6 +162,7 @@ class World {
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
+        this.addObjectsToMap(this.visualEffects);
         if (this.level.StatusBar[3]) this.addToMap(this.level.StatusBar[3]);
     }
 
@@ -243,6 +259,8 @@ class World {
         this.getAllObjects().forEach(object => {
             if (object) object.updateState();
         });
+        this.visualEffects.forEach(eff => eff.updateState());
+        this.visualEffects = this.visualEffects.filter(effect => !effect.isFinished);
         this.filterProjectiles();
         this.filterEnemies();
         this.level.collectableItems = this.level.collectableItems.filter(item =>
