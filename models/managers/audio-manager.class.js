@@ -23,10 +23,10 @@ class AudioManager {
      */
     initSettings() {
         this.sounds.background.loop = true;
-        this.sounds.background.volume = 0.3;
-        this.sounds.plasma.volume = 0.1;
-        this.sounds.explosion.volume = 0.2;
-        this.sounds.collect.volume = 0.4;
+        this.sounds.background.volume = 0.1;
+        this.sounds.plasma.volume = 0.05;
+        this.sounds.explosion.volume = 0.1;
+        this.sounds.collect.volume = 0.2;
     }
 
     /**
