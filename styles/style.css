@@ -82,15 +82,15 @@ canvas {
 /* ------  BUTTON ------ */
 .btn-fullscreen {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 1.4rem;
+  right: 1.4rem;
   background: none;
   border: none;
-  color: #e3dbc9;
+  color: rgba(227, 227, 227, 0.4);
   cursor: pointer;
   z-index: 1000;
   display: block;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-fullscreen svg {
@@ -100,13 +100,12 @@ canvas {
 }
 
 .btn-fullscreen:hover {
-  transform: scale(1.1);
+  color: #00ffff;
 }
 
 .mobile-controls-overlay,
 .system-btns,
-.orientation-overlay,
-#btn-start-game {
+.orientation-overlay {
   display: none;
 }
 
@@ -114,4 +113,36 @@ canvas {
   .btn-fullscreen {
     display: none;
   }
+}
+
+/* ------  FOOTER  ------ */
+.game-footer {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.footer-links {
+  pointer-events: auto;
+}
+
+.imprint-link {
+  font-family: "ByteBounce", sans-serif;
+  color: rgba(227, 227, 227, 0.4);
+  font-size: 1.2rem;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.imprint-link:hover {
+  color: rgb(0, 255, 255);
+  text-shadow: 0 0 8px #00ffff;
 }

@@ -227,4 +227,34 @@ function setupInput() {
     window.addEventListener('resize', resizeGame);
 }
 
+
+
+window.toggleImprint = function () {
+    const overlay = document.getElementById('imprint-overlay');
+    if (!overlay) return;
+    const isVisible = window.getComputedStyle(overlay).display === 'flex';
+    if (!isVisible) {
+        overlay.style.display = 'flex';
+    } else {
+        overlay.style.display = 'none';
+    }
+};
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const overlay = document.getElementById('imprint-overlay');
+        if (overlay && overlay.style.display === 'flex') {
+            toggleImprint();
+        }
+    }
+});
+
+window.addEventListener('click', (e) => {
+    const overlay = document.getElementById('imprint-overlay');
+    if (e.target === overlay) {
+        toggleImprint();
+    }
+});
+
+
 window.addEventListener('load', init);

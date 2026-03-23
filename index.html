@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="styles/fonts.css" />
     <link rel="stylesheet" href="styles/style.css" />
     <link rel="stylesheet" href="styles/mobile.css" />
+    <link rel="stylesheet" href="styles/imprint.css" />
 
     <script src="models/base/drawable-object.class.js"></script>
     <script src="models/base/moveable-object.class.js"></script>
@@ -54,7 +55,7 @@
     <div class="game-container">
       <canvas id="canvas" class="game-canvas" width="800" height="450"></canvas>
 
-      <div class="controls-group system-btns">
+      <div class="system-btns">
         <button id="btn-mission" class="ctrl-btn-small btn-neon-yellow">M</button>
         <button id="btn-controls" class="ctrl-btn-small btn-neon-yellow">C</button>
         <button id="btn-fullscreen-mobile" class="ctrl-btn-small btn-neon-yellow" onclick="toggleFullscreen()">
@@ -65,11 +66,11 @@
       </div>
 
       <div class="mobile-controls-overlay">
-        <div class="controls-group movement-btns">
+        <div class="movement-btns">
           <button id="btn-left" class="ctrl-btn btn-neon-blue">←</button>
           <button id="btn-right" class="ctrl-btn btn-neon-blue">→</button>
         </div>
-        <div class="controls-group action-btns">
+        <div class="action-btns">
           <button id="btn-jump" class="ctrl-btn btn-neon-pink">JUMP</button>
           <button id="btn-shoot" class="ctrl-btn btn-neon-pink">SHOOT</button>
         </div>
@@ -80,10 +81,43 @@
       </div>
     </div>
 
+    <footer class="game-footer">
+      <div class="footer-links">
+        <span onclick="toggleImprint()" class="imprint-link">IMPRINT</span>
+      </div>
+    </footer>
+
     <button class="btn-fullscreen" onclick="toggleFullscreen()">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M14 10l8 -8m0 0h-6m6 0v6M10 14l-8 8m0 0h6m-6 0v-6" stroke="currentColor" stroke-width="2" fill="none" />
       </svg>
     </button>
+
+    <div id="imprint-overlay" class="imprint-overlay">
+      <div class="imprint-content">
+        <h2 class="neon-text-pink">IMPRINT</h2>
+        <div class="imprint-scroll-container">
+          <section>
+            <h3 class="neon-text-blue">INFORMATION ACCORDING TO § 5 TMG</h3>
+            <p>Stefan Straeter<br />Maxmuster 5<br />12345 Musterstadt, Germany</p>
+          </section>
+          <section>
+            <h3 class="neon-text-blue">ASSET CREDITS</h3>
+            <p>Sprites: https://itch.io/</p>
+          </section>
+          <section>
+            <h3 class="neon-text-blue">CONTACT</h3>
+            <p>Phone:follows</p>
+            <p>Email: follows</p>
+          </section>
+          <section>
+            <h3 class="neon-text-blue">LEGAL DETAILS</h3>
+            <p>VAT ID: Musterustid</p>
+            <p>Business ID: Musterwirtschaftsid</p>
+            <p>Supervisory Authority: Musterstadt</p>
+          </section>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
