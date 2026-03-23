@@ -150,3 +150,7 @@ body.is-touch .orientation-message {
     display: none !important;
   }
 }
+
+body.is-touch .game-footer {
+  display: none;
+}

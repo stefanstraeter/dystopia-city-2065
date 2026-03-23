@@ -97,7 +97,6 @@
 
 .imprint-scroll-container p {
   line-height: 1.4;
-
   margin: 0;
 }
 
@@ -105,8 +104,8 @@
   color: #00ffff;
 }
 
-@media (max-width: 50rem) {
-  .game-footer {
+@media (max-width: 64rem) {
+  body:not(.is-touch) .game-footer {
     display: none;
   }
 }

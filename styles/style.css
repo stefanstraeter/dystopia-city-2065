@@ -146,3 +146,7 @@ canvas {
   color: rgb(0, 255, 255);
   text-shadow: 0 0 8px #00ffff;
 }
+
+body.is-touch .btn-fullscreen {
+  display: none !important;
+}
