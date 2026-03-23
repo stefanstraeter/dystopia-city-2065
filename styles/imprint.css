@@ -27,6 +27,7 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  max-height: 70%;
 }
 
 .imprint-scroll-container {
@@ -91,6 +92,8 @@
 .neon-text-pink {
   color: #ff00ff;
   text-shadow: 0 0 8px #ff00ff;
+  font-size: 3rem;
+  font-family: Cyberway;
 }
 .neon-text-blue {
   color: #00ffff;
