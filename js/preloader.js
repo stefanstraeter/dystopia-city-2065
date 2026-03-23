@@ -73,22 +73,15 @@ async function preloadAssets() {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = src;
-
             img.onload = async () => {
                 try {
-                    /** * Decode ensures the image is ready for the GPU, 
-                     * preventing frame drops on first render.
-                     */
                     await img.decode();
-                } catch (e) {
-                    console.warn("Failed to decode image:", src);
-                }
+                } catch (error) {
+                };
                 window.IMAGE_CACHE[src] = img;
                 resolve();
             };
-
             img.onerror = () => {
-                console.error("Failed to load asset:", src);
                 resolve();
             };
         });
