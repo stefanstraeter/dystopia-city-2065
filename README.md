@@ -6,7 +6,7 @@
 
 ### Preview
 
-![Neon City 2065 Gameplay Mockup](assets/img/neon-city-2065.gif)
+![Neon City 2065 Gameplay Mockup](assets/img/00_general/neon-city-2065.gif)
 
 ### Live Demo
 
