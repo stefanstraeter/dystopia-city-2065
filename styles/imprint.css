@@ -53,17 +53,19 @@
   transition: all 0.2s ease;
 }
 
-.imprint-scroll-container h3 {
-  font-size: 2rem;
-}
-
-.imprint-scroll-container p {
-  font-size: 1.5rem;
-}
 .imprint-close-btn:hover {
   color: #00ffff;
   text-shadow: 0 0 12px #00ffff;
   transform: scale(1.2);
+}
+
+.imprint-scroll-container h3 {
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+
+.imprint-scroll-container p {
+  font-size: 1.6rem;
 }
 
 .imprint-scroll-container::-webkit-scrollbar {
@@ -95,10 +97,6 @@
   font-size: 3rem;
   font-family: Cyberway;
 }
-.neon-text-blue {
-  color: #00ffff;
-  text-shadow: 0 0 8px #00ffff;
-}
 
 .imprint-scroll-container section {
   margin-bottom: 1.5rem;
@@ -106,7 +104,7 @@
 }
 
 .imprint-scroll-container p {
-  line-height: 1.4;
+  line-height: 0.8;
   margin: 0;
 }
 
