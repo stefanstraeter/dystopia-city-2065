@@ -7,7 +7,7 @@ const ASSETS_TO_PRELOAD = [
     'assets/img/01_background/back-buildings.png',
     'assets/img/01_background/far-buildings.png',
     'assets/img/01_background/foreground.png',
-    'assets/img/background.jpg',
+    'assets/img/00_general/background.jpg',
 
     'assets/img/02_character_bud/Attack.png',
     'assets/img/02_character_bud/Death.png',
