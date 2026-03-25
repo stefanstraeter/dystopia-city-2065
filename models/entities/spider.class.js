@@ -1,9 +1,11 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+
 /**
  * Represents a spider enemy with a multi-stage AI behavior including 
  * patrolling, pursuing the player at varying speeds, and melee attacks.
  * @extends MoveableObject
  */
-class Spider extends MoveableObject {
+export class Spider extends MoveableObject {
 
     AGGRO_RANGE = 200;
     CHASE_SPEED = 2;

@@ -1,8 +1,9 @@
+
 /**
  * Base class for all objects that can be drawn on the canvas.
  * Handles positioning, image loading, and frame-based animation.
  */
-class DrawableObject {
+export class DrawableObject {
 
     x = 140;
     y = 100;

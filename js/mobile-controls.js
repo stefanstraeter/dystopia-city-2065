@@ -1,4 +1,4 @@
-const MobileControls = {
+export const MobileControls = {
 
     keyboard: null,
 

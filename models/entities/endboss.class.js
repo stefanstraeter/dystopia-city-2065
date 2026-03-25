@@ -1,9 +1,12 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+import { BossBomb } from './throwable-object.class.js';
+
 /**
  * Represents the final boss enemy with advanced AI behavior including 
  * patrolling, targeted attacks, and gravity-based physics.
  * @extends MoveableObject
  */
-class Endboss extends MoveableObject {
+export class Endboss extends MoveableObject {
     animations = {
         idle: { path: 'assets/img/03_enemies/endboss/Idle.png', frames: 6, speed: 10 },
         attack: { path: 'assets/img/03_enemies/endboss/Attack.png', frames: 6, speed: 8 },

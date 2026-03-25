@@ -1,5 +1,10 @@
-const byteBounce = new FontFace('ByteBounce', 'url(./assets/fonts/ByteBounce.woff2)');
-const cyberwayRiders = new FontFace('CyberwayRiders', 'url(./assets/fonts/CyberwayRiders.woff2)');
+import { level1 } from './level1.js';
+import { World } from '../models/core/world.class.js';
+import { Keyboard } from '../models/core/keyboard.class.js';
+import { MobileControls } from './mobile-controls.js';
+import { preloadAssets } from './preloader.js';
+
+
 const IS_TOUCH = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
 const GAME_CONFIG = {
     MAX_WIDTH: 800,
@@ -11,6 +16,10 @@ const GAME_CONFIG = {
 let canvas;
 let world;
 let keyboard = new Keyboard();
+
+window.init = init;
+window.toggleFullscreen = toggleFullscreen;
+window.unlockAudio = unlockAudio;
 
 /**
  * Initializes the game environment, canvas, and assets.
@@ -31,7 +40,7 @@ async function init() {
     await loadFonts();
     await loadInitialAssets();
 
-    world = new World(canvas, keyboard);
+    world = new World(canvas, keyboard, level1);
 
     if (IS_TOUCH) {
         setupMobile();
@@ -48,9 +57,7 @@ async function init() {
  * Initializes mobile-specific controls if available.
  */
 function setupMobile() {
-    if (typeof MobileControls !== 'undefined') {
-        MobileControls.init(keyboard);
-    }
+    MobileControls.init(keyboard);
 }
 
 /**
@@ -212,7 +219,7 @@ function unlockAudio() {
 
 /**
  * Re-declares input setup (Note: duplicate of previous setupInput logic in original).
- */
+
 function setupInput() {
     canvas.addEventListener('mousedown', (e) => toggleMouseClick(e, true));
     canvas.addEventListener('mouseup', (e) => toggleMouseClick(e, false));
@@ -226,6 +233,8 @@ function setupInput() {
     window.addEventListener('keyup', (e) => handleKeyboard(e.code, false));
     window.addEventListener('resize', resizeGame);
 }
+ */
+
 
 window.toggleImprint = function () {
     const overlay = document.getElementById('imprint-overlay');

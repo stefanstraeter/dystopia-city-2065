@@ -1,9 +1,12 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+import { EnemyPlasma } from './throwable-object.class.js';
+
 /**
  * Represents a flying sentry drone enemy with autonomous AI behavior including 
  * hovering, tracking the player, and firing plasma projectiles.
  * @extends MoveableObject
  */
-class SentryDrone extends MoveableObject {
+export class SentryDrone extends MoveableObject {
 
     AGGRO_RANGE = 400;
     FIRE_RANGE = 450;

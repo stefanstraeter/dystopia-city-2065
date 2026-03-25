@@ -1,8 +1,11 @@
+import { ThrowableObject, BossBomb } from '../entities/throwable-object.class.js';
+import { PlasmaCore, PowerCell, Mediapack } from '../environment/items.class.js';
+
 /**
  * Handles all collision-related logic within the game world.
  * Detects interactions between the character, enemies, projectiles, and collectable items.
  */
-class CollisionManager {
+export class CollisionManager {
 
     /**
      * @param {Object} world - Reference to the main game world instance.

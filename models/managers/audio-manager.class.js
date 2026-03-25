@@ -2,7 +2,7 @@
  * Manages game audio, including sound effects and background music.
  * Handles browser-specific audio unlocking and volume balancing.
  */
-class AudioManager {
+export class AudioManager {
 
     /**
      * Initializes the audio library and sets default volumes.

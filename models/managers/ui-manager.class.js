@@ -2,7 +2,7 @@
  * Handles the game's User Interface (UI), including menus, overlays, 
  * and post-processing visual effects like scanlines and film grain.
  */
-class UIManager {
+export class UIManager {
     /** * Central color palette for the Cyberpunk aesthetic.
      * @static 
      */

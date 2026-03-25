@@ -1,9 +1,11 @@
+import { DrawableObject } from '../base/drawable-object.class.js';
+
 /**
  * A dynamic UI element that represents a percentage-based value (health, ammo, etc.) 
  * using a specific frame from a spritesheet.
  * @extends DrawableObject
  */
-class StatusBar extends DrawableObject {
+export class StatusBar extends DrawableObject {
     percentage = 100;
 
     /**
@@ -61,7 +63,7 @@ class StatusBar extends DrawableObject {
  * HUD element for the player's health.
  * @extends StatusBar
  */
-class HealthBar extends StatusBar {
+export class HealthBar extends StatusBar {
     constructor() {
         super('assets/img/06_status_bar/health_status.png', 30, 30, 190, 30, 18, 100);
     }
@@ -71,7 +73,7 @@ class HealthBar extends StatusBar {
  * HUD element for the player's plasma energy.
  * @extends StatusBar
  */
-class PlasmaBar extends StatusBar {
+export class PlasmaBar extends StatusBar {
     constructor() {
         super('assets/img/06_status_bar/plasma_status.png', 30, 60, 190, 30, 18, 0);
     }
@@ -81,7 +83,7 @@ class PlasmaBar extends StatusBar {
  * HUD element for the player's ammunition level.
  * @extends StatusBar
  */
-class AmmoBar extends StatusBar {
+export class AmmoBar extends StatusBar {
     constructor() {
         super('assets/img/06_status_bar/gun_status.png', 30, 90, 190, 30, 18, 0);
     }
@@ -91,7 +93,7 @@ class AmmoBar extends StatusBar {
  * A world-space status bar that follows the Endboss to show its remaining health.
  * @extends StatusBar
  */
-class BossBar extends StatusBar {
+export class BossBar extends StatusBar {
     constructor() {
         super('assets/img/06_status_bar/health_status_endboss.png', 0, 0, 150, 20, 18, 100);
     }
@@ -110,7 +112,7 @@ class BossBar extends StatusBar {
  * Static icon displayed next to status bars for visual identification.
  * @extends DrawableObject
  */
-class StatusIcon extends DrawableObject {
+export class StatusIcon extends DrawableObject {
     /**
      * @param {string} path - Path to the icon image.
      * @param {number} x - Horizontal screen position.
@@ -129,16 +131,16 @@ class StatusIcon extends DrawableObject {
 }
 
 /** Icon for the health bar. @extends StatusIcon */
-class HealthIcon extends StatusIcon {
+export class HealthIcon extends StatusIcon {
     constructor() { super('assets/img/06_status_bar/health_icon.png', 19, 20, 40, 40); }
 }
 
 /** Icon for the plasma bar. @extends StatusIcon */
-class PlasmaIcon extends StatusIcon {
+export class PlasmaIcon extends StatusIcon {
     constructor() { super('assets/img/06_status_bar/plasma_icon.png', 22, 57, 40, 40); }
 }
 
 /** Icon for the ammunition bar. @extends StatusIcon */
-class AmmoIcon extends StatusIcon {
+export class AmmoIcon extends StatusIcon {
     constructor() { super('assets/img/06_status_bar/gun_icon.png', 12, 97, 50, 25); }
 }

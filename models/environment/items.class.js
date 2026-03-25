@@ -1,9 +1,11 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+
 /**
  * Base class for all items that can be picked up by the player.
  * Supports both static images and animated spritesheets.
  * @extends MoveableObject
  */
-class CollectableObject extends MoveableObject {
+export class CollectableObject extends MoveableObject {
 
     /**
      * @param {string} path - Path to the item's image or spritesheet.
@@ -44,7 +46,7 @@ class CollectableObject extends MoveableObject {
  * A collectable core that typically recharges the player's plasma resources.
  * @extends CollectableObject
  */
-class PlasmaCore extends CollectableObject {
+export class PlasmaCore extends CollectableObject {
     value = 25;
     constructor(x, y) {
         super('assets/img/07_collectables/plasma_core.png', x, y);
@@ -55,7 +57,7 @@ class PlasmaCore extends CollectableObject {
  * A power cell item, used for ammunition or energy replenishment.
  * @extends CollectableObject
  */
-class PowerCell extends CollectableObject {
+export class PowerCell extends CollectableObject {
     value = 25;
     constructor(x, y) {
         super('assets/img/07_collectables/power_cell.png', x, y);
@@ -66,7 +68,7 @@ class PowerCell extends CollectableObject {
  * A medical pack used to restore the player character's health (energy).
  * @extends CollectableObject
  */
-class Mediapack extends CollectableObject {
+export class Mediapack extends CollectableObject {
     value = 5;
     constructor(x, y) {
         super('assets/img/07_collectables/medipack.png', x, y, 60, 60);

@@ -1,9 +1,11 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+
 /**
  * Base class for all projectiles and throwable objects. 
  * Uses static blueprints to define shared properties like damage, speed, and visuals.
  * @extends MoveableObject
  */
-class ThrowableObject extends MoveableObject {
+export class ThrowableObject extends MoveableObject {
 
     /** * Central configuration for different types of projectiles.
      * @static 
@@ -63,7 +65,7 @@ class ThrowableObject extends MoveableObject {
  * Projectile fired by the player character.
  * @extends ThrowableObject
  */
-class PlayerPlasma extends ThrowableObject {
+export class PlayerPlasma extends ThrowableObject {
     constructor(x, y, isMirrored) {
         super(x, y, isMirrored, ThrowableObject.BLUEPRINTS.PLAYER_PLASMA);
     }
@@ -73,7 +75,7 @@ class PlayerPlasma extends ThrowableObject {
  * Projectile fired by enemy units like the Sentry Drone.
  * @extends ThrowableObject
  */
-class EnemyPlasma extends ThrowableObject {
+export class EnemyPlasma extends ThrowableObject {
     constructor(x, y, isMirrored) {
         super(x, y, isMirrored, ThrowableObject.BLUEPRINTS.ENEMY_PLASMA);
     }
@@ -84,7 +86,7 @@ class EnemyPlasma extends ThrowableObject {
  * Features gravity, ground collision, and screen-shake effects on explosion.
  * @extends ThrowableObject
  */
-class BossBomb extends ThrowableObject {
+export class BossBomb extends ThrowableObject {
     /**
      * @param {number} x - Target X coordinate.
      * @param {number} y - Vertical spawn height.

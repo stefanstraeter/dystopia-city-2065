@@ -3,7 +3,7 @@
  */
 window.IMAGE_CACHE = {};
 
-const ASSETS_TO_PRELOAD = [
+export const ASSETS_TO_PRELOAD = [
     'assets/img/01_background/back-buildings.png',
     'assets/img/01_background/far-buildings.png',
     'assets/img/01_background/foreground.png',
@@ -68,7 +68,7 @@ const ASSETS_TO_PRELOAD = [
  * Uses Promise.all to wait for all assets to be ready.
  * @returns {Promise<void>} Resolves when all assets are loaded and decoded.
  */
-async function preloadAssets() {
+export async function preloadAssets() {
     const promises = ASSETS_TO_PRELOAD.map(src => {
         return new Promise((resolve) => {
             const img = new Image();

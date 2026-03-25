@@ -1,8 +1,10 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+
 /**
  * Represents a one-time visual effect like explosions or hits.
  * @extends MoveableObject
  */
-class VisualEffect extends MoveableObject {
+export class VisualEffect extends MoveableObject {
     static BLUEPRINTS = {
         PLASMA: { path: 'assets/img/08_explosions/plasma_explosion.png', frames: 6, speed: 2 },
         BOMB: { path: 'assets/img/08_explosions/rocket_explosion.png', frames: 8, speed: 4 }

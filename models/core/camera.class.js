@@ -2,7 +2,7 @@
  * Handles the game viewport, including character tracking, 
  * level boundaries, and screen shake effects.
  */
-class Camera {
+export class Camera {
 
     x = 0;
     isShaking = false;

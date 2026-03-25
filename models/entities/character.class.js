@@ -1,9 +1,12 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+import { PlayerPlasma } from './throwable-object.class.js';
+
 /**
  * Represents the player character with specific animations, 
  * resource management (ammo/plasma), and input-based movement.
  * @extends MoveableObject
  */
-class Character extends MoveableObject {
+export class Character extends MoveableObject {
 
     animations = {
         idle: { path: 'assets/img/02_character_bud/Idle.png', frames: 5, speed: 4 },

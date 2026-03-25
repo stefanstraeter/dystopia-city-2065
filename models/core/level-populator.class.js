@@ -1,8 +1,14 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+import { SentryDrone } from '../entities/sentry-drone.class.js';
+import { NeonSign } from '../environment/neon-signs.class.js';
+import { CollectableObject } from '../environment/items.class.js';
+import { FlyingVehicle, Police, Drone, Truck } from '../environment/flying-vehicles.class.js';
+
 /**
  * Responsible for initializing level objects, aligning them to the ground,
  * and spawning dynamic background elements like traffic.
  */
-class LevelPopulator {
+export class LevelPopulator {
 
     /**
      * @param {Object} world - Reference to the main game world instance.

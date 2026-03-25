@@ -1,9 +1,11 @@
+import { DrawableObject } from '../base/drawable-object.class.js';
+
 /**
  * Represents animated decorative elements in the environment, such as flickering neon signs.
  * Inherits directly from DrawableObject as it requires animation but no movement or physics.
  * @extends DrawableObject
  */
-class NeonSign extends DrawableObject {
+export class NeonSign extends DrawableObject {
 
     /**
      * @param {string} path - Path to the neon sign's spritesheet.

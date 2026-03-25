@@ -1,8 +1,22 @@
+import { level1 } from '../../js/level1.js';
+import { Camera } from './camera.class.js';
+import { GameStateManager } from './game-state-manager.class.js';
+import { LevelPopulator } from './level-populator.class.js';
+import { UIManager } from '../managers/ui-manager.class.js';
+import { CollisionManager } from '../managers/collision-manager.class.js';
+import { AudioManager } from '../managers/audio-manager.class.js';
+import { Character } from '../entities/character.class.js';
+import { Endboss } from '../entities/endboss.class.js';
+import { SentryDrone } from '../entities/sentry-drone.class.js';
+import { FlyingVehicle } from '../environment/flying-vehicles.class.js';
+import { VisualEffect } from '../entities/visual-effect.class.js';
+import { PlayerPlasma, EnemyPlasma, BossBomb } from '../entities/throwable-object.class.js';
+
 /**
  * The main game engine class that coordinates the game loop, rendering, 
  * collision handling, and object management.
  */
-class World {
+export class World {
 
     groundLevel = 490;
     throwableObjects = [];
@@ -22,7 +36,6 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-
         this.gameState = new GameStateManager(this);
         this.uiManager = new UIManager(this.ctx, this.canvas);
         this.collisionManager = new CollisionManager(this);
@@ -30,7 +43,6 @@ class World {
         this.level = level1;
         this.audioManager = new AudioManager();
         this.camera = new Camera();
-
         this.initLevel();
         this.draw();
         this.run();

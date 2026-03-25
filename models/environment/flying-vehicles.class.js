@@ -1,9 +1,11 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+
 /**
  * Represents ambient flying vehicles in the background or midground.
  * Includes logic for automatic movement and screen-wrapping to simulate continuous traffic.
  * @extends MoveableObject
  */
-class FlyingVehicle extends MoveableObject {
+export class FlyingVehicle extends MoveableObject {
 
     /**
      * @param {string} imagePath - Path to the vehicle sprite.
@@ -64,7 +66,7 @@ class FlyingVehicle extends MoveableObject {
  * Police vehicle subtype with specific dimensions.
  * @extends FlyingVehicle
  */
-class Police extends FlyingVehicle {
+export class Police extends FlyingVehicle {
     constructor(x, y, speed, direction, world, parallaxFactor) {
         super('assets/img/04_vehicles/police.png', x, y, speed, 60, 30, direction, world, parallaxFactor);
     }
@@ -74,7 +76,7 @@ class Police extends FlyingVehicle {
  * Large truck vehicle subtype with specific dimensions.
  * @extends FlyingVehicle
  */
-class Truck extends FlyingVehicle {
+export class Truck extends FlyingVehicle {
     constructor(x, y, speed, direction, world, parallaxFactor) {
         super('assets/img/04_vehicles/truck.png', x, y, speed, 120, 50, direction, world, parallaxFactor);
     }
@@ -84,7 +86,7 @@ class Truck extends FlyingVehicle {
  * Small drone vehicle subtype with specific dimensions.
  * @extends FlyingVehicle
  */
-class Drone extends FlyingVehicle {
+export class Drone extends FlyingVehicle {
     constructor(x, y, speed, direction, world, parallaxFactor) {
         super('assets/img/04_vehicles/drone.png', x, y, speed, 40, 20, direction, world, parallaxFactor);
     }

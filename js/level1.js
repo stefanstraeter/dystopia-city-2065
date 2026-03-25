@@ -1,4 +1,13 @@
-const level1 = {
+import { HealthBar, PlasmaBar, AmmoBar, BossBar, HealthIcon, PlasmaIcon, AmmoIcon } from '../models/managers/status-bar.class.js';
+import { BackgroundObject } from '../models/environment/background-object.class.js';
+import { NeonSign } from '../models/environment/neon-signs.class.js';
+import { PlasmaCore, Mediapack, PowerCell } from '../models/environment/items.class.js';
+import { Drone, Police, Truck } from '../models/environment/flying-vehicles.class.js';
+import { Spider } from '../models/entities/spider.class.js';
+import { SentryDrone } from '../models/entities/sentry-drone.class.js';
+import { Endboss } from '../models/entities/endboss.class.js';
+
+export const level1 = {
     level_end_x: 3400,
     StatusBar: [
         new HealthBar(),

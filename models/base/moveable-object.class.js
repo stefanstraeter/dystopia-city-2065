@@ -1,8 +1,11 @@
+import { DrawableObject } from './drawable-object.class.js';
+
+
 /**
  * Extension of DrawableObject that adds movement, gravity, collision detection, and combat logic.
  * @extends DrawableObject
  */
-class MoveableObject extends DrawableObject {
+export class MoveableObject extends DrawableObject {
 
     speed = 0.15;
     speedY = 0;
@@ -94,7 +97,12 @@ class MoveableObject extends DrawableObject {
      * @returns {boolean} True if above ground level.
      */
     isAboveGround() {
-        if (this instanceof ThrowableObject) return true;
+        if (this.constructor.name === 'ThrowableObject' ||
+            this.constructor.name === 'PlayerPlasma' ||
+            this.constructor.name === 'EnemyPlasma' ||
+            this.constructor.name === 'BossBomb') {
+            return true;
+        }
         let ground = this.world ? this.world.groundLevel : 490;
         return this.y < (ground - this.height + this.footOffset);
     }

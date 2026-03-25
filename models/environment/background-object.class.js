@@ -1,9 +1,11 @@
+import { MoveableObject } from '../base/moveable-object.class.js';
+
 /**
  * Represents a static or moving background layer in the game world.
  * Used for parallax effects and environmental scenery.
  * @extends MoveableObject
  */
-class BackgroundObject extends MoveableObject {
+export class BackgroundObject extends MoveableObject {
 
     /**
      * Initializes a background layer with a specific image and dimensions.

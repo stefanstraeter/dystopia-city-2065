@@ -1,8 +1,10 @@
+import { MobileControls } from '../../js/mobile-controls.js';
+
 /**
  * Manages the high-level state of the game, including intro progression,
  * game over logic, and UI toggles.
  */
-class GameStateManager {
+export class GameStateManager {
 
     /**
      * @param {Object} world - Reference to the main game world instance.

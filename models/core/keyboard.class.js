@@ -2,7 +2,7 @@
  * Simple state container for tracking the current status of keyboard and mouse inputs.
  * Each property represents a specific key or action.
  */
-class Keyboard {
+export class Keyboard {
 
     KEY_LEFT = false;
     KEY_RIGHT = false;
