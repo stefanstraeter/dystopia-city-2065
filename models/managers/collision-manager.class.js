@@ -1,5 +1,6 @@
 import { ThrowableObject, BossBomb } from '../entities/throwable-object.class.js';
 import { PlasmaCore, PowerCell, Mediapack } from '../environment/items.class.js';
+import { Endboss } from '../entities/endboss.class.js';
 
 /**
  * Handles all collision-related logic within the game world.
@@ -55,27 +56,58 @@ export class CollisionManager {
     }
 
     /**
-     * Processes a successful hit between a projectile and a target.
-     * Manages damage application, triggers specific projectile behaviors (like BossBomb explosions),
-     * and updates UI/effects if the player is hit.
-     * @param {ThrowableObject} projectile - The projectile in motion.
-     * @param {MoveableObject} target - The character or enemy being hit.
-     */
+      * Orchestrates the hit sequence: applies damage, triggers visuals, and updates UI.
+      * @param {ThrowableObject} projectile - The incoming projectile.
+      * @param {MoveableObject} target - The hit entity.
+      */
     handleHit(projectile, target) {
         if (target.isDead() || !projectile.isColliding(target)) return;
+        if (projectile.damageApplied) return;
 
-        if (!projectile.damageApplied) {
-            target.hit(projectile.damage, projectile.damageType, projectile.isMirrored);
-            projectile.damageApplied = true;
-            if (projectile instanceof BossBomb) {
-                projectile.explode();
-            } else {
-                this.world.spawnEffect(target.x, target.y, target.width, target.height, 'PLASMA');
-                projectile.hasHit = true;
-            }
-            if (target === this.world.character) {
-                this.world.healthBar.setPercentage(this.world.character.energy);
-                this.world.camera.activateShake(200, 10);
+        this.applyProjectileDamage(projectile, target);
+        this.triggerHitEffects(projectile, target);
+        this.updateTargetUI(target);
+    }
+
+    /**
+     * Deducts energy from the target and prevents double damage.
+     * @param {ThrowableObject} projectile - The source of damage.
+     * @param {MoveableObject} target - The entity taking damage.
+     */
+    applyProjectileDamage(projectile, target) {
+        target.hit(projectile.damage, projectile.damageType, projectile.isMirrored);
+        projectile.damageApplied = true;
+    }
+
+    /**
+     * Handles animations, explosions, and camera effects upon impact.
+     * @param {ThrowableObject} projectile - The hitting object.
+     * @param {MoveableObject} target - The hit entity.
+     */
+    triggerHitEffects(projectile, target) {
+        if (projectile.constructor.name === 'BossBomb') {
+            projectile.explode();
+        } else {
+            this.world.spawnEffect(target.x, target.y, target.width, target.height, 'PLASMA');
+            projectile.hasHit = true;
+        }
+
+        if (target === this.world.character) {
+            this.world.camera.activateShake(200, 10);
+        }
+    }
+
+    /**
+     * Synchronizes the health/status bars after a successful hit.
+     * @param {MoveableObject} target - The entity whose bar needs updating.
+     */
+    updateTargetUI(target) {
+        if (target === this.world.character) {
+            this.world.healthBar.setPercentage(target.energy);
+        } else if (target.constructor.name === 'Endboss') {
+            const bossBar = this.world.level.StatusBar[3];
+            if (bossBar) {
+                bossBar.setPercentage(target.energy);
             }
         }
     }
