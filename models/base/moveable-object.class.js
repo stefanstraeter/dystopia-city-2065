@@ -181,11 +181,9 @@ export class MoveableObject extends DrawableObject {
         this.setLastHit(damageType);
         this.lastHit = Date.now();
 
-        const knockbackForce = 12;
-        if (isMirroredHit) {
-            this.x -= knockbackForce;
-        } else {
-            this.x += knockbackForce;
+        if (damageType !== 'melee') {
+            const force = (damageType === 'plasma') ? 20 : 0;
+            this.x += isMirroredHit ? -force : force;
         }
         if (this.energy > 0) {
             this.playAnimation('hurt');
