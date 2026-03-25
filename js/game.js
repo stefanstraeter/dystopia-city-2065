@@ -61,28 +61,6 @@ function setupMobile() {
 }
 
 /**
- * Sets up event listeners for mouse, touch, and keyboard input.
- */
-function setupInput() {
-    canvas.addEventListener('pointerdown', (e) => {
-        keyboard.LEFT_CLICK = true;
-    });
-    canvas.addEventListener('pointerup', () => {
-        keyboard.LEFT_CLICK = false;
-    });
-    canvas.addEventListener('touchstart', (e) => {
-        keyboard.LEFT_CLICK = true;
-    }, { passive: false });
-
-    canvas.addEventListener('touchend', () => {
-        keyboard.LEFT_CLICK = false;
-    });
-    window.addEventListener('keydown', (e) => handleKeyboard(e.code, true));
-    window.addEventListener('keyup', (e) => handleKeyboard(e.code, false));
-    window.addEventListener('resize', resizeGame);
-}
-
-/**
  * Updates the keyboard state based on mouse click events.
  * @param {MouseEvent} event - The mouse event.
  * @param {boolean} isPressed - Whether the button is pressed.
@@ -219,21 +197,17 @@ function unlockAudio() {
 
 /**
  * Re-declares input setup (Note: duplicate of previous setupInput logic in original).
-
+*/
 function setupInput() {
     canvas.addEventListener('mousedown', (e) => toggleMouseClick(e, true));
     canvas.addEventListener('mouseup', (e) => toggleMouseClick(e, false));
-    canvas.addEventListener('touchstart', (e) => {
-        keyboard.LEFT_CLICK = true;
-    }, { passive: false });
-    canvas.addEventListener('touchend', () => {
-        keyboard.LEFT_CLICK = false;
-    });
+    canvas.addEventListener('touchstart', (e) => { keyboard.LEFT_CLICK = true; }, { passive: false });
+    canvas.addEventListener('touchend', () => { keyboard.LEFT_CLICK = false; });
     window.addEventListener('keydown', (e) => handleKeyboard(e.code, true));
     window.addEventListener('keyup', (e) => handleKeyboard(e.code, false));
     window.addEventListener('resize', resizeGame);
 }
- */
+
 
 
 window.toggleImprint = function () {
